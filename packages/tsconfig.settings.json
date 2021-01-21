@@ -1,3 +1,4 @@
+// This tsconfig is used as a base to extend each individual package's tsconfig
 {
   "compilerOptions": {
     "module": "CommonJS",
