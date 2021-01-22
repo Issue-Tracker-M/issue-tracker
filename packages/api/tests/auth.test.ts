@@ -1,10 +1,11 @@
 import app from "../api/app";
-import supertest from "supertest";
+import * as supertest from "supertest";
 import { clearDB, createUser, newUser } from "./test_utils";
 /* 
 iwm is a singleton used by nodemailer-stub to store all of the newly created emails in memory
 and give you easy access to them for testing  purposes
  */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const iwm: any = require("nodemailer-stub").interactsWithMail;
 
 beforeAll(async (done) => {

@@ -1,4 +1,4 @@
-import supertest from "supertest";
+import * as supertest from "supertest";
 import app from "../../../api/app";
 import { UserDocument } from "../../../models/User";
 import { clearDB, createUser } from "../../test_utils";
