@@ -36,7 +36,7 @@ export interface IBaseComment {
  * @public
  *
 //  * @remarks
-//  * The {@link @issue-tracker/types#isTeam} type guard may be used to
+//  * The {@link @issue-tracker/types#isBaseTask} type guard may be used to
 //  * detect whether a value conforms to this interface
  */
 export interface IBaseTask {

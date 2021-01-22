@@ -12,5 +12,5 @@
  *
  * @packageDocumentation
  */
-export * from "./type-guards";
+export { isTypedArray, isBaseTask } from "./type-guards";
 export * from "./types";

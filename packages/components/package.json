@@ -9,6 +9,7 @@
   },
   "scripts": {
     "story": "start-storybook",
+    "api-report": "scripty",
     "lint": "scripty",
     "clean": "rimraf dist *.tsbuildinfo",
     "build": "scripty",

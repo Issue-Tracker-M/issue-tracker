@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "api-docs": "scripty",
     "build": "scripty",
     "test": "scripty",
     "lint": "scripty",

@@ -23,7 +23,7 @@ export function isTypedArray<T>(
 }
 
 /**
- * Check whether a given value is an {@link @shlack/types#ITeam}
+ * Check whether a given value is an {@link @issue-tracker/types#IBaseTask}
  * @param arg - value to check
  * @beta
  *

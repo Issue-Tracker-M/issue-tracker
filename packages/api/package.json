@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node dist/server.js",
+    "api-report": "scripty",
     "dev": "ts-node-dev src/server.ts",
     "lint": "scripty",
     "clean": "rimraf dist *.tsbuildinfo",
