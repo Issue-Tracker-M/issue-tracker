@@ -7,7 +7,8 @@
     "outDir": "dist",
     "rootDir": "src",
     "jsx": "react",
-    "declaration": true
+    "declaration": true,
+    "esModuleInterop": true
   },
   "include": ["src"]
 }

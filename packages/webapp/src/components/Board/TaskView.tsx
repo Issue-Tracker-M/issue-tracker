@@ -4,8 +4,8 @@ import {
   HamburgerIcon,
   InfoIcon,
   TimeIcon,
-  WarningTwoIcon
-} from '@chakra-ui/icons'
+  WarningTwoIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Drawer,
@@ -20,42 +20,42 @@ import {
   IconButton,
   Skeleton,
   Text,
-  Textarea
-} from '@chakra-ui/react'
-import React, { FC, useEffect } from 'react'
-import { useThunkDispatch } from '../../hooks/useThunkDispatch'
-import { fetchTask, patchTask } from '../../store/thunks'
-import { Stage, Task, TaskStub } from '../../store/workspace/types'
-import MemberSelect from '../MemberSelect'
-import MemberPreview from './MemberPreview'
-import TaskDatePicker from './DatePicker'
-import TaskViewItem from './TaskViewItem'
-import CommentInput from './CommentInput'
-import CommentView from './CommentView'
+  Textarea,
+} from "@chakra-ui/react";
+import React, { FC, useEffect } from "react";
+import { useThunkDispatch } from "../../hooks/useThunkDispatch";
+import { fetchTask, patchTask } from "../../store/thunks";
+import { Stage, Task, TaskStub } from "../../store/workspace/types";
+import MemberSelect from "../MemberSelect";
+import MemberPreview from "./MemberPreview";
+import TaskDatePicker from "./DatePicker";
+import TaskViewItem from "./TaskViewItem";
+import CommentInput from "./CommentInput";
+import CommentView from "./CommentView";
 // Load with the initial data
 // Fetch the rest of the task data if it hasn't been loaded yet
 // Show something to the user while it's happening
 // Show full task view once it's loaded.
 
 interface IProps {
-  task: TaskStub | Task
-  stage: Stage
-  isOpen: boolean
-  onClose: (...args: any) => any
+  task: TaskStub | Task;
+  stage: Stage;
+  isOpen: boolean;
+  onClose: (...args: any) => any;
 }
 
 const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
-  const dispatch = useThunkDispatch()
+  const dispatch = useThunkDispatch();
 
   useEffect(() => {
-    let mounted = true
+    let mounted = true;
     // If we are trying to render this and the task is not loaded => load it
 
-    if (!task.loaded) dispatch(fetchTask(task._id))
+    if (!task.loaded) dispatch(fetchTask(task._id));
     return () => {
-      mounted = false
-    }
-  }, [dispatch, stage, task._id, task.loaded])
+      mounted = false;
+    };
+  }, [dispatch, stage, task._id, task.loaded]);
   return (
     <Drawer
       isOpen={isOpen}
@@ -71,17 +71,15 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
         <DrawerHeader
           display="flex"
           justifyContent="flex-start"
-          alignItems="center"
-        >
+          alignItems="center">
           <WarningTwoIcon color="red.500" fontSize="md" />
           <Editable
             paddingLeft="1rem"
             defaultValue={task.title}
             onSubmit={(value) => {
               if (value !== task.title)
-                dispatch(patchTask({ _id: task._id, title: value }))
-            }}
-          >
+                dispatch(patchTask({ _id: task._id, title: value }));
+            }}>
             <EditablePreview />
             <EditableInput />
           </Editable>
@@ -91,8 +89,7 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
             <>
               <TaskViewItem
                 title="Members"
-                icon={<AtSignIcon color="gray.500" />}
-              >
+                icon={<AtSignIcon color="gray.500" />}>
                 <Box display="flex">
                   <MemberPreview members={task.users} />
                   <MemberSelect
@@ -113,16 +110,16 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
               </TaskViewItem>
               <TaskViewItem
                 title="Description"
-                icon={<InfoIcon color="gray.500" />}
-              >
+                icon={<InfoIcon color="gray.500" />}>
                 <Editable
-                  defaultValue={task.description || ''}
+                  defaultValue={task.description || ""}
                   placeholder="Add a more detailed description..."
                   onSubmit={(value) => {
                     if (value !== task.description)
-                      dispatch(patchTask({ _id: task._id, description: value }))
-                  }}
-                >
+                      dispatch(
+                        patchTask({ _id: task._id, description: value })
+                      );
+                  }}>
                   <EditablePreview
                     as={Text}
                     backgroundColor="gray.100"
@@ -138,9 +135,9 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
                     minH="100px"
                     width="100%"
                     onChange={(e) => {
-                      const { target } = e
-                      target.style.height = '1px'
-                      target.style.height = target.scrollHeight + 1 + 'px'
+                      const { target } = e;
+                      target.style.height = "1px";
+                      target.style.height = target.scrollHeight + 1 + "px";
                     }}
                     border="none"
                     transition="all 0.2s ease, height 0s"
@@ -150,15 +147,13 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
                 </Editable>
               </TaskViewItem>
               <TaskViewItem
-                title={'Due Date'}
-                icon={<TimeIcon color="gray.500" />}
-              >
+                title={"Due Date"}
+                icon={<TimeIcon color="gray.500" />}>
                 <TaskDatePicker task_id={task._id} />
               </TaskViewItem>
               <TaskViewItem
                 title="Comments"
-                icon={<HamburgerIcon color="gray.500" />}
-              >
+                icon={<HamburgerIcon color="gray.500" />}>
                 <CommentInput taskId={task._id} />
               </TaskViewItem>
               {task.comments.map((id) => (
@@ -174,7 +169,7 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
         </DrawerBody>
       </DrawerContent>
     </Drawer>
-  )
-}
+  );
+};
 
-export default TaskView
+export default TaskView;

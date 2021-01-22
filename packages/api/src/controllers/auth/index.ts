@@ -17,7 +17,6 @@ import resetPasswordTemplate from "../../templates/resetPasswordTemplate";
 export interface registerInput {
   first_name: IUser["first_name"];
   last_name: IUser["last_name"];
-  username: IUser["username"];
   password: IUser["password"];
   email: IUser["email"];
   is_verified?: IUser["is_verified"];
@@ -34,14 +33,13 @@ export const register = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { first_name, last_name, username, password, email } = req.body;
+    const { first_name, last_name, password, email } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       email,
       password: hashedPassword,
       first_name,
       last_name,
-      username,
     });
 
     const user = await newUser.save();
@@ -66,7 +64,7 @@ export const register = async (
  * Expected input for the regular login endpoint without Oauth.
  */
 export interface loginInput {
-  credential: IUser["username"] | IUser["email"];
+  credential: IUser["email"];
   password: IUser["password"];
 }
 

@@ -2,7 +2,7 @@ import { Button, ButtonProps } from '@chakra-ui/react'
 import { FormikErrors, useFormikContext } from 'formik'
 import React from 'react'
 
-interface IProps extends ButtonProps {}
+type IProps = ButtonProps
 
 const anyErrors = (errors: FormikErrors<unknown>) => {
   return Object.values(errors).some(Boolean)

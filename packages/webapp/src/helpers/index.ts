@@ -2,7 +2,7 @@ import decode from 'jwt-decode'
 
 const KEY = 'cfa8ebf4'
 
-export const setToken = (token: String) => {
+export const setToken = (token: string) => {
   try {
     const item = JSON.stringify(token)
     localStorage.setItem(KEY, item)

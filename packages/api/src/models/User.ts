@@ -1,4 +1,5 @@
 import { Document, Model, Types, Schema, model } from "mongoose";
+import { IBaseUser } from "@issue-tracker/types";
 import { WorkspaceDocument } from "./Workspace";
 
 const UserSchema = new Schema<UserDocument>(
@@ -24,17 +25,10 @@ const UserSchema = new Schema<UserDocument>(
   },
   { timestamps: true }
 );
-export interface User {
-  first_name: string;
-  last_name: string;
-  username: string;
-  password: string;
-  email: string;
-  is_verified: boolean;
-  workspaces?: Types.ObjectId[] | WorkspaceDocument[];
-  provider_ids?: {
-    google?: string;
-    github?: string;
+export interface User extends IBaseUser {
+  workspaces: Types.ObjectId[] | WorkspaceDocument[];
+  provider_ids: {
+    google: string;
   };
 }
 

@@ -1,5 +1,6 @@
 {
   "extends": "../tsconfig.settings.json",
+  "references": [{ "path": "../types" }],
   "compilerOptions": {
     "typeRoots": ["node_modules", "typings"],
     "composite": true,
