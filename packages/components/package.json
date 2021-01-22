@@ -2,12 +2,13 @@
   "name": "@issue-tracker/components",
   "version": "0.0.0",
   "description": "Shared React components for the issue-tracker app",
-  "main": "index.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
+    "story": "start-storybook",
     "lint": "scripty",
     "clean": "rimraf dist *.tsbuildinfo",
     "build": "scripty",
@@ -22,12 +23,24 @@
     "react-dom": "^16.8.1"
   },
   "devDependencies": {
-    "@storybook/react": "^6.1.14",
-    "babel-loader": "^8.2.2",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
+    "@storybook/react": "^6.1.14",
     "@types/jest": "^26.0.20",
+    "@types/storybook__react": "^5.2.1",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.2.2",
     "jest": "^26.6.3",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^10.1.1",
+    "source-map-loader": "^2.0.0",
+    "style-loader": "^2.0.0",
     "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^1.1.5",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
+    "framer-motion": "^3.2.1"
   }
 }

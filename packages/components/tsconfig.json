@@ -1,9 +1,13 @@
 {
   "extends": "../tsconfig.settings.json",
+  "references": [{ "path": "../types" }],
+  "exclude": ["node_modules", "dist", "**/*.story*", "tests"],
   "compilerOptions": {
     "composite": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "jsx": "react",
+    "declaration": true
   },
   "include": ["src"]
 }
