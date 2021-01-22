@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "scripty",
+    "test": "scripty",
+    "lint": "scripty",
+    "clean": "scripty"
+  },
+  "scripty": {
+    "path": "./scripts/workspace"
   },
   "repository": {
     "type": "git",
