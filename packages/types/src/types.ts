@@ -16,7 +16,7 @@ export interface IBaseUser {
   password: string;
   email: string;
   is_verified: boolean;
-  workspaces: any[];
+  workspaces: unknown[];
   provider_ids: {
     google: string;
   };
@@ -28,7 +28,7 @@ export interface IBaseUser {
  */
 export interface IBaseComment {
   content: string;
-  author: any;
+  author: unknown;
 }
 
 /**
@@ -42,16 +42,16 @@ export interface IBaseComment {
 export interface IBaseTask {
   title: string;
   description?: string;
-  list: any;
+  list: unknown;
   due_date?: Date;
   complete?: boolean;
-  labels: any[];
-  users: any[];
-  comments: any[];
+  labels: unknown[];
+  users: unknown[];
+  comments: unknown[];
 }
 
 // /**
-//  * A chat channel, containing many chat messages
+//  * A chat channel, containing munknown chat messages
 //  * @public
 //  */
 // export interface IChannel {
