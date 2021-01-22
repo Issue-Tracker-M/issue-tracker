@@ -1,9 +1,11 @@
 {
   "extends": "../tsconfig.settings.json",
   "compilerOptions": {
+    "typeRoots": ["node_modules", "typings"],
     "composite": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": ".",
+    "esModuleInterop": true
   },
   "include": ["src"]
 }

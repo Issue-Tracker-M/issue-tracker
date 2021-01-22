@@ -1,9 +1,6 @@
 import { Response } from "express";
 import Joi from "joi";
-import Workspace, {
-  Workspace as IWorkspace,
-  WorkspaceDocument,
-} from "../../models/Workspace";
+import Workspace, { WorkspaceDocument } from "../../models/Workspace";
 import { AuthorizedRequest } from "../auth/middleware";
 
 const schema = Joi.object({

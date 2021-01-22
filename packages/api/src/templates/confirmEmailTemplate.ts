@@ -1,4 +1,4 @@
-import MailGen from "mailgen";
+import MailGen = require("mailgen");
 import { CLIENT_URL } from "../config";
 
 export default function (full_name: string, token: string): string {
@@ -25,5 +25,5 @@ export default function (full_name: string, token: string): string {
     },
   };
 
-  return mailGenerator.generate(email);
+  return mailGenerator.generate(email) as string;
 }

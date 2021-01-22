@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Types } from "mongoose";
+import { Document, Model, Types, Schema, model } from "mongoose";
 import { TaskDocument } from "./Task";
 import { UserDocument } from "./User";
 
@@ -6,7 +6,7 @@ export interface List {
   name: string;
 }
 
-// const ListSchema = new mongoose.Schema({
+// const ListSchema = new Schema({
 //   name: String,
 // });
 
@@ -17,7 +17,7 @@ export interface Label {
 
 export interface LabelDocument extends Label, Document {}
 
-const LabelSchema = new mongoose.Schema({
+const LabelSchema = new Schema({
   name: String,
   color: String, //hex color code
 });
@@ -28,15 +28,15 @@ export interface Change {
 
 export interface ChangeDocument extends Change, Document {}
 
-const ChangeSchema = new mongoose.Schema({
+const ChangeSchema = new Schema({
   //   text: String,
   // what happened // string based on the type of change or a type of possible action
 
   // what changed  // a reference to the document in the Db, preferably by it's id
-  target: { type: mongoose.Types.ObjectId },
-  subtarget: { type: mongoose.Types.ObjectId, required: false },
+  target: { type: Types.ObjectId },
+  subtarget: { type: Types.ObjectId, required: false },
   // who did it  // reference to the user id
-  user: { type: mongoose.Types.ObjectId, ref: "Users" },
+  user: { type: Types.ObjectId, ref: "Users" },
 });
 
 export interface Workspace {
@@ -77,19 +77,19 @@ export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {
 
 export type WorkspaceModel = Model<WorkspaceDocument>;
 
-const Workspaces = mongoose.model<WorkspaceDocument, WorkspaceModel>(
+const Workspaces = model<WorkspaceDocument, WorkspaceModel>(
   "Workspaces",
-  new mongoose.Schema(
+  new Schema(
     {
       name: { type: String, required: true },
       labels: [LabelSchema], //all of labels defined for this workspace
-      users: [{ type: mongoose.Types.ObjectId, ref: "Users" }], //references to all the users
-      admin: { type: mongoose.Types.ObjectId, ref: "Users", required: true },
+      users: [{ type: Types.ObjectId, ref: "Users" }], //references to all the users
+      admin: { type: Types.ObjectId, ref: "Users", required: true },
       // lists: [ListSchema],
-      // tasks: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
-      todo: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
-      in_progress: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
-      completed: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
+      // tasks: [{ type: Types.ObjectId, ref: "Tasks" }],
+      todo: [{ type: Types.ObjectId, ref: "Tasks" }],
+      in_progress: [{ type: Types.ObjectId, ref: "Tasks" }],
+      completed: [{ type: Types.ObjectId, ref: "Tasks" }],
       history: [ChangeSchema],
     },
     { timestamps: true }

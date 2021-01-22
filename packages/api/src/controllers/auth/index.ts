@@ -1,6 +1,6 @@
 import User, { User as IUser } from "./../../models/User";
 import { EMAIL_SECRET } from "../../config";
-import { Request, RequestHandler, Response } from "express";
+import { Request, Response } from "express";
 import generateToken from "../../utils/generateToken";
 import bcrypt from "bcrypt";
 import sendMail from "../../utils/sendEmail";
@@ -73,7 +73,7 @@ export interface loginInput {
 /**
  * Regular login requests have the user document with matching credential attached to req.user.
  */
-interface LoginRequest extends Request {
+interface LoginRequest extends AuthorizedRequest<any> {
   body: loginInput;
 }
 

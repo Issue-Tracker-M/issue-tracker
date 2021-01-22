@@ -7,10 +7,10 @@ export interface TaskInput extends TaskDocument {
   stage: "todo" | "in_progress" | "completed";
 }
 
-export const createTask = async (
+export const createTask = (
   req: AuthorizedRequest<unknown, TaskInput>,
   res: Response
-): Promise<void> => {
+): void => {
   const { workspace, stage } = req.body;
 
   const newTask = new Task(req.body);

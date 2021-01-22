@@ -1,5 +1,6 @@
-import nodemailer, { SendMailOptions } from "nodemailer";
+import { SendMailOptions, createTransport } from "nodemailer";
 import { SENDER_EMAIL, EMAIL_PASSWORD } from "../config/index";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { stubTransport } = require("nodemailer-stub");
 
 /** A sendEmail util accepting an options object with the following properties:
@@ -33,7 +34,7 @@ export const sendMail = async ({
    * transporter, as opposed to the transport stub.
    */
   if (process.env.NODE_ENV !== "test") {
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
       service: "gmail",
       auth: {
         user: SENDER_EMAIL,
@@ -56,7 +57,7 @@ export const sendMail = async ({
      * a stub is created and the same mailOptions are used to
      * mock the sending of an actual email.
      */
-    const transporter = nodemailer.createTransport(stubTransport);
+    const transporter = createTransport(stubTransport);
     await transporter.sendMail(mailOptions);
   }
 };

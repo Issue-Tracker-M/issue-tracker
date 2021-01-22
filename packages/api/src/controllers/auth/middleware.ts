@@ -1,9 +1,10 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { JWT_SECRET } from "../../config";
 import validateToken from "../../utils/validateToken";
 import User, { UserDocument } from "../../models/User";
 
-export interface RequestWithCredentials<P, B> extends Request<P, any, B, any> {
+export interface RequestWithCredentials<P = any, B = any>
+  extends Request<P, any, B, any> {
   headers: Request["headers"] & { authorization: string };
 }
 
@@ -36,7 +37,8 @@ export const checkToken = async (
     }
     req.user = user;
     next();
-  } catch (error) {
+  } catch (error: unknown) {
+    if (!(error instanceof Error)) return;
     res.status(500).json({ message: `Confirmation failed ${error.message}` });
   }
 };

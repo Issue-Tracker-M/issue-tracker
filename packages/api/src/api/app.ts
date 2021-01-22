@@ -1,6 +1,6 @@
 import { port, mongoURI } from "./../config/index";
-import express from "express";
-import mongoose from "mongoose";
+import express = require("express");
+import mongoose = require("mongoose");
 mongoose
   .connect(mongoURI, {
     useNewUrlParser: true,
@@ -17,9 +17,9 @@ mongoose
     console.log(err);
   });
 require("../models");
-import bodyParser from "body-parser";
-import cors from "cors";
-import helmet from "helmet";
+import bodyParser = require("body-parser");
+import cors = require("cors");
+import helmet = require("helmet");
 import authRouter from "../routes/authRouter";
 import taskRouter from "../routes/taskRouter";
 import workspaceRouter from "../routes/workspaceRouter";
@@ -38,11 +38,11 @@ app.use(bodyParser.json());
 
 app.use("/api", apiRouter);
 
-app.get("/", (req, res) => {
+app.get("/", (_, res: express.Response) => {
   return res.status(200).json({ message: "API is up 🚀" });
 });
 
-app.all("*", (req, res) => {
+app.all("*", (_, res: express.Response) => {
   res.status(404).json({ message: "This URL can not be found" });
 });
 

@@ -18,7 +18,7 @@ const createWorkspace = (
   req: AuthorizedRequest<unknown, workspaceInput>,
   res: Response
 ): void => {
-  const { error, value } = schema.validate(req.body);
+  const { error } = schema.validate(req.body);
   if (error) {
     res.status(400).json(error);
     return;

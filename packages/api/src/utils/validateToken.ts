@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt = require("jsonwebtoken");
 import { JWT_SECRET } from "../config";
 
 export const validateToken = (

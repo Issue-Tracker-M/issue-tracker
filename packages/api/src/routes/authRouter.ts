@@ -17,6 +17,8 @@ import { Router } from "express";
 
 const router = Router();
 router.post("/register", validateRegisterInput, register);
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 router.post("/login", validateLoginInput, getUserByCredential, login);
 router.post("/confirm_email", validateEmailConfirmation, confirmEmail);
 router.post("/forgot_password", validateForgotPassword, forgotPassword);

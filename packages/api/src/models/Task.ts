@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Types } from "mongoose";
+import { Document, Model, Types, Schema, model } from "mongoose";
 import { UserDocument } from "./User";
 import { Label, WorkspaceDocument } from "./Workspace";
 
@@ -7,11 +7,11 @@ export interface IComment {
   author: UserDocument["_id"];
 }
 
-const CommentSchema = new mongoose.Schema(
+const CommentSchema = new Schema(
   {
     content: { type: String, required: true },
     author: {
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "Users",
       required: true,
     },
@@ -54,25 +54,25 @@ export interface TaskPopulatedDocument extends TaskBaseDocument {
 
 export type TaskModel = Model<TaskDocument>;
 
-const Task = mongoose.model<TaskDocument, TaskModel>(
+const Task = model<TaskDocument, TaskModel>(
   "Tasks",
-  new mongoose.Schema(
+  new Schema(
     {
       title: { type: String, required: true },
       description: String,
       due_date: { type: Date, required: false },
       complete: { type: Boolean, required: false },
-      workspace: { type: mongoose.Schema.Types.ObjectId, ref: "Workspaces" },
+      workspace: { type: Schema.Types.ObjectId, ref: "Workspaces" },
       labels: [
         {
           name: String,
           color: String,
-          id: mongoose.Types.ObjectId,
+          id: Types.ObjectId,
         },
       ], //reference to labels within this tasks workspace
       users: [
         {
-          type: mongoose.Types.ObjectId,
+          type: Types.ObjectId,
           ref: "Users",
         },
       ],

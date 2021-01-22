@@ -1,6 +1,6 @@
-import { AuthorizedRequest } from "./controllers/auth/middleware";
-import { UserDocument } from "./models/User";
-import { NextFunction, Response } from "express";
+import { NextFunction, Response } from "express-serve-static-core";
+import { AuthorizedRequest } from "../../src/controllers/auth/middleware";
+import { UserDocument } from "../../src/models/User";
 
 interface AuthorizedRouteHandler<P, B> {
   (req: AuthorizedRequest<P, B>, res: Response, next: NextFunction): any;
@@ -28,7 +28,7 @@ declare module "express-serve-static-core" {
       | "options"
       | "head" = any
   > {
-    <P = ParamsDictionary, ResBody = any, ReqBody = any, ReqQuery = ParsedQs>(
+    <P = ParamsDictionary, ResBody = any, ReqBody = any, ReqQuery = any>(
       path: PathParams,
       ...handlers: Array<AuthorizedRouteHandler<P, ResBody>>
     ): T;

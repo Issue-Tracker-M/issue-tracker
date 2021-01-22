@@ -1,6 +1,6 @@
 import { UserDocument } from "../models/User";
 import { JWT_SECRET } from "../config";
-import jwt from "jsonwebtoken";
+import jwt = require("jsonwebtoken");
 
 export default function generateToken(
   user: UserDocument,

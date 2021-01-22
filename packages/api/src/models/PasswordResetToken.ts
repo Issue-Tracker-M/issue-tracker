@@ -1,13 +1,13 @@
-import mongoose, { Document, Model } from "mongoose";
+import { Document, Model, Schema, model } from "mongoose";
 import generatePasswordResetToken from "../utils/generatePasswordResetToken";
 
 export interface PasswordResetToken {
-  user_id: mongoose.Schema.Types.ObjectId;
+  user_id: Schema.Types.ObjectId;
   token: string;
 }
 
-const tokenSchema = new mongoose.Schema({
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
+const tokenSchema = new Schema<PasswordTokenDocument>({
+  user_id: { type: Schema.Types.ObjectId, ref: "Users" },
   token: {
     type: String,
     required: true,
@@ -21,7 +21,7 @@ export interface PasswordTokenDocument extends PasswordResetToken, Document {}
 
 export type TokenModel = Model<PasswordTokenDocument>;
 
-export default mongoose.model<PasswordTokenDocument, TokenModel>(
+export default model<PasswordTokenDocument, TokenModel>(
   "PasswordResetTokens",
   tokenSchema
 );

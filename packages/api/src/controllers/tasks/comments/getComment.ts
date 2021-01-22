@@ -1,5 +1,5 @@
 import { Response } from "express";
-import Task, { IComment } from "../../../models/Task";
+import Task from "../../../models/Task";
 import { AuthorizedRequest } from "../../auth/middleware";
 
 export const getComment = async (
@@ -13,10 +13,10 @@ export const getComment = async (
       res.status(404).end();
       return;
     }
-    task.comments.id;
-    task.comments.set(task.comments.indexOf(comment_id), req.body);
-    await task.save();
-    res.status(200).end();
+    const c = task.comments.id(comment_id);
+    if (c) {
+      res.status(200).json(c);
+    } else res.status(404).end();
   } catch (error) {
     res.status(500).end();
   }

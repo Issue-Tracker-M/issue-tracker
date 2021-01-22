@@ -1,7 +1,7 @@
-import mongoose, { Document, Model, Types } from "mongoose";
+import { Document, Model, Types, Schema, model } from "mongoose";
 import { WorkspaceDocument } from "./Workspace";
 
-const UserSchema = new mongoose.Schema<User>(
+const UserSchema = new Schema<UserDocument>(
   {
     first_name: { type: String, required: true },
     last_name: { type: String, required: true },
@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema<User>(
     is_verified: { type: Boolean, default: false },
     workspaces: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Workspaces",
       },
     ],
@@ -50,4 +50,4 @@ export interface UserPopulatedDocument extends UserBaseDocument {
 
 export type UserModel = Model<UserDocument>;
 
-export default mongoose.model<UserDocument, UserModel>("Users", UserSchema);
+export default model<UserDocument, UserModel>("Users", UserSchema);
