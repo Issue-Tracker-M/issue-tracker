@@ -7,6 +7,8 @@
     "api-docs": "scripty",
     "build": "scripty",
     "test": "scripty",
+    "dev": "SCRIPTY_PARALLEL=true scripty",
+    "test:ci": "lerna run test --since main...HEAD --stream -- --passWithNoTests",
     "lint": "scripty",
     "clean": "scripty"
   },
