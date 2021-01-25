@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "api-report": "scripty",
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "ts-node-dev --deps src/server.ts",
     "lint": "scripty",
     "clean": "rimraf dist *.tsbuildinfo",
     "build": "scripty",

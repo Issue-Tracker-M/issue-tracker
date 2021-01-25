@@ -36,6 +36,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "react-scripts start",
     "api-report": "scripty",
     "lint": "scripty",
     "build": "react-scripts build",

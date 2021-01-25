@@ -1,5 +1,6 @@
 {
   "files": [],
+  "composite": true,
   "references": [
     { "path": "components" },
     { "path": "api" },
