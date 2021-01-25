@@ -1,23 +1,18 @@
+import { IBaseList, IBaseWorkspace } from "@issue-tracker/types";
 import { Document, Model, Types, Schema, model } from "mongoose";
-import { TaskDocument } from "./Task";
+import { CommentDocument, TaskDocument } from "./Task";
 import { UserDocument } from "./User";
-
-export interface List {
-  name: string;
-}
-
-// const ListSchema = new Schema({
-//   name: String,
-// });
 
 export interface Label {
   name: string;
   color: string;
 }
 
-export interface LabelDocument extends Label, Document {}
+export interface LabelDocument extends Label, Document {
+  _id: Types.ObjectId;
+}
 
-const LabelSchema = new Schema({
+const LabelSchema = new Schema<LabelDocument>({
   name: String,
   color: String, //hex color code
 });
@@ -39,57 +34,59 @@ const ChangeSchema = new Schema({
   user: { type: Types.ObjectId, ref: "Users" },
 });
 
-export interface Workspace {
-  name: string;
-  labels?: Label[];
-  users?: UserDocument["_id"][] | UserDocument[];
-  admin: UserDocument["_id"] | UserDocument;
-  // lists: List[];
-  todo?: TaskDocument["_id"][] | TaskDocument[];
-  in_progress?: TaskDocument["_id"][] | TaskDocument[];
-  completed?: TaskDocument["_id"][] | TaskDocument[];
-  // tasks?: TaskDocument["_id"][] | TaskDocument[];
-  history?: Change[];
+// List of tasks
+interface ListBaseDocument extends IBaseList, Document {
+  _id: Types.ObjectId;
+}
+export interface ListDocument extends IBaseList, ListBaseDocument {
+  tasks: Types.Array<TaskDocument["_id"]>;
+}
+export interface ListPopulatedDocument extends IBaseList, ListBaseDocument {
+  tasks: Types.Array<TaskDocument["_id"]>;
 }
 
-interface WorkspaceBaseDocument extends Workspace, Document {
+const ListSchema = new Schema<ListDocument>({
+  name: { type: String, required: true },
+  tasks: [{ type: Types.ObjectId, ref: "Tasks" }],
+});
+
+interface WorkspaceBaseDocument extends IBaseWorkspace, Document {
   labels: Types.DocumentArray<LabelDocument>;
-  history: Types.DocumentArray<ChangeDocument>;
+  lists: Types.Array<ListDocument["_id"]> | Types.DocumentArray<ListDocument>;
+  users: Types.Array<UserDocument["_id"]> | Types.DocumentArray<UserDocument>;
+  comments: Types.DocumentArray<CommentDocument>;
 }
 
 export interface WorkspaceDocument extends WorkspaceBaseDocument {
-  // tasks: Types.Array<TaskDocument["_id"]>;
-  todo: Types.Array<TaskDocument["_id"]>;
-  in_progress: Types.Array<TaskDocument["_id"]>;
-  completed: Types.Array<TaskDocument["_id"]>;
+  lists: Types.DocumentArray<ListDocument>;
+  // lists: Types.Array<ListDocument["_id"]>;
   users: Types.Array<UserDocument["_id"]>;
   admin: UserDocument["_id"];
 }
 
 export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {
-  // tasks: Types.Array<TaskDocument>;
-  todo: Types.DocumentArray<TaskDocument>;
-  in_progress: Types.DocumentArray<TaskDocument>;
-  completed: Types.DocumentArray<TaskDocument>;
   users: Types.DocumentArray<UserDocument>;
   admin: UserDocument;
 }
 
 export type WorkspaceModel = Model<WorkspaceDocument>;
 
-const Workspaces = model<WorkspaceDocument, WorkspaceModel>(
+const Workspaces = model<WorkspaceDocument>(
   "Workspaces",
-  new Schema(
+  new Schema<WorkspaceDocument>(
     {
       name: { type: String, required: true },
       labels: [LabelSchema], //all of labels defined for this workspace
       users: [{ type: Types.ObjectId, ref: "Users" }], //references to all the users
       admin: { type: Types.ObjectId, ref: "Users", required: true },
-      // lists: [ListSchema],
-      // tasks: [{ type: Types.ObjectId, ref: "Tasks" }],
-      todo: [{ type: Types.ObjectId, ref: "Tasks" }],
-      in_progress: [{ type: Types.ObjectId, ref: "Tasks" }],
-      completed: [{ type: Types.ObjectId, ref: "Tasks" }],
+      lists: {
+        type: [ListSchema],
+        default: () => [
+          { name: "Todo" },
+          { name: "In Progress" },
+          { name: "Complete" },
+        ],
+      },
       history: [ChangeSchema],
     },
     { timestamps: true }

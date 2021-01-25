@@ -8,9 +8,9 @@
     "access": "public"
   },
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "node dist/index.js",
     "api-report": "scripty",
-    "dev": "ts-node-dev --deps src/server.ts",
+    "dev": "ts-node-dev --deps src/index.ts",
     "lint": "scripty",
     "clean": "rimraf dist *.tsbuildinfo",
     "build": "scripty",

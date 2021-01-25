@@ -1,9 +1,9 @@
 import { Response } from "express";
-import Task, { IComment } from "../../../models/Task";
+import Task, { CommentDocument } from "../../../models/Task";
 import { AuthorizedRequest } from "../../auth/middleware";
 
 export const createComment = async (
-  req: AuthorizedRequest<{ task_id: string }, IComment>,
+  req: AuthorizedRequest<{ task_id: string }, Pick<CommentDocument, "content">>,
   res: Response
 ): Promise<void> => {
   const { task_id } = req.params;

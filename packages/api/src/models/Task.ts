@@ -1,13 +1,9 @@
+import { IBaseComment, IBaseTask } from "@issue-tracker/types";
 import { Document, Model, Types, Schema, model } from "mongoose";
 import { UserDocument } from "./User";
-import { Label, WorkspaceDocument } from "./Workspace";
+import { LabelDocument, ListDocument, WorkspaceDocument } from "./Workspace";
 
-export interface IComment {
-  content: string;
-  author: UserDocument["_id"];
-}
-
-const CommentSchema = new Schema(
+const CommentSchema = new Schema<CommentDocument>(
   {
     content: { type: String, required: true },
     author: {
@@ -19,30 +15,18 @@ const CommentSchema = new Schema(
   { timestamps: true }
 );
 
-export interface CommentDocument extends IComment, Document {}
-
-export enum Priority {
-  not_set,
-  low,
-  high,
-  urgent,
+export interface CommentDocument extends IBaseComment, Document {
+  _id: Types.ObjectId;
+  author: UserDocument["_id"];
 }
 
-export interface ITask {
-  title: string;
-  description?: string;
+interface TaskBaseDocument extends IBaseTask, Document {
+  _id: Types.ObjectId;
+  list: ListDocument["_id"];
   workspace: WorkspaceDocument["_id"];
-  due_date?: Date;
-  complete?: boolean;
-  labels?: Label[];
-  users?: UserDocument["_id"][] | UserDocument[];
-  comments?: IComment[];
-}
-
-interface TaskBaseDocument extends ITask, Document {
-  priority: number;
   comments: Types.DocumentArray<CommentDocument>;
-  labels: Types.Array<Document["_id"]>;
+  labels: Types.Array<LabelDocument["_id"]>;
+  users: Types.Array<UserDocument["_id"]> | Types.DocumentArray<UserDocument>;
 }
 
 export interface TaskDocument extends TaskBaseDocument {
@@ -54,22 +38,17 @@ export interface TaskPopulatedDocument extends TaskBaseDocument {
 
 export type TaskModel = Model<TaskDocument>;
 
-const Task = model<TaskDocument, TaskModel>(
+const Task = model(
   "Tasks",
-  new Schema(
+  new Schema<TaskDocument>(
     {
       title: { type: String, required: true },
-      description: String,
-      due_date: { type: Date, required: false },
-      complete: { type: Boolean, required: false },
-      workspace: { type: Schema.Types.ObjectId, ref: "Workspaces" },
-      labels: [
-        {
-          name: String,
-          color: String,
-          id: Types.ObjectId,
-        },
-      ], //reference to labels within this tasks workspace
+      description: { type: String, required: true, default: null },
+      due_date: { type: Date, required: false, default: null },
+      complete: { type: Boolean, required: false, default: false },
+      workspace: { type: Types.ObjectId, ref: "Workspaces", required: true },
+      list: { type: Types.ObjectId, required: true },
+      labels: [String], //reference to labels within this tasks workspace
       users: [
         {
           type: Types.ObjectId,

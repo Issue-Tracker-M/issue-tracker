@@ -17,22 +17,18 @@ const UserSchema = new Schema<UserDocument>(
     ],
     provider_ids: {
       type: {
-        google: String,
-        github: String,
+        google: { type: String, default: null },
       },
       required: false,
     },
   },
   { timestamps: true }
 );
-export interface User extends IBaseUser {
-  workspaces: Types.ObjectId[] | WorkspaceDocument[];
-  provider_ids: {
-    google: string;
-  };
-}
 
-interface UserBaseDocument extends User, Document {}
+interface UserBaseDocument extends IBaseUser, Document {
+  _id: Types.ObjectId;
+  workspaces: Types.ObjectId[] | WorkspaceDocument[];
+}
 
 export interface UserDocument extends UserBaseDocument {
   workspaces: Types.Array<WorkspaceDocument["_id"]>;

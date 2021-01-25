@@ -8,7 +8,7 @@
 
 /**
  * An app user.
- * @public
+ * @private
  */
 export interface IBaseUser {
   first_name: string;
@@ -18,13 +18,13 @@ export interface IBaseUser {
   is_verified: boolean;
   workspaces: unknown[];
   provider_ids: {
-    google: string;
+    google: string | null;
   };
 }
 
 /**
  * Comment belonging to a task
- * @public
+ * @private
  */
 export interface IBaseComment {
   content: string;
@@ -33,18 +33,16 @@ export interface IBaseComment {
 
 /**
  * A task, belonging to a list and containing comments and references to users & labels
- * @public
+ * @private
  *
-//  * @remarks
-//  * The {@link @issue-tracker/types#isBaseTask} type guard may be used to
-//  * detect whether a value conforms to this interface
  */
 export interface IBaseTask {
   title: string;
-  description?: string;
+  description: string | null;
+  due_date: Date | null;
+  complete: boolean;
   list: unknown;
-  due_date?: Date;
-  complete?: boolean;
+  workspace: unknown;
   labels: unknown[];
   users: unknown[];
   comments: unknown[];
@@ -52,7 +50,7 @@ export interface IBaseTask {
 
 // /**
 //  * A chat channel, containing munknown chat messages
-//  * @public
+//  * @private
 //  */
 // export interface IChannel {
 //   teamId: string;
@@ -61,3 +59,26 @@ export interface IBaseTask {
 //   id: string;
 //   messages: IMessage[];
 // }
+
+export interface IBaseWorkspace {
+  name: string;
+  labels: unknown[];
+  users: unknown[];
+  admin: unknown;
+  lists: unknown[];
+}
+
+export interface IBaseList {
+  name: string;
+  tasks: unknown[];
+}
+
+export interface IBaseLabel {
+  name: string;
+  color: string;
+}
+
+export interface IBaseComment {
+  content: string;
+  author: unknown;
+}
