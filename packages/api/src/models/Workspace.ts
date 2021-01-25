@@ -1,6 +1,6 @@
 import { IBaseList, IBaseWorkspace } from "@issue-tracker/types";
 import { Document, Model, Types, Schema, model } from "mongoose";
-import { CommentDocument, TaskDocument } from "./Task";
+import { TaskDocument } from "./Task";
 import { UserDocument } from "./User";
 
 export interface Label {
@@ -51,10 +51,10 @@ const ListSchema = new Schema<ListDocument>({
 });
 
 interface WorkspaceBaseDocument extends IBaseWorkspace, Document {
+  _id: Types.ObjectId;
   labels: Types.DocumentArray<LabelDocument>;
   lists: Types.Array<ListDocument["_id"]> | Types.DocumentArray<ListDocument>;
   users: Types.Array<UserDocument["_id"]> | Types.DocumentArray<UserDocument>;
-  comments: Types.DocumentArray<CommentDocument>;
 }
 
 export interface WorkspaceDocument extends WorkspaceBaseDocument {

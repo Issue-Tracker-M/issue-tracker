@@ -41,7 +41,7 @@ const createWorkspace = (
     .then(async (workspace) => {
       await User.findOneAndUpdate(
         { _id },
-        { $push: { workspaces: workspace } },
+        { $push: { workspaces: workspace.id } },
         { new: true }
       );
       res.status(201).json(workspace);
