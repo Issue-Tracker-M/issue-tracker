@@ -32,6 +32,7 @@ import TaskDatePicker from "./DatePicker";
 import TaskViewItem from "./TaskViewItem";
 import CommentInput from "./CommentInput";
 import CommentView from "./CommentView";
+import { AiOutlineCreditCard } from "react-icons/ai";
 // Load with the initial data
 // Fetch the rest of the task data if it hasn't been loaded yet
 // Show something to the user while it's happening
@@ -72,7 +73,7 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
           display="flex"
           justifyContent="flex-start"
           alignItems="center">
-          <WarningTwoIcon color="red.500" fontSize="md" />
+          <AiOutlineCreditCard color="gray" />
           <Editable
             paddingLeft="1rem"
             defaultValue={task.title}
@@ -160,6 +161,7 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
                 <CommentView
                   commentId={(id as unknown) as string}
                   taskId={task._id}
+                  key={(id as unknown) as string}
                 />
               ))}
             </>
