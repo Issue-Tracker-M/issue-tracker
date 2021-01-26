@@ -18,9 +18,9 @@ export async function deleteTask(
     await Tasks.deleteOne({ _id: taskId });
     const w = await Workspaces.findById(task.workspace).exec();
     if (!w) throw new Error("Workspace not found");
-    w.todo.pull(task.id);
-    w.in_progress.pull(task.id);
-    w.completed.pull(task.id);
+    // w.todo.pull(task.id);
+    // w.in_progress.pull(task.id);
+    // w.completed.pull(task.id);
     await w.save();
     res.status(204).json({ message: "Task has been deleted" });
     return;

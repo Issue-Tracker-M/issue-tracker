@@ -8,16 +8,13 @@ const emailSchema = (): Joi.StringSchema =>
   Joi.string().lowercase().label("email").email({ minDomainSegments: 2 });
 
 const loginSchema = Joi.object().keys({
-  credential: Joi.alternatives()
-    .try(Joi.string().lowercase().label("username").alphanum(), emailSchema())
-    .required(),
+  credential: emailSchema().required(),
   password: passwordSchema,
 });
 
 const registerSchema = Joi.object().keys({
   first_name: Joi.string().alphanum().required().max(64),
   last_name: Joi.string().alphanum().required().max(64),
-  username: Joi.string().lowercase().alphanum().required().max(64),
   password: passwordSchema,
   email: emailSchema().required(),
 });

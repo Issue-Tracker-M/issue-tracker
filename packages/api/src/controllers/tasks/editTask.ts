@@ -29,10 +29,10 @@ export async function editTask(
     if (stage) {
       const w = await Workspaces.findById(task.workspace).exec();
       if (!w) throw new Error("Workspace not found");
-      w.todo.pull(task.id);
-      w.in_progress.pull(task.id);
-      w.completed.pull(task.id);
-      w[stage].push(task.id);
+      // w.todo.pull(task.id);
+      // w.in_progress.pull(task.id);
+      // w.completed.pull(task.id);
+      // w[stage].push(task.id);
       await w.save();
     }
     res

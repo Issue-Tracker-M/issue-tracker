@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Modal,
   Input,
@@ -9,36 +9,36 @@ import {
   FormErrorMessage,
   ModalBody,
   ModalCloseButton,
-  Button
-} from '@chakra-ui/react'
-import * as yup from 'yup'
-import { Formik, Form, Field } from 'formik'
-import { useThunkDispatch } from '../../hooks/useThunkDispatch'
-import { addWorkspace } from '../../store/thunks'
+  Button,
+} from "@chakra-ui/react";
+import * as yup from "yup";
+import { Formik, Form, Field } from "formik";
+import { useThunkDispatch } from "../../hooks/useThunkDispatch";
+import { addWorkspace } from "../../store/thunks";
 
 interface createWorkspaceModalProps {
-  isOpen: boolean
-  onClose(): any
+  isOpen: boolean;
+  onClose(): any;
 }
 
 export interface createWorkspaceObject {
-  name: string
+  name: string;
 }
 
 const CreateWorkspaceModal = ({
   isOpen,
-  onClose
+  onClose,
 }: createWorkspaceModalProps) => {
-  const dispatch = useThunkDispatch()
+  const dispatch = useThunkDispatch();
   const validationSchema = yup.object().shape({
-    name: yup.string().label('name').required()
+    name: yup.string().label("name").required(),
     // labels: yup.array().label('labels').required()
-  })
+  });
 
   const initialValues: createWorkspaceObject = {
-    name: ''
+    name: "",
     // labels: []
-  }
+  };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -49,27 +49,24 @@ const CreateWorkspaceModal = ({
           <Formik
             initialValues={initialValues}
             onSubmit={(values, actions) => {
-              const payload = { name: values.name, labels: [] }
-              dispatch(addWorkspace(payload))
-              onClose()
+              const payload = { name: values.name };
+              dispatch(addWorkspace(payload));
+              onClose();
             }}
-            validationSchema={validationSchema}
-          >
+            validationSchema={validationSchema}>
             <Form
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                height: '100%'
-              }}
-            >
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                height: "100%",
+              }}>
               <label htmlFor="name">
                 {/* Name{' '} */}
                 <Field name="name">
                   {({ field, form }: any) => (
                     <FormControl
-                      isInvalid={form.errors.name && form.touched.name}
-                    >
+                      isInvalid={form.errors.name && form.touched.name}>
                       <Input
                         {...field}
                         id="name"
@@ -91,7 +88,7 @@ const CreateWorkspaceModal = ({
         </ModalBody>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};
 
-export default CreateWorkspaceModal
+export default CreateWorkspaceModal;

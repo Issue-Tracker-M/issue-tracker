@@ -21,12 +21,12 @@ import bodyParser = require("body-parser");
 import cors = require("cors");
 import helmet = require("helmet");
 import authRouter from "../routes/authRouter";
-import taskRouter from "../routes/taskRouter";
-import workspaceRouter from "../routes/workspaceRouter";
+import { workspaceRouter } from "../components/workspaces/routes";
+// import taskRouter from "../routes/taskRouter";
 
 const apiRouter = express.Router();
 apiRouter.use("/auth", authRouter);
-apiRouter.use("/tasks", taskRouter);
+// apiRouter.use("/tasks", taskRouter);
 apiRouter.use("/workspaces", workspaceRouter);
 
 const app = express();

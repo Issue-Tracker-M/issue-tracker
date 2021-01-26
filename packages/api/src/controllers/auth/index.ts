@@ -1,4 +1,4 @@
-import User, { User as IUser } from "./../../models/User";
+import User, { UserDocument } from "./../../models/User";
 import { EMAIL_SECRET } from "../../config";
 import { Request, Response } from "express";
 import generateToken from "../../utils/generateToken";
@@ -14,13 +14,10 @@ import resetPasswordTemplate from "../../templates/resetPasswordTemplate";
 /**
  * Registers a new user with username, email & password. Sends back the new user document & token.
  */
-export interface registerInput {
-  first_name: IUser["first_name"];
-  last_name: IUser["last_name"];
-  password: IUser["password"];
-  email: IUser["email"];
-  is_verified?: IUser["is_verified"];
-}
+export type registerInput = Pick<
+  UserDocument,
+  "first_name" | "last_name" | "password" | "email"
+>;
 
 interface RegisterRequest extends Request {
   body: registerInput;
@@ -63,10 +60,7 @@ export const register = async (
 /**
  * Expected input for the regular login endpoint without Oauth.
  */
-export interface loginInput {
-  credential: IUser["email"];
-  password: IUser["password"];
-}
+export type loginInput = Pick<UserDocument, "email" | "password">;
 
 /**
  * Regular login requests have the user document with matching credential attached to req.user.
