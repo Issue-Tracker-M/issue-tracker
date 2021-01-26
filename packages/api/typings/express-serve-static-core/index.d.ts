@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express-serve-static-core";
+import { WorkspaceDocument } from "../../src/components/workspaces/model";
 import { AuthorizedRequest } from "../../src/controllers/auth/middleware";
 import { UserDocument } from "../../src/models/User";
-import { WorkspaceDocument } from "../../src/models/Workspace";
 
 interface AuthorizedRouteHandler<P, B> {
   (req: AuthorizedRequest<P, B>, res: Response, next: NextFunction): any;

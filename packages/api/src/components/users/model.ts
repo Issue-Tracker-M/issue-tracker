@@ -1,6 +1,6 @@
 import { Document, Model, Types, Schema, model } from "mongoose";
 import { IBaseUser } from "@issue-tracker/types";
-import { WorkspaceDocument } from "./Workspace";
+import { WorkspaceDocument } from "../components/workspaces/model";
 
 const UserSchema = new Schema<UserDocument>(
   {

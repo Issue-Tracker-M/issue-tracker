@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { JWT_SECRET } from "../../config";
 import validateToken from "../../utils/validateToken";
-import User, { UserDocument } from "../../models/User";
+import User, { UserDocument } from "../users/model";
 
 export interface RequestWithCredentials<P = any, B = any>
   extends Request<P, any, B, any> {
@@ -14,7 +14,7 @@ export interface AuthorizedRequest<P, B = any>
 }
 
 /**
- * Extracts user id from token, fetches that user and assigns the user document to req.user
+ * Validates token, extracts user id from token, fetches that user and assigns the user document to req.user
  * @param req
  * @param res
  * @param next
@@ -38,20 +38,19 @@ export const checkToken = async (
     req.user = user;
     next();
   } catch (error: unknown) {
-    if (!(error instanceof Error)) return;
+    if (!(error instanceof Error)) return next(error);
     res.status(500).json({ message: `Confirmation failed ${error.message}` });
   }
 };
 
-export const checkForToken = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  if (req.headers.authorization) {
-    next();
-    return;
-  }
+/**
+ * Check if request has Authorization header set to something
+ * @param req
+ * @param res
+ * @param next
+ */
+export const checkForCredentials: RequestHandler = (req, res, next) => {
+  if (req.headers.authorization) return next();
   res.status(400).json({ message: "Missing credentials" });
 };
 
@@ -61,23 +60,12 @@ export const checkForToken = (
  * @param res
  * @param next
  */
-export const getUserByCredential = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  const credential: string = req.body.credential;
+export const getUserByEmail: RequestHandler = async (req, res, next) => {
+  const { email } = req.body;
   try {
-    // get credential type
-    const user = await User.findOne(
-      credential.includes("@")
-        ? { email: credential }
-        : { username: credential }
-    ).exec();
-    if (!user) {
-      res.status(404).json({ message: "No user with such credentials" });
-      return;
-    }
+    const user = await User.findOne({ email }).exec();
+    if (!user)
+      return res.status(404).json({ message: "No user with such email" });
     req.user = user;
     next();
   } catch (error) {

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { WorkspaceDocument } from "../../models/Workspace";
+import { WorkspaceDocument } from "./model";
 import { createValidationMiddleware } from "../../utils/createValidationMiddleware";
 
 export type WorkspaceInput = Pick<WorkspaceDocument, "name">;

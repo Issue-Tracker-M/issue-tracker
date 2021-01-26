@@ -1,8 +1,8 @@
 import Workspace, { WorkspaceDocument } from "./model";
 import { NextFunction, Response } from "express";
-import { AuthorizedRequest } from "../../controllers/auth/middleware";
-import { workspaceInput } from "../../controllers/workspace/createWorkspace";
 import { JSONed } from "../../utils/typeUtils";
+import { WorkspaceInput } from "./validation";
+import { AuthorizedRequest } from "../auth/middleware";
 
 /**
  * @private
@@ -11,7 +11,7 @@ import { JSONed } from "../../utils/typeUtils";
  * @param res
  */
 export const createWorkspace = async (
-  req: AuthorizedRequest<unknown, workspaceInput>,
+  req: AuthorizedRequest<unknown, WorkspaceInput>,
   res: Response
 ): Promise<void> => {
   const { name } = req.body;

@@ -1,7 +1,11 @@
 import { IBaseComment, IBaseTask } from "@issue-tracker/types";
 import { Document, Model, Types, Schema, model } from "mongoose";
-import { UserDocument } from "./User";
-import { LabelDocument, ListDocument, WorkspaceDocument } from "./Workspace";
+import {
+  LabelDocument,
+  ListDocument,
+  WorkspaceDocument,
+} from "../workspaces/model";
+import { UserDocument } from "../users/model";
 
 const CommentSchema = new Schema<CommentDocument>(
   {

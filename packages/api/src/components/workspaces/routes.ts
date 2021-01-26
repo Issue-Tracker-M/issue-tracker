@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkToken } from "../../controllers/auth/middleware";
+import { checkForCredentials, checkToken } from "../auth/middleware";
 import {
   getWorkspaces,
   createWorkspace,
@@ -15,7 +15,7 @@ import {
 import { validateWorkspaceEdit, validateWorkspaceInput } from "./validation";
 
 export const workspaceRouter = Router();
-workspaceRouter.use("/", checkToken);
+workspaceRouter.use("/", checkForCredentials, checkToken);
 
 // @route POST /api/workspace/
 // @desc Add a workspace

@@ -1,7 +1,7 @@
 import { IBaseList, IBaseWorkspace } from "@issue-tracker/types";
 import { Document, Model, Types, Schema, model } from "mongoose";
-import { TaskDocument } from "./Task";
-import { UserDocument } from "./User";
+import { TaskDocument } from "../../models/Task";
+import { UserDocument } from "../../models/User";
 
 export interface Label {
   name: string;
@@ -53,15 +53,15 @@ const ListSchema = new Schema<ListDocument>({
 interface WorkspaceBaseDocument extends IBaseWorkspace, Document {
   _id: Types.ObjectId;
   labels: Types.DocumentArray<LabelDocument>;
-  lists: Types.Array<ListDocument["_id"]> | Types.DocumentArray<ListDocument>;
+  lists: Types.DocumentArray<ListDocument>;
   users: Types.Array<UserDocument["_id"]> | Types.DocumentArray<UserDocument>;
 }
 
 export interface WorkspaceDocument extends WorkspaceBaseDocument {
-  lists: Types.DocumentArray<ListDocument>;
   // lists: Types.Array<ListDocument["_id"]>;
   users: Types.Array<UserDocument["_id"]>;
   admin: UserDocument["_id"];
+  a: ListDocument;
 }
 
 export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {

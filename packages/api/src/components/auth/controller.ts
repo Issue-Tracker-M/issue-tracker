@@ -1,33 +1,30 @@
-import User, { UserDocument } from "./../../models/User";
 import { EMAIL_SECRET } from "../../config";
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 import generateToken from "../../utils/generateToken";
 import bcrypt from "bcrypt";
 import sendMail from "../../utils/sendEmail";
 import confirmEmailTemplate from "../../templates/confirmEmailTemplate";
 import { validateToken } from "../../utils/validateToken";
-import ConfirmationToken from "../../models/ConfirmationToken";
-import { AuthorizedRequest } from "./middleware";
-import PasswordResetToken from "../../models/PasswordResetToken";
+import ConfirmationToken from "./models/ConfirmationToken";
+import PasswordResetToken from "./models/PasswordResetToken";
 import resetPasswordTemplate from "../../templates/resetPasswordTemplate";
+import User, { UserDocument } from "../users/model";
 
 /**
- * Registers a new user with username, email & password. Sends back the new user document & token.
+ * Data expected for initial registration
  */
 export type registerInput = Pick<
   UserDocument,
   "first_name" | "last_name" | "password" | "email"
 >;
 
-interface RegisterRequest extends Request {
-  body: registerInput;
-}
 /**
  * Creates a new user and sends an email confirmation letter.
  */
-export const register = async (
-  req: RegisterRequest,
-  res: Response
+export const register: RequestHandler<null, any, registerInput> = async (
+  req,
+  res,
+  next
 ): Promise<void> => {
   try {
     const { first_name, last_name, password, email } = req.body;
@@ -52,8 +49,8 @@ export const register = async (
     });
 
     res.status(201).end();
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (error: unknown) {
+    next(error);
   }
 };
 
@@ -63,19 +60,13 @@ export const register = async (
 export type loginInput = Pick<UserDocument, "email" | "password">;
 
 /**
- * Regular login requests have the user document with matching credential attached to req.user.
- */
-interface LoginRequest extends AuthorizedRequest<any> {
-  body: loginInput;
-}
-
-/**
  * Checks the validity of given credentials and issues a JWT.
  */
-export const login = async (
-  req: LoginRequest,
-  res: Response
-): Promise<void> => {
+export const login: RequestHandler<null, any, loginInput> = async (
+  req,
+  res,
+  next
+) => {
   const { user } = req;
   try {
     if (!user) throw new Error("Missing user data");
@@ -84,32 +75,27 @@ export const login = async (
       req.body.password,
       user.password
     );
-    if (validPassword) {
-      const token = generateToken(user);
-      await user.populate("workspaces", "name").execPopulate();
-      res.status(200).json({ token, user });
-    } else {
-      res.status(401).json({ message: "Invalid credentials" });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Failed to login" });
+
+    if (!validPassword)
+      return res.status(401).json({ message: "Wrong password" });
+
+    const token = generateToken(user);
+    await user.populate("workspaces", "name").execPopulate();
+    return res.status(200).json({ token, user });
+  } catch (error: unknown) {
+    next(error);
   }
 };
 
-interface ConfirmEmailRequest extends Request {
-  body: {
-    token: string;
-  };
-}
 /**
  * Accepts an email confirmation token within the request body, if it's valid and didn't expire,
  * sets the user as 'verified' and returns a valid access token.
  */
-export const confirmEmail = async (
-  req: ConfirmEmailRequest,
-  res: Response
-): Promise<void> => {
+export const confirmEmail: RequestHandler<
+  null,
+  any,
+  { token: string }
+> = async (req, res, next) => {
   const emailToken = req.body.token;
   /* 
   1. receive the email confirmation request with the token
@@ -124,7 +110,7 @@ export const confirmEmail = async (
       token: emailToken,
     });
 
-    if (!emailTokenRecord) throw new Error("Expired token"); //if the token is valid, but we couldn't find it in db - it expired
+    if (!emailTokenRecord) throw new Error("Expired token"); //if the token is valid, but we couldn't find it in db - it expired or has been used
 
     const user = await User.findOneAndUpdate(
       { _id: sub },
@@ -140,18 +126,19 @@ export const confirmEmail = async (
     const token = generateToken(user);
     await user.populate("workspaces", "name").execPopulate();
     res.status(200).json({ token, user });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (error: unknown) {
+    next(error);
   }
 };
 
 /**
  * Creates a new password reset token in the db and sends a mail message to the user
  */
-export const forgotPassword = async (
-  req: Request,
-  res: Response<{ message: string }>
-): Promise<void> => {
+export const forgotPassword: RequestHandler<
+  null,
+  any,
+  { email: string }
+> = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).exec();
     if (!user) {
@@ -166,16 +153,17 @@ export const forgotPassword = async (
       to: user.email,
       html: resetPasswordTemplate(user.email, resetToken.token),
     });
-    res.status(200).json({ message: "Password reset mail sent to user email" });
-  } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(200).json({ message: "Password reset link sent to user email" });
+  } catch (error: unknown) {
+    next(error);
   }
 };
 
-export const resetPassword = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const resetPassword: RequestHandler<
+  null,
+  any,
+  { token: string; password: string }
+> = async (req, res, next) => {
   try {
     const { token, password } = req.body;
     const existingToken = await PasswordResetToken.findOne({ token });
@@ -189,7 +177,7 @@ export const resetPassword = async (
       password: hashedPassword,
     }).exec();
     res.status(200).json({ message: "Password updated" });
-  } catch (error) {
-    res.status(500).json({ message: error });
+  } catch (error: unknown) {
+    next(error);
   }
 };

@@ -1,14 +1,14 @@
 //dependencies
 import Joi = require("joi");
-// types
 import { createValidationMiddleware } from "../../utils/createValidationMiddleware";
+// types
 
 const passwordSchema = Joi.string().min(8).max(64).required();
 const emailSchema = (): Joi.StringSchema =>
   Joi.string().lowercase().label("email").email({ minDomainSegments: 2 });
 
 const loginSchema = Joi.object().keys({
-  credential: emailSchema().required(),
+  email: emailSchema().required(),
   password: passwordSchema,
 });
 
