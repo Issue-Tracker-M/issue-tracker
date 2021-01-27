@@ -20,7 +20,7 @@ require("../models");
 import bodyParser = require("body-parser");
 import cors = require("cors");
 import helmet = require("helmet");
-import authRouter from "../routes/authRouter";
+import authRouter from "./auth/routes";
 import { workspaceRouter } from "../components/workspaces/routes";
 // import taskRouter from "../routes/taskRouter";
 
