@@ -1,4 +1,4 @@
-import app from "../api/app";
+import app from "../src/components/app";
 import * as supertest from "supertest";
 import { clearDB, createUser, newUser } from "./test_utils";
 /* 

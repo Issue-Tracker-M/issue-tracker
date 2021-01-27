@@ -1,5 +1,5 @@
 //dependencies
-import Joi = require("joi");
+import Joi from "joi";
 import { createValidationMiddleware } from "../../utils/createValidationMiddleware";
 // types
 

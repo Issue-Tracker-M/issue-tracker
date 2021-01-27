@@ -1,33 +1,36 @@
-import { registerInput } from "../../controllers/auth";
-import { workspaceInput } from "../../controllers/workspace/createWorkspace";
-import ConfirmationToken from "../../models/ConfirmationToken";
-import PasswordResetToken from "../../models/PasswordResetToken";
-import Tasks, { ITask, Priority, TaskDocument } from "../../models/Task";
-import User, { UserDocument } from "../../models/User";
-import Workspace, { WorkspaceDocument } from "../../models/Workspace";
-import generateToken from "../../utils/generateToken";
+import { Types } from "mongoose";
+import { registerInput } from "../../src/components/auth/controller";
+import ConfirmationToken from "../../src/components/auth/models/ConfirmationToken";
+import PasswordResetToken from "../../src/components/auth/models/PasswordResetToken";
+import Tasks, { TaskDocument } from "../../src/components/tasks/model";
+import Users, { UserDocument } from "../../src/components/users/model";
+import Workspaces, {
+  WorkspaceDocument,
+} from "../../src/components/workspaces/model";
+import { WorkspaceInput } from "../../src/components/workspaces/validation";
+import generateToken from "../../src/utils/generateToken";
+import { JSONify } from "../../src/utils/typeUtils";
 
 export const newUser: registerInput = {
   first_name: "Max",
   last_name: "Plank",
-  username: "mplank",
   email: "mplank@gmail.com",
   password: "6.626073",
   is_verified: false,
 };
 
 interface CreateUser {
-  (userData: registerInput, verified: boolean): Promise<{
+  (userData?: registerInput, verified?: boolean): Promise<{
     user: UserDocument;
     token: string;
   }>;
-  (userData: registerInput): Promise<{ user: UserDocument; token: string }>;
-  (): Promise<{ user: UserDocument; token: string }>;
 }
+
 /**
+ * @private
  * Takes 2 optional params
- * @param {registerInput} [userData=] A minimum required data to create a User in the db
- * @param {boolean} [verified=] Whether the created user should have a verified email. True by default.
+ * @param userData - A minimum required data to create a User in the db
+ * @param verified - Whether the created user should have a verified email. True by default.
  * @returns a UserDocument and an access token.
  */
 export const createUser: CreateUser = async (
@@ -35,27 +38,27 @@ export const createUser: CreateUser = async (
   verified = true
 ) => {
   userData.is_verified = verified;
-  const user = await new User(userData).save();
+  const user = await new Users(userData).save();
   const token = generateToken(user);
   return { user, token };
 };
 export const clearUsers = async (): Promise<void> => {
-  await User.deleteMany({});
+  await Users.deleteMany({});
 };
 
-export const newWorkspace: workspaceInput = {
+export const newWorkspace: WorkspaceInput = {
   name: "testworkspace7",
-  labels: [],
 };
 
 /**
+ * @private
  * Creates a new workspace for the given user.
  * @param user_id admin id for the new workspace
  */
 export const createWorkspace = async (
-  user_id: string
+  user_id: string | Types.ObjectId
 ): Promise<WorkspaceDocument> => {
-  const workspace = await new Workspace({
+  const workspace = await new Workspaces({
     name: "testworkspace7",
     labels: [],
     users: [user_id],
@@ -64,7 +67,7 @@ export const createWorkspace = async (
     history: [],
   }).save();
 
-  await User.findByIdAndUpdate(
+  await Users.findByIdAndUpdate(
     user_id,
     { $push: { workspaces: workspace.id } },
     { new: true, runValidators: true }
@@ -74,23 +77,25 @@ export const createWorkspace = async (
 };
 
 interface CreateTask {
-  (workspace_id: string, task: ITask): Promise<TaskDocument>;
-  (workspace_id: string): Promise<TaskDocument>;
+  (
+    workspace_id: string | Types.ObjectId,
+    list: string | Types.ObjectId,
+    task?: Partial<JSONify<TaskDocument>>
+  ): Promise<TaskDocument>;
 }
 
 /**
  * Creates a new task within the given workspace
  * @param workspace_id
+ * @param task
  */
 export const createTask: CreateTask = async (
   workspace_id: string,
-  task: ITask = {
+  list: string,
+  task: Partial<JSONify<TaskDocument>> = {
     title: "Test Task",
-    description: "Test description",
     workspace: workspace_id,
-    comments: [],
-    users: [],
-    labels: [],
+    list,
   }
 ): Promise<TaskDocument> => {
   const new_task = await new Tasks(task).save();
@@ -99,7 +104,7 @@ export const createTask: CreateTask = async (
 };
 
 export const clearWorkspaces = async (): Promise<void> => {
-  await Workspace.deleteMany({});
+  await Workspaces.deleteMany({});
 };
 
 export const clearTokens = async (): Promise<void> => {

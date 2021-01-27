@@ -1,8 +1,10 @@
-import { Schema } from "joi";
+import { ObjectSchema } from "joi";
 import { Request, Response, NextFunction } from "express";
 
-export const createValidationMiddleware = <T>(schema: Schema) => async (
-  req: Request & T,
+export const createValidationMiddleware = <T>(
+  schema: ObjectSchema<T>
+) => async (
+  req: Request<any, any, T>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {

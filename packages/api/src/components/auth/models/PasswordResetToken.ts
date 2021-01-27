@@ -1,5 +1,5 @@
 import { Document, Model, Schema, model } from "mongoose";
-import generatePasswordResetToken from "../utils/generatePasswordResetToken";
+import generatePasswordResetToken from "../../../utils/generatePasswordResetToken";
 
 export interface PasswordResetToken {
   user_id: Schema.Types.ObjectId;

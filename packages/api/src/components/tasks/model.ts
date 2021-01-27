@@ -42,12 +42,12 @@ export interface TaskPopulatedDocument extends TaskBaseDocument {
 
 export type TaskModel = Model<TaskDocument>;
 
-const Task = model(
+const Tasks = model(
   "Tasks",
   new Schema<TaskDocument>(
     {
       title: { type: String, required: true },
-      description: { type: String, required: true, default: null },
+      description: { type: String, required: false, default: null },
       due_date: { type: Date, required: false, default: null },
       complete: { type: Boolean, required: false, default: false },
       workspace: { type: Types.ObjectId, ref: "Workspaces", required: true },
@@ -66,4 +66,4 @@ const Task = model(
   )
 );
 
-export default Task;
+export default Tasks;

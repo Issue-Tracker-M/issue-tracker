@@ -8,7 +8,7 @@ export interface RequestWithCredentials<P = any, B = any>
   headers: Request["headers"] & { authorization: string };
 }
 
-export interface AuthorizedRequest<P, B = any>
+export interface AuthorizedRequest<P = any, B = any>
   extends RequestWithCredentials<P, B> {
   user: UserDocument;
 }

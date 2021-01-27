@@ -15,13 +15,13 @@ import User, { UserDocument } from "../users/model";
  */
 export type registerInput = Pick<
   UserDocument,
-  "first_name" | "last_name" | "password" | "email"
+  "first_name" | "last_name" | "password" | "email" | "is_verified"
 >;
 
 /**
  * Creates a new user and sends an email confirmation letter.
  */
-export const register: RequestHandler<null, any, registerInput> = async (
+export const register: RequestHandler<any, any, registerInput> = async (
   req,
   res,
   next
@@ -62,7 +62,7 @@ export type loginInput = Pick<UserDocument, "email" | "password">;
 /**
  * Checks the validity of given credentials and issues a JWT.
  */
-export const login: RequestHandler<null, any, loginInput> = async (
+export const login: RequestHandler<any, any, loginInput> = async (
   req,
   res,
   next
@@ -91,11 +91,11 @@ export const login: RequestHandler<null, any, loginInput> = async (
  * Accepts an email confirmation token within the request body, if it's valid and didn't expire,
  * sets the user as 'verified' and returns a valid access token.
  */
-export const confirmEmail: RequestHandler<
-  null,
-  any,
-  { token: string }
-> = async (req, res, next) => {
+export const confirmEmail: RequestHandler<any, any, { token: string }> = async (
+  req,
+  res,
+  next
+) => {
   const emailToken = req.body.token;
   /* 
   1. receive the email confirmation request with the token
@@ -135,7 +135,7 @@ export const confirmEmail: RequestHandler<
  * Creates a new password reset token in the db and sends a mail message to the user
  */
 export const forgotPassword: RequestHandler<
-  null,
+  any,
   any,
   { email: string }
 > = async (req, res, next) => {
@@ -160,7 +160,7 @@ export const forgotPassword: RequestHandler<
 };
 
 export const resetPassword: RequestHandler<
-  null,
+  any,
   any,
   { token: string; password: string }
 > = async (req, res, next) => {

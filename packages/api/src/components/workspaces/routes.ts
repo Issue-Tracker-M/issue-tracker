@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { checkForCredentials, checkToken } from "../auth/middleware";
+import taskRouter from "../tasks/routes";
 import {
   getWorkspaces,
   createWorkspace,
@@ -13,8 +14,8 @@ import {
   checkWorkspaceExists,
 } from "./middleware";
 import { validateWorkspaceEdit, validateWorkspaceInput } from "./validation";
+const workspaceRouter = Router();
 
-export const workspaceRouter = Router();
 workspaceRouter.use("/", checkForCredentials, checkToken);
 
 // @route POST /api/workspace/
@@ -37,15 +38,16 @@ workspaceRouter.patch(
   editWorkspace
 );
 
+workspaceRouter.use(
+  "/:workspace_id",
+  checkWorkspaceExists,
+  checkUserIsWorkspaceMember
+);
+
 // @route GET /api/workspace/:workspace_id
 // @desc Get a workspaces
 // @access Private
-workspaceRouter.get(
-  "/:workspace_id",
-  checkWorkspaceExists,
-  checkUserIsWorkspaceMember,
-  getWorkspaceById
-);
+workspaceRouter.get("/:workspace_id", getWorkspaceById);
 
 // @route DELETE /api/workspace/:workspace_id
 // @desc Delete a single workspace
@@ -55,3 +57,7 @@ workspaceRouter.delete(
   checkUserIsWorkspaceAdmin,
   deleteWorkspace
 );
+
+workspaceRouter.use("/:workspace_id/tasks", taskRouter);
+
+export default workspaceRouter;

@@ -1,7 +1,7 @@
 import { IBaseList, IBaseWorkspace } from "@issue-tracker/types";
 import { Document, Model, Types, Schema, model } from "mongoose";
-import { TaskDocument } from "../../models/Task";
-import { UserDocument } from "../../models/User";
+import { TaskDocument } from "../tasks/model";
+import { UserDocument } from "../users/model";
 
 export interface Label {
   name: string;

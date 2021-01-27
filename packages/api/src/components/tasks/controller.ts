@@ -1,110 +1,104 @@
-import { AuthorizedRequest } from "../auth/middleware";
-import { TaskDocument } from "./model";
+import { RequestHandler } from "express";
+import { JSONed } from "../../utils/typeUtils";
+import Tasks, { TaskDocument } from "./model";
 
 type TaskInput = Pick<TaskDocument, "title" | "list">;
 
-export const createTask = (
-  req: AuthorizedRequest<unknown, TaskInput>,
-  res: Response
-): void => {
-  const { workspace, stage } = req.body;
+/**
+ * Creates a new task given data about it's title, workspace id & list id.
+ * @param req
+ * @param res
+ * @param next
+ */
+export const createTask: RequestHandler<
+  { workspace_id: string },
+  any,
+  TaskInput
+> = async (req, res, next) => {
+  try {
+    const workspace = req.workspace;
+    if (!workspace) throw new Error("Expected workspace document in request");
+    const { list } = req.body;
+    const newTask = await new Tasks(req.body).save();
 
-  const newTask = new Task(req.body);
+    const l = workspace.lists.id(list);
+    if (!l) throw new Error("List not found");
 
-  newTask
-    .save()
-    .then(async (task) => {
-      await Workspaces.findByIdAndUpdate(workspace, {
-        $push: { [stage]: task.id },
-      });
-      res.status(201).json(task);
-    })
-    .catch((err) => {
-      return res.status(500).json({ message: err.message });
-    });
+    l.tasks.push(newTask._id);
+    await workspace.save();
+    return res.status(201).json(newTask);
+  } catch (error: unknown) {
+    next(error);
+  }
 };
 
-export async function deleteTask(
-  req: AuthorizedRequest<{ task_id: string }, undefined>,
-  res: Response
-): Promise<void> {
-  const taskId = req.params.task_id;
+/**
+ * Deletes a task given it's id & workspace id.
+ * @param req
+ * @param res
+ * @param next
+ */
+export const deleteTask: RequestHandler = async (req, res, next) => {
+  const workspace = req.workspace;
+  if (!workspace) throw new Error("Expected workspace document in request");
+  const task = req.task;
+  if (!task) throw new Error("Expected task document in request");
 
   try {
-    const task = await Tasks.findOne({ _id: taskId });
-    if (!task) {
-      res.status(404).json({ message: "Task does not exist" });
-      return;
-    }
-    await Tasks.deleteOne({ _id: taskId });
-    const w = await Workspaces.findById(task.workspace).exec();
-    if (!w) throw new Error("Workspace not found");
-    // w.todo.pull(task.id);
-    // w.in_progress.pull(task.id);
-    // w.completed.pull(task.id);
-    await w.save();
-    res.status(204).json({ message: "Task has been deleted" });
-    return;
+    await task.remove();
+    workspace.lists.id(task.list)?.tasks.pull(task._id);
+    await workspace.save();
+
+    res.status(200).send({ message: "Task has been deleted" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
-    return;
+    next(error);
   }
-}
+};
 
-export async function editTask(
-  req: AuthorizedRequest<{ task_id: string }, Partial<TaskInput>>,
-  res: Response
-): Promise<void> {
-  const { task_id } = req.params;
-  const { stage, ...update } = req.body;
+/**
+ * Merges the request body into task document with given id.
+ * If request body contains 'list' param, also updates the workspace document containing the list.
+ * @param req
+ * @param res
+ * @param next
+ */
+export const patchTask: RequestHandler<
+  any,
+  any,
+  Partial<JSONed<TaskDocument>>
+> = async (req, res, next) => {
+  const workspace = req.workspace;
+  if (!workspace) throw new Error("Expected workspace document in request");
+  const task = req.task;
+  if (!task) throw new Error("Expected task document in request");
 
   try {
-    const task = await Tasks.findById({ _id: task_id });
-    if (!task) {
-      res.status(404).json({ message: "Task not found " });
-      return;
+    if (req.body.list) {
+      workspace.lists.id(task.list)?.tasks.pull(task._id);
+      workspace.lists.id(req.body.list)?.tasks.push(task._id);
+      await workspace.save();
     }
-    const updatedTask = await Tasks.findOneAndUpdate(
-      { _id: task_id },
-      { $set: update },
-      { new: true }
-    );
-    /* 
-    TODO: redo the Workspace model to have customizable columns and figure out how to best represent the tasks current position
-    Also make queries/edits more palatable.
-    */
-    if (stage) {
-      const w = await Workspaces.findById(task.workspace).exec();
-      if (!w) throw new Error("Workspace not found");
-      // w.todo.pull(task.id);
-      // w.in_progress.pull(task.id);
-      // w.completed.pull(task.id);
-      // w[stage].push(task.id);
-      await w.save();
-    }
-    res
-      .status(200)
-      .json({ message: "Task has been updated", data: updatedTask });
-    return;
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
+    const updatedTask = await task
+      .update({ $set: req.body }, { new: true })
+      .exec();
+    res.status(200).json(updatedTask);
+  } catch (error: unknown) {
+    next(error);
   }
-}
+};
 
-export async function getTask(
-  req: AuthorizedRequest<{ task_id: string }>,
-  res: Response
-): Promise<void> {
-  const { task_id } = req.params;
+/**
+ * Returns a task document with given id
+ * @param req
+ * @param res
+ * @param next
+ */
+export const getTask: RequestHandler<any, any, null> = (req, res, next) => {
   try {
-    const task = await Task.findById(task_id).exec();
-    if (!task) {
-      res.status(404).json({ message: "Not found" });
-      return;
-    }
+    const task = req.task;
+    if (!task) throw new Error("Expected task document in request");
     res.status(200).json(task);
-  } catch (error) {
-    res.status(500).json({ message: "Couldn't get the task" });
+  } catch (error: unknown) {
+    next(error);
   }
-}
+};

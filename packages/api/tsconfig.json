@@ -7,7 +7,8 @@
     "outDir": "dist",
     "rootDir": ".",
     "noImplicitReturns": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"]
 }

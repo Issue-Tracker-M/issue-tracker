@@ -1,6 +1,11 @@
 import { port, mongoURI } from "./../config/index";
-import express = require("express");
-import mongoose = require("mongoose");
+import express, { RequestHandler } from "express";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import cors from "cors";
+import helmet from "helmet";
+import authRouter from "./auth/routes";
+import workspaceRouter from "../components/workspaces/routes";
 mongoose
   .connect(mongoURI, {
     useNewUrlParser: true,
@@ -10,23 +15,15 @@ mongoose
   })
   .then((conn) =>
     console.log(
-      `MongoDB connection with url successful @: ${conn.connection.host}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `MongoDB connection with url successful @: ${conn.connection.host}:${conn.connection.port}`
     )
   )
   .catch((err) => {
-    console.log(err);
+    console.log(err, "THIS IS HAPPENING TOO EARLY");
   });
-require("../models");
-import bodyParser = require("body-parser");
-import cors = require("cors");
-import helmet = require("helmet");
-import authRouter from "./auth/routes";
-import { workspaceRouter } from "../components/workspaces/routes";
-// import taskRouter from "../routes/taskRouter";
-
 const apiRouter = express.Router();
 apiRouter.use("/auth", authRouter);
-// apiRouter.use("/tasks", taskRouter);
 apiRouter.use("/workspaces", workspaceRouter);
 
 const app = express();
@@ -43,7 +40,7 @@ app.get("/", (_, res: express.Response) => {
 });
 
 app.all("*", (_, res: express.Response) => {
-  res.status(404).json({ message: "This URL can not be found" });
+  res.status(404).json({ message: "This URL can not be found!" });
 });
 
 export default app;

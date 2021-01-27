@@ -47,8 +47,7 @@ export const deleteComment = async (
     const comment = task.comments.id(comment_id);
     if (!comment) return res.status(404).end();
     // User is not the author of the comment
-    if (comment.author.toString() !== author_id.toString())
-      return res.status(401).end();
+    if (!comment.author.equals(author_id)) return res.status(401).end();
 
     task.comments.pull(comment_id);
     await task.save();

@@ -1,6 +1,6 @@
 import { Document, Model, Types, Schema, model } from "mongoose";
 import { IBaseUser } from "@issue-tracker/types";
-import { WorkspaceDocument } from "../components/workspaces/model";
+import { WorkspaceDocument } from "../workspaces/model";
 
 const UserSchema = new Schema<UserDocument>(
   {
@@ -40,4 +40,6 @@ export interface UserPopulatedDocument extends UserBaseDocument {
 
 export type UserModel = Model<UserDocument>;
 
-export default model<UserDocument, UserModel>("Users", UserSchema);
+const Users = model<UserDocument, UserModel>("Users", UserSchema);
+
+export default Users;

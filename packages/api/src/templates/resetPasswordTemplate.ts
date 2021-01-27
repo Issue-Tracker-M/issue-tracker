@@ -1,4 +1,4 @@
-import Mailgen = require("mailgen");
+import Mailgen from "mailgen";
 import { CLIENT_URL } from "../config";
 
 export default function (userEmail: string, token: string): string {

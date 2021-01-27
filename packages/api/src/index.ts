@@ -1,5 +1,5 @@
-import dotenv = require("dotenv");
-import errorHandler = require("errorhandler");
+import dotenv from "dotenv";
+import errorHandler from "errorhandler";
 import app from "./components/app";
 import { isBaseTask, isTypedArray } from "@issue-tracker/types";
 isTypedArray([], isBaseTask);

@@ -1,7 +1,8 @@
 import { NextFunction, Response } from "express-serve-static-core";
+import { AuthorizedRequest } from "../../src/components/auth/middleware";
+import { TaskDocument } from "../../src/components/tasks/model";
+import { UserDocument } from "../../src/components/users/model";
 import { WorkspaceDocument } from "../../src/components/workspaces/model";
-import { AuthorizedRequest } from "../../src/controllers/auth/middleware";
-import { UserDocument } from "../../src/models/User";
 
 interface AuthorizedRouteHandler<P, B> {
   (req: AuthorizedRequest<P, B>, res: Response, next: NextFunction): any;
@@ -13,6 +14,7 @@ declare global {
     interface Request {
       user?: UserDocument;
       workspace?: WorkspaceDocument;
+      task?: TaskDocument;
     }
   }
 }

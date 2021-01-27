@@ -4,7 +4,9 @@
     "lib": ["DOM", "ES2018"],
     "types": ["jest"],
     "baseUrl": "../../",
-    "noEmit": true
+    "esModuleInterop": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["./**/*"]
 }
