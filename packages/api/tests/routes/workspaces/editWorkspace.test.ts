@@ -1,8 +1,13 @@
 import supertest from "supertest";
-import app from "../../../api/app";
-import { UserDocument } from "../../../models/User";
-import { WorkspaceDocument } from "../../../models/Workspace";
-import { clearDB, createUser, createWorkspace } from "../../test_utils";
+import app from "../../../src/components/app";
+import { UserDocument } from "../../../src/components/users/model";
+import { WorkspaceDocument } from "../../../src/components/workspaces/model";
+import {
+  clearDB,
+  createUser,
+  createWorkspace,
+  teardown,
+} from "../../test_utils";
 
 let token: string;
 let workspace: WorkspaceDocument;
@@ -22,38 +27,27 @@ beforeAll(async (done) => {
   }
 });
 
-afterAll(async (done) => {
-  await clearDB();
-  done();
-});
+afterAll(teardown);
 
-describe("PUT: /api/workspaces/:id", () => {
+describe("PATCH: /api/workspaces/:id", () => {
   it("Sends 404 on non existent id", async () => {
     const fake_workspace_id = "5f7f4800a552e6ec677a2766";
     const res = await supertest(app)
-      .put("/api/workspaces/" + fake_workspace_id)
+      .patch("/api/workspaces/" + fake_workspace_id)
       .send({
         name: "testworkspace8",
-        labels: [],
         admin: "5f7f4800a552e6ec677a2766",
         users: ["5f7f4800a552e6ec677a2766"],
-        history: [],
-        tasks: [],
       })
       .set("Authorization", token);
-    expect(res.body).toEqual({ message: "Workspace with id doesn't exist" });
     expect(res.status).toBe(404);
+    expect(res.body).toEqual({ message: "Not found" });
   });
   it("returns workspace has been updated", async () => {
     const res = await supertest(app)
-      .put(`/api/workspaces/${workspace.id}`)
+      .patch(`/api/workspaces/${workspace._id.toHexString()}`)
       .send({
-        name: "testworkspace8",
-        labels: [],
-        admin: user.id,
-        users: [user.id],
-        history: [],
-        tasks: [],
+        name: "testworkspace9",
       })
       .set("Authorization", token);
 

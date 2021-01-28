@@ -1,8 +1,13 @@
 import supertest from "supertest";
-import app from "../../../api/app";
-import { UserDocument } from "../../../models/User";
-import { WorkspaceDocument } from "../../../models/Workspace";
-import { clearDB, createWorkspace, createUser } from "../../test_utils";
+import app from "../../../src/components/app";
+import { UserDocument } from "../../../src/components/users/model";
+import { WorkspaceDocument } from "../../../src/components/workspaces/model";
+import {
+  clearDB,
+  createWorkspace,
+  createUser,
+  teardown,
+} from "../../test_utils";
 
 let token: string;
 let workspace: WorkspaceDocument;
@@ -15,24 +20,24 @@ beforeAll(async (done) => {
     const test_data = await createUser();
     user = test_data.user;
     token = test_data.token;
+    workspace = await createWorkspace(user.id);
     done();
   } catch (error) {
     console.error(error.name, error.message);
   }
 });
 
-afterAll(async (done) => {
-  await clearDB();
-  done();
-});
+afterAll(teardown);
 
 describe("GET: /api/workspaces", () => {
-  test("Returns 404 if user has no workspaces", async (done) => {
+  test("Returns 200 and an array of workspaces user is part of", async (done) => {
     const response = await supertest(app)
       .get("/api/workspaces/")
       .set("Authorization", token);
-    console.log(response.body);
-    expect(response.status).toBe(404);
+    expect(response.body).toEqual([
+      { _id: workspace._id.toHexString(), name: workspace.name },
+    ]);
+    expect(response.status).toBe(200);
     done();
   });
 });
@@ -41,7 +46,7 @@ describe("GET: /api/workspaces/:id", () => {
   test("Returns a single workspace with corresponding id", async () => {
     workspace = await createWorkspace(user.id);
     const response = await supertest(app)
-      .get(`/api/workspaces/${workspace.id}`)
+      .get(`/api/workspaces/${workspace._id.toHexString()}`)
       .set("Authorization", token);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("name", "testworkspace7");
