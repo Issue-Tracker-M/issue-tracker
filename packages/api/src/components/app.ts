@@ -1,5 +1,5 @@
 import { port, mongoURI } from "./../config/index";
-import express, { RequestHandler } from "express";
+import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -13,12 +13,13 @@ mongoose
     useFindAndModify: false,
     useCreateIndex: true,
   })
-  .then((conn) =>
+  .then((conn) => {
+    app.set("db_connection", conn);
     console.log(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `MongoDB connection with url successful @: ${conn.connection.host}:${conn.connection.port}`
-    )
-  )
+    );
+  })
   .catch((err) => {
     console.log(err, "THIS IS HAPPENING TOO EARLY");
   });

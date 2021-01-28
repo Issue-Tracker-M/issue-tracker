@@ -10,16 +10,12 @@ import Task, { CommentDocument } from "../model";
 export const createComment = async (
   req: AuthorizedRequest<{ task_id: string }, Pick<CommentDocument, "content">>,
   res: Response
-): Promise<void> => {
-  const { task_id } = req.params;
+): Promise<any> => {
+  const task = req.task;
   const author = req.user._id;
   const { content } = req.body;
+  if (!task) return res.sendStatus(404);
   try {
-    const task = await Task.findById(task_id).exec();
-    if (!task) {
-      res.status(404).end();
-      return;
-    }
     const commentIndex = task.comments.push({ author, content }) - 1;
     await task.save();
     res.status(201).json(task.comments[commentIndex]);
@@ -37,12 +33,12 @@ export const deleteComment = async (
   req: AuthorizedRequest<{ task_id: string; comment_id: string }, void>,
   res: Response
 ): Promise<any> => {
-  const { task_id, comment_id } = req.params;
+  const { comment_id } = req.params;
   const author_id = req.user._id;
-  try {
-    const task = await Task.findById(task_id).exec();
-    if (!task) return res.status(404).end();
+  const task = req.task;
+  if (!task) return res.sendStatus(404);
 
+  try {
     // No comment with such id
     const comment = task.comments.id(comment_id);
     if (!comment) return res.status(404).end();
@@ -63,13 +59,13 @@ export const editComment = async (
     { content: string }
   >,
   res: Response
-): Promise<void> => {
-  const { task_id, comment_id } = req.params;
+): Promise<any> => {
+  const { comment_id } = req.params;
   const authorId = req.user._id;
-  try {
-    const task = await Task.findById(task_id).exec();
-    if (!task) return res.status(404).end();
+  const task = req.task;
+  if (!task) return res.sendStatus(404);
 
+  try {
     const comment = task.comments.id(comment_id);
     if (!comment) return res.status(404).end();
     if (comment.author.toString() !== authorId.toString())
@@ -82,17 +78,15 @@ export const editComment = async (
   }
 };
 
-export const getComment = async (
-  req: AuthorizedRequest<{ task_id: string; comment_id: string }>,
+export const getComment = (
+  req: AuthorizedRequest<{ comment_id: string }>,
   res: Response
-): Promise<void> => {
-  const { task_id, comment_id } = req.params;
+): any => {
+  const { comment_id } = req.params;
+  const task = req.task;
+  if (!task) return res.sendStatus(404);
+
   try {
-    const task = await Task.findById(task_id).exec();
-    if (!task) {
-      res.status(404).end();
-      return;
-    }
     const c = task.comments.id(comment_id);
     if (c) {
       res.status(200).json(c);

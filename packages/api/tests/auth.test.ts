@@ -1,5 +1,5 @@
 import app from "../src/components/app";
-import * as supertest from "supertest";
+import supertest from "supertest";
 import { clearDB, createUser, newUser } from "./test_utils";
 /* 
 iwm is a singleton used by nodemailer-stub to store all of the newly created emails in memory
@@ -14,6 +14,12 @@ beforeAll(async (done) => {
   } catch (error) {
     console.log(error);
   }
+  done();
+});
+
+afterAll(async (done) => {
+  await clearDB();
+  await app.get("db_connection").disconnect();
   done();
 });
 
@@ -49,18 +55,7 @@ describe("Auth", () => {
   it("User can login with email & password", async (done) => {
     const res = await supertest(app)
       .post("/api/auth/login")
-      .send({ credential: newUser.email, password: newUser.password });
-    expect(res.body).toEqual(
-      expect.objectContaining({ token: expect.any(String) })
-    );
-    expect(res.status).toBe(200);
-    done();
-  });
-
-  it("User can login with username & password", async (done) => {
-    const res = await supertest(app)
-      .post("/api/auth/login")
-      .send({ credential: newUser.username, password: newUser.password });
+      .send({ email: newUser.email, password: newUser.password });
     expect(res.body).toEqual(
       expect.objectContaining({ token: expect.any(String) })
     );
@@ -82,7 +77,7 @@ describe("Auth", () => {
       .send({ email: user.email });
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
-      message: "Password reset mail sent to user email",
+      message: "Password reset link sent to user email",
     });
     // get token from the email
     const reset_token = iwm
@@ -101,7 +96,7 @@ describe("Auth", () => {
     // try to login using updated password
     const res3 = await supertest(app)
       .post("/api/auth/login")
-      .send({ credential: user.email, password: newPassword });
+      .send({ email: user.email, password: newPassword });
 
     expect(res3.body).toEqual(
       expect.objectContaining({ token: expect.any(String) })
@@ -114,6 +109,7 @@ describe("Auth", () => {
 afterAll(async (done) => {
   try {
     await clearDB();
+    await new Promise((resolve) => setTimeout(() => resolve(undefined), 500));
   } catch (error) {
     console.log(error);
   }
