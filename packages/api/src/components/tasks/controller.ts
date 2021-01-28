@@ -79,7 +79,7 @@ export const patchTask: RequestHandler<
       await workspace.save();
     }
     const updatedTask = await task
-      .update({ $set: req.body }, { new: true })
+      .updateOne({ $set: req.body }, { new: true })
       .exec();
     res.status(200).json(updatedTask);
   } catch (error: unknown) {

@@ -79,7 +79,7 @@ export const editWorkspace = async (
   try {
     if (!workspace) throw "Expected a workspace document";
     if (!user) throw "Expected a user document";
-    await workspace.update(req.body).exec();
+    await workspace.updateOne(req.body).exec();
 
     res.status(200).json({ message: "Workspace updated" });
   } catch (err) {

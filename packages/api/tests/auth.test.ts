@@ -1,6 +1,6 @@
 import app from "../src/components/app";
 import supertest from "supertest";
-import { clearDB, createUser, newUser } from "./test_utils";
+import { clearDB, createUser, newUser, teardown } from "./test_utils";
 /* 
 iwm is a singleton used by nodemailer-stub to store all of the newly created emails in memory
 and give you easy access to them for testing  purposes
@@ -17,11 +17,7 @@ beforeAll(async (done) => {
   done();
 });
 
-afterAll(async (done) => {
-  await clearDB();
-  await app.get("db_connection").disconnect();
-  done();
-});
+afterAll(teardown);
 
 describe("Auth", () => {
   it("User can register with username, email, and password. And then confirm their email", async (done) => {
