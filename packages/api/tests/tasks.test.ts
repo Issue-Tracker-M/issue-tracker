@@ -2,7 +2,13 @@ import supertest from "supertest";
 import app from "../src/components/app";
 import { UserDocument } from "../src/components/users/model";
 import { WorkspaceDocument } from "../src/components/workspaces/model";
-import { clearDB, createWorkspace, createUser, createTask } from "./test_utils";
+import {
+  clearDB,
+  createWorkspace,
+  createUser,
+  createTask,
+  teardown,
+} from "./test_utils";
 
 let token: string;
 let workspace: WorkspaceDocument;
@@ -21,11 +27,7 @@ beforeAll(async (done) => {
   done();
 });
 
-afterAll(async (done) => {
-  await clearDB();
-  await app.get("db_connection").disconnect();
-  done();
-});
+afterAll(teardown);
 
 describe("Tasks", () => {
   test("User can create a new task", async (done) => {

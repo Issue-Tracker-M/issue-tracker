@@ -12,7 +12,11 @@ export const EMAIL_SECRET = process.env.EMAIL_SECRET || "bleep";
 export const CLIENT_URL = process.env.CLIENT_URL || "sergei-dev.me";
 
 if (NODE_ENV === "test" && DB_CONNECTION_TEST) {
-  mongoURI = DB_CONNECTION_TEST;
+  mongoURI = DB_CONNECTION_TEST.split("issue_tracker_testing").join(
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    "testing_db_" + process.env.JEST_WORKER_ID
+  );
+  // console.log(mongoURI);
 } else if (DB_CONNECTION) {
   mongoURI = DB_CONNECTION;
 }

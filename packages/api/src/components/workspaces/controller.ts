@@ -1,5 +1,8 @@
-import Workspace, { WorkspaceDocument } from "./model";
-import { NextFunction, Response } from "express";
+import Workspace, {
+  WorkspaceDocument,
+  WorkspacePopulatedDocument,
+} from "./model";
+import { NextFunction, RequestHandler, Response } from "express";
 import { JSONed } from "../../utils/typeUtils";
 import { WorkspaceInput } from "./validation";
 import { AuthorizedRequest } from "../auth/middleware";
@@ -41,23 +44,23 @@ export const createWorkspace = async (
  * @param req - Needs to have a user document at req.user attached by previous middleware
  * @param res
  */
-export const deleteWorkspace = async (
-  req: AuthorizedRequest<{ workspace_id: string }, void>,
-  res: Response
-): Promise<void> => {
-  const { workspace_id } = req.params;
+export const deleteWorkspace: RequestHandler = async (req, res, next) => {
+  const { workspace, user } = req;
+  if (!workspace) throw new Error("Expected workspace document");
+  if (!user) throw new Error("Expected user document");
   try {
-    const workspace = await Workspace.findById(workspace_id);
-    if (!workspace) {
-      res.status(404).json({ message: "No workspace associated with this id" });
-    } else if (workspace.admin.equals(req.user._id)) {
-      res.status(401).json({ message: "Unauthorized" });
-    } else {
-      await Workspace.deleteOne({ _id: workspace_id });
-      res.status(200).json({ message: "Workspace deleted" });
-    }
+    user.workspaces.pull(workspace._id);
+    const p = await workspace.populate("users").execPopulate();
+    await Promise.all(
+      ((p as unknown) as WorkspacePopulatedDocument).users.map(async (u) => {
+        u.workspaces.pull(workspace._id);
+        await u.save();
+      })
+    );
+    await workspace.remove();
+    return res.sendStatus(200);
   } catch (error: unknown) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
@@ -71,25 +74,14 @@ export const editWorkspace = async (
   req: AuthorizedRequest<{ workspace_id: string }, JSONed<WorkspaceDocument>>,
   res: Response,
   next: NextFunction
-): Promise<void> => {
-  const { workspace_id } = req.params;
+): Promise<any> => {
+  const { workspace, user } = req;
   try {
-    const workspace = await Workspace.findById(workspace_id).exec();
-    if (!workspace) {
-      res.status(404).json({ message: "Workspace not found" });
-    } else if (
-      // check if current user is part of the workspace
-      !(
-        workspace.users.includes(req.user._id) ||
-        workspace.admin.equals(req.user._id)
-      )
-    ) {
-      res.status(401).json({ message: "Unauthorized" });
-    } else {
-      workspace.update(req.body);
+    if (!workspace) throw "Expected a workspace document";
+    if (!user) throw "Expected a user document";
+    await workspace.update(req.body).exec();
 
-      res.status(200).json({ message: "Workspace updated" });
-    }
+    res.status(200).json({ message: "Workspace updated" });
   } catch (err) {
     next(err);
   }
@@ -101,22 +93,14 @@ export const editWorkspace = async (
  * @param res
  * @param next
  */
-export const getWorkspaces = async (
-  req: AuthorizedRequest<void, void>,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const getWorkspaces: RequestHandler = async (req, res, next) => {
+  const { user } = req;
   try {
-    if (!req.user.workspaces.length) {
-      res.status(404).json({ message: "No workspaces found" });
-      return;
-    }
-    const workspacesArr = await Workspace.find(
-      { admin: req.user._id },
-      "_id name"
-    );
-    res.status(200).json(workspacesArr);
-    return;
+    if (!user) throw "Expected a user document";
+    await user
+      .populate({ path: "workspaces", select: ["name"] })
+      .execPopulate();
+    return res.status(200).json(user.workspaces);
   } catch (err) {
     next(err);
   }
@@ -134,7 +118,6 @@ export const getWorkspaceById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log("GOT IT");
     const workspace = await Workspace.findById(req.params.workspace_id)
       .populate({ path: "lists.tasks", select: ["title", "labels"] })
       .populate({

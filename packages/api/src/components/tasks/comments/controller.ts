@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { AuthorizedRequest } from "../../auth/middleware";
-import Task, { CommentDocument } from "../model";
+import { CommentDocument } from "../model";
 
 /**
  * Creates a new comment within a given task

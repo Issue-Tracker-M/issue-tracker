@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import app from "../../src/components/app";
 import { registerInput } from "../../src/components/auth/controller";
 import ConfirmationToken from "../../src/components/auth/models/ConfirmationToken";
 import PasswordResetToken from "../../src/components/auth/models/PasswordResetToken";
@@ -124,4 +125,11 @@ export const clearDB = async (): Promise<void> => {
     clearWorkspaces(),
     clearTasks(),
   ]);
+};
+
+export const teardown = async (done) => {
+  await clearDB();
+  await app.get("db_connection").connection.dropDatabase();
+  await app.get("db_connection").disconnect();
+  done();
 };

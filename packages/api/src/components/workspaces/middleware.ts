@@ -14,6 +14,7 @@ export const checkWorkspaceExists: RequestHandler = async (req, res, next) => {
     req.workspace = workspace;
     next();
   } catch (error: unknown) {
+    console.log(error);
     next(error);
   }
 };
@@ -28,8 +29,7 @@ export const checkUserIsWorkspaceAdmin: RequestHandler = (req, res, next) => {
   if (!user) throw new Error("Expected user document in the request");
   if (!req.workspace)
     throw new Error("Expected workspace document in the request");
-  if (!req.workspace.admin.equals(user._id))
-    return res.status(401).json({ message: "Unauthorized" });
+  if (!req.workspace.admin.equals(user._id)) return res.sendStatus(401);
   return next();
 };
 
@@ -39,16 +39,17 @@ export const checkUserIsWorkspaceAdmin: RequestHandler = (req, res, next) => {
  * @param res
  */
 export const checkUserIsWorkspaceMember: RequestHandler = (req, res, next) => {
-  const { user } = req;
-  if (!user) throw new Error("Expected user document in the request");
-  if (!req.workspace)
-    throw new Error("Expected workspace document in the request");
-  if (
-    !(
-      req.workspace.users.includes(user._id) ||
-      req.workspace.admin.equals(user._id)
+  const { user, workspace } = req;
+  try {
+    if (!user) throw new Error("Expected user document in the request");
+    if (!workspace)
+      throw new Error("Expected workspace document in the request");
+    if (
+      !(workspace.users.includes(user._id) || workspace.admin.equals(user._id))
     )
-  )
-    return res.status(401).json({ message: "Unauthorized" });
-  return next();
+      return res.sendStatus(401);
+    next();
+  } catch (error) {
+    return next(error);
+  }
 };

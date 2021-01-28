@@ -28,21 +28,16 @@ workspaceRouter.post("/", validateWorkspaceInput, createWorkspace);
 // @access Private
 workspaceRouter.get("/", getWorkspaces);
 
-// @route PUT /api/workspace/:workspace_id
-// @desc Edit a workspaces's details
-// @access Private
-workspaceRouter.patch(
-  "/:workspace_id",
-  checkUserIsWorkspaceMember,
-  validateWorkspaceEdit,
-  editWorkspace
-);
-
 workspaceRouter.use(
   "/:workspace_id",
   checkWorkspaceExists,
   checkUserIsWorkspaceMember
 );
+
+// @route PUT /api/workspace/:workspace_id
+// @desc Edit a workspaces's details
+// @access Private
+workspaceRouter.patch("/:workspace_id", validateWorkspaceEdit, editWorkspace);
 
 // @route GET /api/workspace/:workspace_id
 // @desc Get a workspaces

@@ -1,15 +1,7 @@
 import dotenv from "dotenv";
-import errorHandler from "errorhandler";
 import app from "./components/app";
-import { isBaseTask, isTypedArray } from "@issue-tracker/types";
-isTypedArray([], isBaseTask);
 dotenv.config();
-/**
- * Error Handler. Provides full stack - remove for production
- */
-if (process.env.NODE_ENV === "dev") {
-  app.use(errorHandler());
-}
+
 /**
  * Start Express server.
  */
