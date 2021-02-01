@@ -8,6 +8,8 @@ export interface Stub {
 
 export interface FullDocument {
   loaded: true;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export enum EntityNames {
@@ -15,5 +17,6 @@ export enum EntityNames {
   workspaces = "workspaces",
   tasks = "tasks",
   labels = "labels",
+  lists = "lists",
   comments = "comments",
 }

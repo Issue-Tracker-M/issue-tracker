@@ -25,7 +25,7 @@ import {
 import React, { FC, useEffect } from "react";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
 import { fetchTask, patchTask } from "../../store/thunks";
-import { Stage, Task, TaskStub } from "../../store/workspace/types";
+import { Task, TaskStub } from "../../store/workspace/types";
 import MemberSelect from "../MemberSelect";
 import MemberPreview from "./MemberPreview";
 import TaskDatePicker from "./DatePicker";
@@ -40,7 +40,7 @@ import { AiOutlineCreditCard } from "react-icons/ai";
 
 interface IProps {
   task: TaskStub | Task;
-  stage: Stage;
+  stage: string;
   isOpen: boolean;
   onClose: (...args: any) => any;
 }
@@ -52,7 +52,8 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
     let mounted = true;
     // If we are trying to render this and the task is not loaded => load it
 
-    if (!task.loaded) dispatch(fetchTask(task._id));
+    if (!task.loaded)
+      dispatch(fetchTask({ taskId: task._id, workspaceId: task.workspace }));
     return () => {
       mounted = false;
     };
