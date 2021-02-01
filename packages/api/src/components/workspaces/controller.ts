@@ -119,7 +119,10 @@ export const getWorkspaceById = async (
 ): Promise<void> => {
   try {
     const workspace = await Workspace.findById(req.params.workspace_id)
-      .populate({ path: "lists.tasks", select: ["title", "labels"] })
+      .populate({
+        path: "lists.tasks",
+        select: ["title", "labels", "workspace", "list"],
+      })
       .populate({
         path: "users",
         select: ["username", "first_name", "last_name"],
