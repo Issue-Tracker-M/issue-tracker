@@ -25,7 +25,7 @@ const MemberPreview = ({ userId }: { userId: UserStub["_id"] }) => {
   return user ? (
     <Box display="flex" alignContent="center" alignItems="center">
       <Avatar name={user.first_name + " " + user.last_name} size="sm" />
-      <Text pl="1em">{`${user.first_name} ${user.last_name}(${user.username})`}</Text>
+      <Text pl="1em">{`${user.first_name} ${user.last_name}`}</Text>
     </Box>
   ) : null;
 };

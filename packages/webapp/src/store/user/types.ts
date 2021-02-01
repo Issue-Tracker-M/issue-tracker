@@ -3,7 +3,6 @@ import { Workspace } from "../workspace/types";
 
 interface UserBase extends DbDocument {
   readonly email: string;
-  readonly username: string;
   readonly first_name: string;
   readonly last_name: string;
 }
@@ -13,7 +12,7 @@ export interface UserAPIResponse extends UserBase {
 }
 
 export interface UserStub
-  extends Pick<User, "_id" | "username" | "first_name" | "last_name">,
+  extends Pick<User, "_id" | "first_name" | "last_name">,
     Stub {}
 
 export interface User extends UserBase, FullDocument {
