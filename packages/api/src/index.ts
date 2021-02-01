@@ -34,3 +34,8 @@ async function bootstrap() {
 }
 
 bootstrap().catch(console.log);
+
+export * from "./utils/typeUtils";
+export * from "./components/auth/middleware";
+export * from "./components/auth/validation";
+export { registerInput } from "./components/auth/controller";
