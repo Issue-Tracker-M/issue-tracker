@@ -1,19 +1,19 @@
 export interface DbDocument {
-  readonly _id: string
+  readonly _id: string;
 }
 
 export interface Stub {
-  loaded: false
+  loaded: false;
 }
 
 export interface FullDocument {
-  loaded: true
+  loaded: true;
 }
 
 export enum EntityNames {
-  users = 'users',
-  workspaces = 'workspaces',
-  tasks = 'tasks',
-  labels = 'labels',
-  comments = 'comments'
+  users = "users",
+  workspaces = "workspaces",
+  tasks = "tasks",
+  labels = "labels",
+  comments = "comments",
 }
