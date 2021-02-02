@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
   Box,
   Tabs,
@@ -9,33 +9,32 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Skeleton
-} from '@chakra-ui/react'
-import { Search2Icon } from '@chakra-ui/icons'
-import { AiOutlineUsergroupAdd } from 'react-icons/ai'
-import BoardContainer from './boardContainer'
-import ListContainer from '../LIst/listContainer'
-import { useSelector } from 'react-redux'
+  Skeleton,
+} from "@chakra-ui/react";
+import { Search2Icon } from "@chakra-ui/icons";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import BoardContainer from "./boardContainer";
+import ListContainer from "../LIst/listContainer";
+import { useSelector } from "react-redux";
+import VerticalList from "@issue-tracker/components";
 
 const Board = () => {
-  const [text, setText] = useState('')
-  const { currentWorkspaceId } = useSelector((state) => state.workspaceDisplay)
+  const [text, setText] = useState("");
+  const { currentWorkspaceId } = useSelector((state) => state.workspaceDisplay);
   return (
     <Box
       paddingTop={5}
       display="flex"
       flexDirection="column"
-      h={{ md: '100vh' }}
-    >
+      h={{ md: "100vh" }}>
       <Box
         paddingLeft={5}
         display="flex"
         alignItems="center"
-        justifyContent="space-between"
-      >
-        <div style={{ display: 'flex' }}>
+        justifyContent="space-between">
+        <div style={{ display: "flex" }}>
           <AiOutlineUsergroupAdd />
-          <span style={{ paddingLeft: '10px' }}>Issue Tracker</span>
+          <span style={{ paddingLeft: "10px" }}>Issue Tracker</span>
         </div>
         <InputGroup w="20rem" mr={2} size="sm">
           <InputLeftElement children={<Search2Icon />} />
@@ -52,8 +51,7 @@ const Board = () => {
           mr={8}
           border="1px solid #E0E0E2"
           p={1.5}
-          borderRadius="50%"
-        >
+          borderRadius="50%">
           UA
         </Box>
       </Box>
@@ -85,6 +83,7 @@ const Board = () => {
           </TabPanel>
           <TabPanel>
             <p>Activity History...</p>
+            <VerticalList />
           </TabPanel>
           <TabPanel>
             <p>Archived Tasks!</p>
@@ -92,7 +91,7 @@ const Board = () => {
         </TabPanels>
       </Tabs>
     </Box>
-  )
-}
+  );
+};
 
-export default Board
+export default Board;
