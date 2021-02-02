@@ -1,5 +1,6 @@
 const path = require("path");
 const toPath = (_path) => {
+  // throw new Error(process.env.PWD + " " + process.cwd());
   return path.join(process.cwd(), _path);
 };
 const emotionPath = toPath("../../../node_modules/@emotion/react");
@@ -13,10 +14,10 @@ module.exports = {
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          // "@emotion/core": toPath("../../../node_modules/@emotion/react"),
-          // "emotion-theming": toPath("../../../node_modules/@emotion/react"),
-          "@emotion/core": emotionPath,
-          "emotion-theming": emotionPath,
+          "@emotion/core": toPath("../../../node_modules/@emotion/react"),
+          "emotion-theming": toPath("../../../node_modules/@emotion/react"),
+          // "@emotion/core": emotionPath,
+          // "emotion-theming": emotionPath,
         },
       },
     };

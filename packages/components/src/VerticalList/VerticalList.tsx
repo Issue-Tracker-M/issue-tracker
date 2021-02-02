@@ -5,7 +5,7 @@ const VerticalList: FC = ({ children }) => {
   console.log(theme);
   return (
     <Box
-      backgroundColor="gray.200"
+      backgroundColor="gray.100"
       width="17rem"
       margin=".25rem"
       color="red"
