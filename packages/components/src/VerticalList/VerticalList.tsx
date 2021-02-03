@@ -1,19 +1,25 @@
-import { Box, Text, theme } from "@chakra-ui/react";
-import React, { FC } from "react";
+import { Box, theme } from "@chakra-ui/react";
+import React, { FC, PropsWithChildren } from "react";
 
-const VerticalList: FC = ({ children }) => {
+/**
+ * Fixed width container for lists of tasks
+ */
+const VerticalList: FC<PropsWithChildren<any>> = ({ children }) => {
   console.log(theme);
   return (
-    <Box
-      backgroundColor="gray.100"
-      width="17rem"
-      margin=".25rem"
-      color="red"
-      borderRadius={3}>
-      {new Array(10).fill("Boppity bop").map((text, i) => (
-        <Text key={i}>{text}</Text>
-      ))}
-      {children}
+    <Box width="17rem" margin="0 .25rem" h="100%" color="black">
+      <Box backgroundColor="gray.100" rounded="md">
+        <Box
+          display="flex"
+          flexDir="column"
+          maxH="100%"
+          position="relative"
+          as="ul"
+          margin="0 .25rem"
+          padding="0 .25rem">
+          {children}
+        </Box>
+      </Box>
     </Box>
   );
 };
