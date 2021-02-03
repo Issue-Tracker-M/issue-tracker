@@ -55,7 +55,7 @@ const Board = () => {
           UA
         </Box>
       </Box>
-      <Tabs defaultIndex={0}>
+      <Tabs defaultIndex={0} height="100%">
         <TabList borderBottom="1px solid #E0E0E2">
           <Tab ml={8} fontSize={12}>
             Board
@@ -67,8 +67,8 @@ const Board = () => {
           <Tab fontSize={12}>Archived Tasks</Tab>
         </TabList>
 
-        <TabPanels p={5}>
-          <TabPanel>
+        <TabPanels p={5} height="100%">
+          <TabPanel height="100%">
             {currentWorkspaceId ? (
               <BoardContainer
                 text={text}

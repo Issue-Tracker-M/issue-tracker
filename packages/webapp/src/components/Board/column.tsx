@@ -8,6 +8,7 @@ import { List, Task } from "../../store/workspace/types";
 import TaskPreview from "./TaskPreview";
 import { taskSelectors } from "../../store/entities/tasks";
 import { listSelectors } from "../../store/entities/lists";
+import VerticalList from "@issue-tracker/components";
 
 interface ColumnProps {
   listId: List["_id"];
@@ -43,13 +44,7 @@ const Column: FC<ColumnProps> = ({ searchText, listId }) => {
   };
 
   return (
-    <Box
-      padding={3}
-      minWidth="32%"
-      minHeight={4}
-      display={{ md: "flex" }}
-      flexDirection={{ md: "column" }}
-      alignItems={{ md: "center" }}>
+    <VerticalList>
       <Text mb={2} fontWeight="bold" fontSize="sm" textTransform="capitalize">
         {list.name}
       </Text>
@@ -63,7 +58,7 @@ const Column: FC<ColumnProps> = ({ searchText, listId }) => {
           dark
         />
       ) : null}
-    </Box>
+    </VerticalList>
   );
 };
 

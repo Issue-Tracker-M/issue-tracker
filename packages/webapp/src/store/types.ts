@@ -16,7 +16,6 @@ export enum EntityNames {
   users = "users",
   workspaces = "workspaces",
   tasks = "tasks",
-  labels = "labels",
   lists = "lists",
   comments = "comments",
 }

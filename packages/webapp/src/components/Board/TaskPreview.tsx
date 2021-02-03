@@ -16,13 +16,13 @@ const TaskPreview: FC<TaskPreviewProps> = ({ taskId, stage }) => {
   if (!task) throw new Error("Task not found in the entities");
   return (
     <Box
-      padding={2}
       cursor="pointer"
-      mb={5}
-      borderRadius={5}
-      backgroundColor="#fff"
+      mb="2"
+      borderRadius="md"
+      backgroundColor="white"
       minWidth="100%"
-      boxShadow="#091e4240 0px 1px 0px 0px"
+      shadow="md"
+      padding=".375rem .5rem .125rem"
       onClick={onOpen}>
       <Text mb={2} fontSize="sm">
         {task.title}

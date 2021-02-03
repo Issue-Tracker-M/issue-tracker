@@ -3,6 +3,7 @@ import { Alert, AlertTitle, Box } from "@chakra-ui/react";
 import Column from "./column";
 import { useSelector } from "react-redux";
 import { workspaceSelectors } from "../../store/entities/workspaces";
+import List from "../List";
 
 interface BoardContainerProps {
   text: string;
@@ -15,18 +16,13 @@ const BoardContainer = ({ text, currentWorkspaceId }: BoardContainerProps) => {
   });
   return (
     <Box
-      height={{ md: "83vh" }}
+      height="100%"
       display={{ md: "flex" }}
       flexDirection={{ md: "row" }}
       alignItems={{ md: "flex-start" }}
-      justifyContent={{ md: "space-between" }}
-      overflow={{ md: "auto" }}
-      minWidth="100%"
-      backgroundColor="#f6f8f9">
+      overflow={{ md: "auto" }}>
       {workspace?.loaded ? (
-        workspace.lists.map((listId) => (
-          <Column searchText={text} key={listId} listId={listId} />
-        ))
+        workspace.lists.map((listId) => <List key={listId} listId={listId} />)
       ) : (
         <Alert>
           <AlertTitle>Something went wrong!</AlertTitle>

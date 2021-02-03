@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
   Box,
   Text,
@@ -10,20 +10,20 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Button
-} from '@chakra-ui/react'
-import EditableComp from '../editable'
+  Button,
+} from "@chakra-ui/react";
+import EditableComp from "../editable";
 
 interface CardProps {
-  title: string
-  key: string
-  priority: string
-  due_date: string
-  description: string
+  title: string;
+  key: string;
+  priority: string;
+  due_date: string;
+  description: string;
 }
 
 const ListCard = ({ title, priority, due_date, description }: CardProps) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   return (
     <>
       <Box
@@ -35,8 +35,7 @@ const ListCard = ({ title, priority, due_date, description }: CardProps) => {
         onClick={() => setOpen(true)}
         display="flex"
         justifyContent="space-between"
-        alignItems="center"
-      >
+        alignItems="center">
         <Text w="30%" fontSize="sm">
           {title}
         </Text>
@@ -76,7 +75,7 @@ const ListCard = ({ title, priority, due_date, description }: CardProps) => {
         </DrawerContent>
       </Drawer>
     </>
-  )
-}
+  );
+};
 
-export default ListCard
+export default ListCard;
