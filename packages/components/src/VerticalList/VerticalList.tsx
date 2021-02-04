@@ -8,7 +8,7 @@ const VerticalList: FC<PropsWithChildren<any>> = ({ children }) => {
   console.log(theme);
   return (
     <Box width="17rem" margin="0 .25rem" h="100%" color="black">
-      <Box backgroundColor="gray.100" rounded="md">
+      <Box backgroundColor="gray.100" borderRadius="3px">
         <Box
           display="flex"
           flexDir="column"
