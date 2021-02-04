@@ -1,7 +1,6 @@
 import { Box, Text, useDisclosure } from "@chakra-ui/react";
 import React, { FC } from "react";
-import { useSelector } from "react-redux";
-import { taskSelectors } from "../../store/entities/tasks";
+import { useEntity } from "../../hooks/useEntity";
 import { Task } from "../../store/workspace/types";
 import TaskView from "./TaskView";
 
@@ -12,7 +11,7 @@ interface TaskPreviewProps {
 
 const TaskPreview: FC<TaskPreviewProps> = ({ taskId, stage }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const task = useSelector((state) => taskSelectors.selectById(state, taskId));
+  const task = useEntity("tasks", taskId);
   if (!task) throw new Error("Task not found in the entities");
   return (
     <Box
