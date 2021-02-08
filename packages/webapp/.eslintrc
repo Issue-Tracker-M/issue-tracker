@@ -1,5 +1,5 @@
 {
-  "extends": "../../.eslintrc",
+  "extends": ["plugin:react-hooks/recommended", "../../.eslintrc"],
   "parserOptions": {
     "project": "tsconfig.json"
   },
