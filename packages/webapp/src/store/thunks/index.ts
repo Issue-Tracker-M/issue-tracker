@@ -100,14 +100,15 @@ export const fetchTask = createAsyncThunk<
 export const patchTask = createAsyncThunk(
   `${EntityNames.tasks}/patchTask`,
   async (
-    data: AtLeastOne<Omit<Task, "_id" | "loaded">> & Pick<Task, "_id">
+    data: AtLeastOne<Omit<Task, "_id" | "loaded" | "workspace">> &
+      Pick<Task, "_id" | "workspace">
   ) => {
-    const { _id, ...rest } = data;
-    const res = await axiosWithAuth().patch<{ message: string; data: Task }>(
-      `${baseUrl}/tasks/${_id}`,
+    const { _id, workspace, ...rest } = data;
+    const res = await axiosWithAuth().patch<Task>(
+      `${baseUrl}/workspaces/${workspace}/tasks/${_id}`,
       rest
     );
-    return normalizeTaskResponse(res.data.data);
+    return normalizeTaskResponse(res.data);
   }
 );
 

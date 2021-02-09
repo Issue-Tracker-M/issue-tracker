@@ -7,11 +7,11 @@ import { DbDocument } from "../types";
 import normalizeWorkspaceResponse from "../../utils/normalizeWorkspaceResponse";
 
 interface workspaceState {
-  currentWorkspaceId: null | Workspace["_id"];
+  filterText: string;
 }
 
 const initialState: workspaceState = {
-  currentWorkspaceId: null,
+  filterText: "",
 };
 
 export const getCurrentWorkspace = createAsyncThunk(
@@ -43,12 +43,15 @@ const workspaceSlice = createSlice({
   initialState,
   reducers: {
     /* TODO */
+    changeFilterText: (state, action) => {
+      state.filterText = action.payload;
+    },
   },
-  extraReducers: (builder) => {
-    builder.addCase(getCurrentWorkspace.fulfilled, (state, action) => {
-      state.currentWorkspaceId = action.payload.result;
-    });
-  },
+  // extraReducers: (builder) => {
+  //   builder.addCase(getCurrentWorkspace.fulfilled, (state, action) => {
+  //     state.currentWorkspaceId = action.payload.result;
+  //   });
+  // },
 });
 
 export default workspaceSlice.reducer;

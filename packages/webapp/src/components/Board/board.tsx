@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import {
   Box,
   Tabs,
@@ -10,17 +10,18 @@ import {
   InputGroup,
   InputLeftElement,
   Skeleton,
+  Flex,
 } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import BoardContainer from "./boardContainer";
-import ListContainer from "../LIst/listContainer";
-import { useSelector } from "react-redux";
-import VerticalList from "@issue-tracker/components";
+import { useParams } from "react-router-dom";
+import { useEntity } from "../../hooks/useEntity";
 
-const Board = () => {
+const Board: FC = () => {
   const [text, setText] = useState("");
-  const { currentWorkspaceId } = useSelector((state) => state.workspaceDisplay);
+  const { workspaceId } = useParams<{ workspaceId: string }>();
+  const workspace = useEntity("workspaces", workspaceId);
   return (
     <Box
       paddingTop={5}
@@ -32,10 +33,10 @@ const Board = () => {
         display="flex"
         alignItems="center"
         justifyContent="space-between">
-        <div style={{ display: "flex" }}>
+        <Flex>
           <AiOutlineUsergroupAdd />
-          <span style={{ paddingLeft: "10px" }}>Issue Tracker</span>
-        </div>
+          <span style={{ paddingLeft: "10px" }}>{workspace?.name}</span>
+        </Flex>
         <InputGroup w="20rem" mr={2} size="sm">
           <InputLeftElement children={<Search2Icon />} />
           <Input
@@ -69,21 +70,14 @@ const Board = () => {
 
         <TabPanels p={5} height="100%">
           <TabPanel height="100%">
-            {currentWorkspaceId ? (
-              <BoardContainer
-                text={text}
-                currentWorkspaceId={currentWorkspaceId}
-              />
+            {workspaceId ? (
+              <BoardContainer text={text} currentWorkspaceId={workspaceId} />
             ) : (
               <Skeleton />
             )}
           </TabPanel>
           <TabPanel>
-            <ListContainer />
-          </TabPanel>
-          <TabPanel>
             <p>Activity History...</p>
-            <VerticalList />
           </TabPanel>
           <TabPanel>
             <p>Archived Tasks!</p>

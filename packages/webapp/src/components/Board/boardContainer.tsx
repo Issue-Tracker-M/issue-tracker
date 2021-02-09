@@ -1,9 +1,9 @@
-import React from "react";
-import { Alert, AlertTitle, Box } from "@chakra-ui/react";
-import Column from "./column";
-import { useSelector } from "react-redux";
-import { workspaceSelectors } from "../../store/entities/workspaces";
+import React, { useEffect } from "react";
+import { Box, Center, Spinner } from "@chakra-ui/react";
 import List from "../List";
+import { useEntity } from "../../hooks/useEntity";
+import { useThunkDispatch } from "../../hooks/useThunkDispatch";
+import { getCurrentWorkspace } from "../../store/workspace/workspaceSlice";
 
 interface BoardContainerProps {
   text: string;
@@ -11,9 +11,15 @@ interface BoardContainerProps {
 }
 
 const BoardContainer = ({ text, currentWorkspaceId }: BoardContainerProps) => {
-  const workspace = useSelector((state) => {
-    return workspaceSelectors.selectById(state, currentWorkspaceId);
-  });
+  const workspace = useEntity("workspaces", currentWorkspaceId);
+  const dispatch = useThunkDispatch();
+  useEffect(() => {
+    let mounted = true;
+    if (!workspace?.loaded) dispatch(getCurrentWorkspace(currentWorkspaceId));
+    return () => {
+      mounted = false;
+    };
+  }, [currentWorkspaceId, dispatch, workspace]);
   return (
     <Box
       height="100%"
@@ -24,9 +30,9 @@ const BoardContainer = ({ text, currentWorkspaceId }: BoardContainerProps) => {
       {workspace?.loaded ? (
         workspace.lists.map((listId) => <List key={listId} listId={listId} />)
       ) : (
-        <Alert>
-          <AlertTitle>Something went wrong!</AlertTitle>
-        </Alert>
+        <Center w="100%" h="100%">
+          <Spinner size="xl" colorScheme="teal" thickness="3" />
+        </Center>
       )}
     </Box>
   );

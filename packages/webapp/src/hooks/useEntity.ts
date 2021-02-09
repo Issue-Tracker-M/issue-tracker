@@ -17,11 +17,18 @@ const selectors = {
 
 type PossibleEntities = `${EntityNames}`
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useEntity = <EntityType extends PossibleEntities>(
   entityType: EntityType,
   entityId: string
-) => {
+):ReturnType<( typeof selectors[EntityType])> => {
   const entity = useSelector((state) => selectors[entityType](state, entityId));
   return entity as ReturnType<( typeof selectors[EntityType])>;
+};
+
+export const useEntities = <EntityType extends PossibleEntities>(
+  entityType: EntityType,
+  idArray: string[]
+):ReturnType<( typeof selectors[EntityType])>[] => {
+  const entities = useSelector((state) => idArray.map(id=>selectors[entityType](state, id)));
+  return entities as ReturnType<( typeof selectors[EntityType])>[];
 };

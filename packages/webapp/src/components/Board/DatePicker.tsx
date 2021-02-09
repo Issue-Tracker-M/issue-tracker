@@ -1,4 +1,4 @@
-import { CloseIcon } from '@chakra-ui/icons'
+import { CloseIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Button,
@@ -9,18 +9,18 @@ import {
   InputGroup,
   InputLeftAddon,
   InputRightAddon,
-  Tooltip
-} from '@chakra-ui/react'
-import React, { FC } from 'react'
-import DatePicker from 'react-datepicker'
-import { useSelector } from 'react-redux'
-import { useThunkDispatch } from '../../hooks/useThunkDispatch'
-import { taskSelectors } from '../../store/entities/tasks'
-import { patchTask } from '../../store/thunks'
-import { Task } from '../../store/workspace/types'
+  Tooltip,
+} from "@chakra-ui/react";
+import React, { FC } from "react";
+import DatePicker from "react-datepicker";
+import { useSelector } from "react-redux";
+import { useThunkDispatch } from "../../hooks/useThunkDispatch";
+import { taskSelectors } from "../../store/entities/tasks";
+import { patchTask } from "../../store/thunks";
+import { Task } from "../../store/workspace/types";
 
 interface IProps {
-  task_id: Task['_id']
+  task_id: Task["_id"];
 }
 
 const CustomDateInput: FC<any> = React.forwardRef(
@@ -51,21 +51,27 @@ const CustomDateInput: FC<any> = React.forwardRef(
           </InputRightAddon>
         ) : null}
       </InputGroup>
-    )
+    );
   }
-)
+);
 
 const TaskDatePicker: FC<IProps> = ({ task_id }) => {
-  const task = useSelector((state) => taskSelectors.selectById(state, task_id))
-  const dispatch = useThunkDispatch()
+  const task = useSelector((state) => taskSelectors.selectById(state, task_id));
+  const dispatch = useThunkDispatch();
 
-  if (!task?.loaded) return <Heading>Something went wrong!</Heading>
+  if (!task?.loaded) return <Heading>Something went wrong!</Heading>;
 
   return task.due_date ? (
     <>
       <DatePicker
         onChange={(date: Date) => {
-          dispatch(patchTask({ _id: task._id, due_date: date }))
+          dispatch(
+            patchTask({
+              _id: task._id,
+              workspace: task.workspace,
+              due_date: date,
+            })
+          );
         }}
         selected={new Date(task.due_date)}
         showTimeSelect
@@ -73,7 +79,13 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
           <CustomDateInput
             due_date={task.due_date}
             onComplete={(e: any) => {
-              dispatch(patchTask({ _id: task._id, complete: e.target.checked }))
+              dispatch(
+                patchTask({
+                  _id: task._id,
+                  workspace: task.workspace,
+                  complete: e.target.checked,
+                })
+              );
             }}
             complete={task.complete}
           />
@@ -85,8 +97,13 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
         aria-label="Remove due date"
         onClick={(e) => {
           dispatch(
-            patchTask({ _id: task._id, due_date: null, complete: false })
-          )
+            patchTask({
+              _id: task._id,
+              workspace: task.workspace,
+              due_date: null,
+              complete: false,
+            })
+          );
         }}
         icon={<CloseIcon color="gray.500" />}
         // borderRadius="50%"
@@ -97,11 +114,16 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
   ) : (
     <Button
       onClick={(e) => {
-        dispatch(patchTask({ _id: task._id, due_date: new Date() }))
-      }}
-    >
+        dispatch(
+          patchTask({
+            _id: task._id,
+            workspace: task.workspace,
+            due_date: new Date(),
+          })
+        );
+      }}>
       Add due date
     </Button>
-  )
-}
-export default TaskDatePicker
+  );
+};
+export default TaskDatePicker;

@@ -1,5 +1,5 @@
 import { Heading } from "@chakra-ui/react";
-import VerticalList from "@issue-tracker/components";
+import VerticalList from "./VerticalList";
 import React, { FC } from "react";
 import { useCallback } from "react";
 import { useEntity } from "../../hooks/useEntity";

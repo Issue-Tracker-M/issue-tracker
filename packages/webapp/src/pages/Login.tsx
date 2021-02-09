@@ -36,7 +36,7 @@ const Login: FC = () => {
           setSubmitting(true);
           dispatch(authenticate(values))
             .then(() => {
-              history.push(`/dashboard`);
+              history.push(`/home`);
               mounted = false;
             })
             .catch((err: unknown) => {

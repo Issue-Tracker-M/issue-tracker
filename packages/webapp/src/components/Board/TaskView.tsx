@@ -1,11 +1,5 @@
-import {
-  AddIcon,
-  AtSignIcon,
-  HamburgerIcon,
-  InfoIcon,
-  TimeIcon,
-  WarningTwoIcon,
-} from "@chakra-ui/icons";
+import { AddIcon, AtSignIcon, HamburgerIcon, TimeIcon } from "@chakra-ui/icons";
+import { BsTextLeft } from "react-icons/bs";
 import {
   Box,
   Drawer,
@@ -33,20 +27,25 @@ import TaskViewItem from "./TaskViewItem";
 import CommentInput from "./CommentInput";
 import CommentView from "./CommentView";
 import { AiOutlineCreditCard } from "react-icons/ai";
+import { useEntity } from "../../hooks/useEntity";
+import { useHistory, useParams } from "react-router-dom";
 // Load with the initial data
 // Fetch the rest of the task data if it hasn't been loaded yet
 // Show something to the user while it's happening
 // Show full task view once it's loaded.
 
-interface IProps {
-  task: TaskStub | Task;
-  stage: string;
-  isOpen: boolean;
-  onClose: (...args: any) => any;
-}
+// interface IProps {
+//   task: TaskStub | Task;
+//   stage: string;
+//   isOpen: boolean;
+//   onClose: (...args: any) => any;
+// }
 
-const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
+const TaskView: FC = () => {
   const dispatch = useThunkDispatch();
+  const { taskId } = useParams<{ taskId: string }>();
+  const task = useEntity("tasks", taskId)!;
+  const history = useHistory();
 
   useEffect(() => {
     let mounted = true;
@@ -57,14 +56,14 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
     return () => {
       mounted = false;
     };
-  }, [dispatch, stage, task._id, task.loaded]);
+  }, [dispatch, task._id, task.loaded, task.workspace]);
   return (
     <Drawer
-      isOpen={isOpen}
+      isOpen
       placement="right"
-      onClose={onClose}
+      onClose={history.goBack}
       size="lg"
-      onEsc={onClose}
+      onEsc={history.goBack}
       // finalFocusRef={btnRef}
     >
       <DrawerOverlay />
@@ -80,7 +79,13 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
             defaultValue={task.title}
             onSubmit={(value) => {
               if (value !== task.title)
-                dispatch(patchTask({ _id: task._id, title: value }));
+                dispatch(
+                  patchTask({
+                    _id: task._id,
+                    workspace: task.workspace,
+                    title: value,
+                  })
+                );
             }}>
             <EditablePreview />
             <EditableInput />
@@ -102,24 +107,21 @@ const TaskView: FC<IProps> = ({ task, isOpen, onClose, stage }) => {
                     size="sm"
                   />
                 </Box>
-                {/* <MemberSelect
-                    taskId={task._id}
-                    as={Button}
-                    colorScheme="teal"
-                    size="sm"
-                    variant="outline"
-                  /> */}
               </TaskViewItem>
               <TaskViewItem
                 title="Description"
-                icon={<InfoIcon color="gray.500" />}>
+                icon={<BsTextLeft color="gray.500" />}>
                 <Editable
                   defaultValue={task.description || ""}
                   placeholder="Add a more detailed description..."
                   onSubmit={(value) => {
                     if (value !== task.description)
                       dispatch(
-                        patchTask({ _id: task._id, description: value })
+                        patchTask({
+                          _id: task._id,
+                          workspace: task.workspace,
+                          description: value,
+                        })
                       );
                   }}>
                   <EditablePreview

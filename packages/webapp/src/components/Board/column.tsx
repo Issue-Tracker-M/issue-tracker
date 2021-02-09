@@ -1,14 +1,15 @@
 import React, { FC } from "react";
 import { AddNewitem } from "../addNewItem";
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
 import { createTask } from "../../store/workspace/workspaceSlice";
 import { List, Task } from "../../store/workspace/types";
 import TaskPreview from "./TaskPreview";
 import { taskSelectors } from "../../store/entities/tasks";
-import { listSelectors } from "../../store/entities/lists";
 import VerticalList from "@issue-tracker/components";
+import { useEntity } from "../../hooks/useEntity";
+import { useParams } from "react-router-dom";
 
 interface ColumnProps {
   listId: List["_id"];
@@ -18,25 +19,24 @@ interface ColumnProps {
 export type TaskInput = Pick<Task, "workspace" | "title" | "list">;
 
 const Column: FC<ColumnProps> = ({ searchText, listId }) => {
-  const list = useSelector((state) => listSelectors.selectById(state, listId));
-  if (!list) return null;
-  const { currentWorkspaceId } = useSelector((state) => state.workspaceDisplay);
-  if (!currentWorkspaceId)
-    return <Heading color="red">Select a workspace</Heading>;
+  const dispatch = useThunkDispatch();
+  const list = useEntity("lists", listId);
+  const { workspaceId } = useParams<{ workspaceId: string }>();
 
   // Filtering task id's by task content
   const filteredTasks = useSelector((state) =>
-    list.tasks.filter((taskId) => {
+    list!.tasks.filter((taskId) => {
       console.log(taskId);
       const t = taskSelectors.selectById(state, taskId);
       return JSON.stringify(t ? t : "").match(new RegExp(searchText, "gi"));
     })
   );
 
-  const dispatch = useThunkDispatch();
+  if (!list) return null;
+  if (!workspaceId) return <Heading color="red">Select a workspace</Heading>;
   const createTaskFunction = (title: string) => {
     const taskPayload = {
-      workspace: currentWorkspaceId,
+      workspace: workspaceId,
       list: listId,
       title,
     };
