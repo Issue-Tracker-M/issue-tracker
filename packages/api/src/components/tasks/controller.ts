@@ -27,7 +27,7 @@ export const createTask: RequestHandler<
     l.tasks.push(newTask._id);
     await workspace.save();
     return res.status(201).json(newTask);
-  } catch (error: unknown) {
+  } catch (error) {
     next(error);
   }
 };
@@ -78,11 +78,12 @@ export const patchTask: RequestHandler<
       workspace.lists.id(req.body.list)?.tasks.push(task._id);
       await workspace.save();
     }
-    const updatedTask = await task
-      .updateOne({ $set: req.body }, { new: true })
-      .exec();
-    res.status(200).json(updatedTask);
-  } catch (error: unknown) {
+    console.log(task);
+    Object.assign(task, req.body);
+    await task.save();
+    console.log(task);
+    res.status(200).json(task);
+  } catch (error) {
     next(error);
   }
 };
@@ -98,7 +99,7 @@ export const getTask: RequestHandler<any, any, null> = (req, res, next) => {
     const task = req.task;
     if (!task) throw new Error("Expected task document in request");
     res.status(200).json(task);
-  } catch (error: unknown) {
+  } catch (error) {
     next(error);
   }
 };
