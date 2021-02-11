@@ -1,6 +1,8 @@
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
+  BoxProps,
   IconButton,
+  PropsOf,
   useDisclosure,
   UseDisclosureProps,
 } from "@chakra-ui/react";
@@ -8,8 +10,7 @@ import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import React, { FC, ReactNode } from "react";
 import { MotionContainer } from "./MotionContainer";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IProps extends UseDisclosureProps {
+interface IProps extends UseDisclosureProps, PropsOf<typeof MotionContainer> {
   toggleControl?: ReactNode;
 }
 
@@ -28,6 +29,14 @@ export const Sidebar: FC<IProps> = ({
     isOpen: open,
     defaultIsOpen,
   }); /* Control panel opening */
+
+  const animate = {
+    animate: { opacity: 1, width: "max-content", scaleX: 1 },
+    initial: open
+      ? { opacity: 1, width: "max-content", scaleX: 1 }
+      : { opacity: 0, width: "0px", scaleX: 0 },
+  };
+
   return (
     <AnimateSharedLayout>
       <MotionContainer layout position="relative" {...rest}>
@@ -48,8 +57,7 @@ export const Sidebar: FC<IProps> = ({
           {isOpen && (
             <motion.div
               layout
-              initial={{ opacity: 0, width: "0px", scaleX: 0 }}
-              animate={{ opacity: 1, width: "max-content", scaleX: 1 }}
+              {...animate}
               exit={{ opacity: 0, width: "0px", scaleX: 0 }}>
               {children}
             </motion.div>

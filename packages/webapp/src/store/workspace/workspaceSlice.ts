@@ -8,10 +8,12 @@ import normalizeWorkspaceResponse from "../../utils/normalizeWorkspaceResponse";
 
 interface workspaceState {
   filterText: string;
+  isSidebarOpen: boolean;
 }
 
 const initialState: workspaceState = {
   filterText: "",
+  isSidebarOpen: false,
 };
 
 export const getCurrentWorkspace = createAsyncThunk(
@@ -46,6 +48,9 @@ const workspaceSlice = createSlice({
     changeFilterText: (state, action) => {
       state.filterText = action.payload;
     },
+    toggleSideBar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
   },
   // extraReducers: (builder) => {
   //   builder.addCase(getCurrentWorkspace.fulfilled, (state, action) => {
@@ -53,5 +58,7 @@ const workspaceSlice = createSlice({
   //   });
   // },
 });
+
+export const { changeFilterText, toggleSideBar } = workspaceSlice.actions;
 
 export default workspaceSlice.reducer;
