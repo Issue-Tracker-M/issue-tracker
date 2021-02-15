@@ -1,6 +1,7 @@
 import { port } from "./../config/index";
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import authRouter from "./auth/routes";
@@ -15,7 +16,18 @@ const app = express();
 
 app.set("port", port);
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    exposedHeaders: ["set-cookie"],
+    origin: [
+      "http://localhost:3000",
+      "http://127.0.0.1",
+      "http://104.142.122.231",
+    ],
+  })
+);
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 app.use("/api", apiRouter);

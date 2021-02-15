@@ -11,6 +11,7 @@ import {
   confirmEmail,
   forgotPassword,
   resetPassword,
+  refreshToken,
 } from "./controller";
 import { getUserByEmail } from "./middleware";
 import { Router } from "express";
@@ -21,5 +22,6 @@ router.post("/login", validateLoginInput, getUserByEmail, login);
 router.post("/confirm_email", validateEmailConfirmation, confirmEmail);
 router.post("/forgot_password", validateForgotPassword, forgotPassword);
 router.post("/reset_password", validateResetPassword, resetPassword);
+router.get("/refresh", refreshToken);
 
 export default router;
