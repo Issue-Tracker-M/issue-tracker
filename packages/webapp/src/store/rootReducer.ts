@@ -7,9 +7,11 @@ import usersReducer from "./entities/users";
 import tasksReducer from "./entities/tasks";
 import commentsReducer from "./entities/comments";
 import listsReducer from "./entities/lists";
+import authReducer from "./authSlice";
 
 export const rootReducer = combineReducers({
   user: userReducer,
+  auth: authReducer,
   workspaceDisplay: workspaceDisplayReducer,
   [EntityNames.workspaces]: workspacesReducer,
   [EntityNames.users]: usersReducer,
