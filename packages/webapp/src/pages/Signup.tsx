@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { NavLink, useHistory, Link as RouterLink } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { object, string } from "yup";
@@ -33,7 +33,7 @@ const initialValues = {
   confirmPassword: "",
 };
 
-const SignUp = () => {
+const SignUp: FC = () => {
   const history = useHistory();
   return (
     <AuthFormWrapper title="Sign up">

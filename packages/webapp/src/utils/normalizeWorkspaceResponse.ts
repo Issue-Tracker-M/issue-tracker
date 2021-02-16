@@ -1,5 +1,5 @@
 import { ListDocument } from "@issue-tracker/api/src/components/workspaces/model";
-import { schema, normalize } from "normalizr";
+import { schema, normalize, NormalizedSchema } from "normalizr";
 import { EntityNames } from "../store/types";
 import { UserStub } from "../store/user/types";
 import {
@@ -56,17 +56,16 @@ const workspaceEntity = new schema.Entity<Workspace>(
 
 const normalizeWorkspaceResponse = (
   workspaceResponse: getWorkspaceResponse
-) => {
-  console.log(workspaceResponse);
-  return normalize<
-    getWorkspaceResponse,
-    {
-      [EntityNames.workspaces]: { [key: string]: Workspace };
-      [EntityNames.users]: { [key: string]: UserStub };
-      [EntityNames.tasks]: { [key: string]: TaskStub };
-      [EntityNames.lists]: { [key: string]: List };
-    }
-  >(workspaceResponse, workspaceEntity);
+): NormalizedSchema<
+  {
+    [EntityNames.workspaces]: { [key: string]: Workspace };
+    [EntityNames.users]: { [key: string]: UserStub };
+    [EntityNames.tasks]: { [key: string]: TaskStub };
+    [EntityNames.lists]: { [key: string]: List };
+  },
+  string
+> => {
+  return normalize(workspaceResponse, workspaceEntity);
 };
 
 export default normalizeWorkspaceResponse;

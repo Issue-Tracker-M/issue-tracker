@@ -31,7 +31,7 @@ const tasksSlice = createSlice({
     });
     builder.addCase(addComment.fulfilled, (state, { payload }) => {
       const task = state.entities[payload.taskId];
-      if (task?.loaded) task.comments.push(payload.comment._id as any);
+      if (task?.loaded) task.comments.push(payload.comment._id);
     });
   },
 });

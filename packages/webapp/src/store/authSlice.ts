@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { baseUrl } from "../config";
 import normalizeAuthResponse from "../utils/normalizeAuthResponse";
 import { authenticate } from "./thunks";
 import { succesfullAuthObject, User } from "./user/types";
@@ -21,24 +20,26 @@ const initialState: initialState = {
   currentUserId: null,
   token: null,
 };
-
-const authSlice = createSlice({
-  name: "auth",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(authenticate.fulfilled, (state, action) => {
-      state.token = action.payload.token;
-      state.currentUserId = action.payload.result;
-    });
-  },
-});
-
 export const refreshAuthToken = createAsyncThunk("refresh_token", async () => {
   const {
     data: { user, token },
   } = await axios.get<succesfullAuthObject>(`/auth/refresh`);
   return { ...normalizeAuthResponse(user), token };
+});
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(refreshAuthToken.fulfilled, (state, action) => {
+      state.token = action.payload.token;
+      state.currentUserId = action.payload.result;
+    });
+    builder.addCase(authenticate.fulfilled, (state, action) => {
+      state.token = action.payload.token;
+      state.currentUserId = action.payload.result;
+    });
+  },
 });
 
 export default authSlice.reducer;

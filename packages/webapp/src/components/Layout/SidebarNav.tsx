@@ -1,14 +1,18 @@
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import {
-  Box,
+  Button,
   Center,
   Collapse,
+  Flex,
   Link,
+  Text,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
 import { useCallback } from "react";
 import { FC } from "react";
+import { AiOutlineHome } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, useRouteMatch } from "react-router-dom";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
@@ -23,9 +27,23 @@ const WorkspacesNavs = () => {
   const { isOpen, onToggle } = useDisclosure();
   return (
     <>
-      <Center w="100%" minW="12rem" h="2rem" onClick={onToggle}>
-        Your workspaces
-      </Center>
+      <Flex
+        as={Button}
+        w="100%"
+        variant="ghost"
+        justify="start"
+        h="2rem"
+        alignItems="center"
+        alignContent="center"
+        onClick={onToggle}
+        color="gray.400"
+        _hover={{ color: "gray.200" }}
+        padding="0 1.5rem">
+        <Text>Your workspaces</Text>
+        <Center h="100%">
+          {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        </Center>
+      </Flex>
       <Collapse in={isOpen} animateOpacity>
         {workspaces.map((w) => (
           <NavItem key={w._id} to={`/w/${w._id}`} content={w.name} />
@@ -40,15 +58,20 @@ const NavItem: FC<{ to: string; content: ReactNode }> = ({ to, content }) => {
   const selected = match.url === to;
   return (
     <Link as={RouterLink} to={to}>
-      <Box
+      <Flex
+        as={Button}
         w="100%"
-        minW="12rem"
+        minW="15rem"
         transition="background-color ease-in 0.1s"
+        justify="start"
+        alignItems="center"
+        fontSize="sm"
+        padding="0 1.5rem"
         h="2rem"
         _hover={{ bgColor: selected ? "gray.500" : "gray.700" }}
         bgColor={selected ? "gray.600" : "inherit"}>
         {content}
-      </Box>
+      </Flex>
     </Link>
   );
 };
@@ -68,9 +91,16 @@ export const SidebarNav: FC = () => {
       onOpen={toggle}
       onClose={toggle}
       backgroundColor="gray.800"
-      color="gray.100">
+      color="gray.200">
       <VStack spacing="0">
-        <NavItem to="/home" content="Home" />
+        <NavItem
+          to="/home"
+          content={
+            <>
+              <AiOutlineHome /> Home
+            </>
+          }
+        />
         <NavItem to="/w" content={"All workspaces"} />
         {workspaces.map((w) => (
           <NavItem key={w._id} to={`/w/${w._id}`} content={w.name} />

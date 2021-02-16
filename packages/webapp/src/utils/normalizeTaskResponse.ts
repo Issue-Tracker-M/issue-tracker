@@ -1,4 +1,4 @@
-import { schema, normalize } from "normalizr";
+import { schema, normalize, NormalizedSchema } from "normalizr";
 import { EntityNames } from "../store/types";
 import { Comment, Task } from "../store/workspace/types";
 
@@ -21,13 +21,14 @@ const taskEntity = new schema.Entity<Task>(
   }
 );
 
-const normalizeTaskResponse = (getTaskResponse: Task) =>
-  normalize<
-    Task,
-    {
-      [EntityNames.tasks]: { [key: string]: Task };
-      [EntityNames.comments]: { [key: string]: Comment };
-    }
-  >(getTaskResponse, taskEntity);
+const normalizeTaskResponse = (
+  getTaskResponse: Task
+): NormalizedSchema<
+  {
+    [EntityNames.tasks]: { [key: string]: Task };
+    [EntityNames.comments]: { [key: string]: Comment };
+  },
+  string
+> => normalize(getTaskResponse, taskEntity);
 
 export default normalizeTaskResponse;

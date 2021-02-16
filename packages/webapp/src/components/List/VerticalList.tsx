@@ -4,7 +4,7 @@ import React, { FC, PropsWithChildren } from "react";
 /**
  * Fixed width container for lists of tasks
  */
-const VerticalList: FC<PropsWithChildren<any>> = ({ children }) => {
+const VerticalList: FC<PropsWithChildren<unknown>> = ({ children }) => {
   return (
     <Box minWidth="17rem" margin="0 .25rem" h="100%" color="black">
       <Box backgroundColor="gray.100" borderRadius="3px">

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import Axios from "axios";
+import axios from "axios";
 import { schema, normalize } from "normalizr";
 import { AppDispatch } from "..";
 import { createWorkspaceObject } from "../../components/Modals/createWorkspaceModal";
@@ -8,7 +8,6 @@ import { AtLeastOne } from "../../globals";
 import { setToken } from "../../helpers";
 import normalizeAuthResponse from "../../utils/normalizeAuthResponse";
 import normalizeTaskResponse from "../../utils/normalizeTaskResponse";
-import { axiosWithAuth } from "../../utils/withAuth";
 import { RootState } from "../rootReducer";
 import { EntityNames } from "../types";
 import { loginCredentials, succesfullAuthObject } from "../user/types";
@@ -24,21 +23,20 @@ import {
 export const authenticate = createAsyncThunk(
   "user/authenticate",
   async (credentials: loginCredentials) => {
-    const res = await Axios.post<succesfullAuthObject>(
+    const {
+      data: { user, token },
+    } = await axios.post<succesfullAuthObject>(
       `${baseUrl}/auth/login`,
       credentials
     );
-    setToken(res.data.token);
-    return normalizeAuthResponse(res.data.user);
-    /*
-     */
+    return { ...normalizeAuthResponse(user), token };
   }
 );
 
 export const confirmEmail = createAsyncThunk(
   "user/confirmEmail",
   async (token: string) => {
-    const res = await Axios.post<succesfullAuthObject>(
+    const res = await axios.post<succesfullAuthObject>(
       `${baseUrl}/auth/confirm_email`,
       {
         token,
@@ -52,9 +50,7 @@ export const confirmEmail = createAsyncThunk(
 export const getWorkspaces = createAsyncThunk(
   "user/getWorkspaces",
   async () => {
-    const response = await axiosWithAuth().get<WorkspaceStub[]>(
-      `${baseUrl}/workspaces/`
-    );
+    const response = await axios.get<WorkspaceStub[]>(`${baseUrl}/workspaces/`);
     return normalize(response.data, [
       new schema.Entity<WorkspaceStub>(
         EntityNames.workspaces,
@@ -68,7 +64,7 @@ export const getWorkspaces = createAsyncThunk(
 export const addWorkspace = createAsyncThunk(
   "user/addWorkspace",
   async (workspace: createWorkspaceObject) => {
-    const response = await axiosWithAuth().post<Workspace>(
+    const response = await axios.post<Workspace>(
       `${baseUrl}/workspaces/`,
       workspace
     );
@@ -86,10 +82,9 @@ export const fetchTask = createAsyncThunk<
   { taskId: string; workspaceId: string },
   ThunkConfig
 >(`${EntityNames.tasks}/fetchTask`, async ({ taskId, workspaceId }) => {
-  const res = await axiosWithAuth().get<Task>(
+  const res = await axios.get<Task>(
     `${baseUrl}/workspaces/${workspaceId}/tasks/${taskId}`
   );
-  console.log(res.data, normalizeTaskResponse(res.data));
   return normalizeTaskResponse(res.data);
 });
 
@@ -104,7 +99,7 @@ export const patchTask = createAsyncThunk(
       Pick<Task, "_id" | "workspace">
   ) => {
     const { _id, workspace, ...rest } = data;
-    const res = await axiosWithAuth().patch<Task>(
+    const res = await axios.patch<Task>(
       `${baseUrl}/workspaces/${workspace}/tasks/${_id}`,
       rest
     );
@@ -116,7 +111,7 @@ export const addComment = createAsyncThunk(
   `${EntityNames.comments}/addComment`,
   async (data: { taskId: Task["_id"]; content: Comment["content"] }) => {
     const { taskId, content } = data;
-    const res = await axiosWithAuth().post<Comment>(
+    const res = await axios.post<Comment>(
       `${baseUrl}/tasks/${taskId}/comment`,
       { content }
     );
@@ -131,16 +126,14 @@ interface deleteCommentInput {
 export const deleteComment = createAsyncThunk(
   `${EntityNames.comments}/deleteComment`,
   async ({ taskId, commentId }: deleteCommentInput) => {
-    await axiosWithAuth().delete(
-      `${baseUrl}/tasks/${taskId}/comment/${commentId}`
-    );
+    await axios.delete(`${baseUrl}/tasks/${taskId}/comment/${commentId}`);
   }
 );
 
 export const addList = createAsyncThunk(
   `${EntityNames.comments}/addList`,
   async ({ workspaceId, name }: { workspaceId: string; name: string }) => {
-    const res = await axiosWithAuth().post<List>(
+    const res = await axios.post<List>(
       `${baseUrl}/workspaces/${workspaceId}/lists`,
       { name }
     );

@@ -4,7 +4,7 @@ import { useThunkDispatch } from "../../hooks/useThunkDispatch";
 import { addComment } from "../../store/thunks";
 import { Task } from "../../store/workspace/types";
 
-interface IProps<T = any> {
+interface IProps<T = (...args: unknown[]) => unknown> {
   taskId: Task["_id"];
   initialContent?: string;
   onSubmit?: T;

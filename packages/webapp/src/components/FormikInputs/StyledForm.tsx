@@ -1,14 +1,14 @@
-import { useFormikContext } from 'formik'
-import React, { FC } from 'react'
-import { chakra, HTMLChakraProps } from '@chakra-ui/react'
+import { useFormikContext } from "formik";
+import React, { FC } from "react";
+import { chakra, PropsOf } from "@chakra-ui/react";
 
-type IProps = HTMLChakraProps<'form'>
+const chakraForm = chakra.form;
 
-const StyledForm = (props: IProps) => {
-  const { handleReset, handleSubmit } = useFormikContext()
+const StyledForm: FC<PropsOf<typeof chakraForm>> = (props) => {
+  const { handleReset, handleSubmit } = useFormikContext();
   return (
     <chakra.form onReset={handleReset} onSubmit={handleSubmit} {...props} />
-  )
-}
+  );
+};
 
-export default StyledForm
+export default StyledForm;

@@ -1,6 +1,5 @@
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
-  BoxProps,
   IconButton,
   PropsOf,
   useDisclosure,

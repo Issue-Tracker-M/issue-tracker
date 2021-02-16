@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { useFocus } from '../../utils/useFocus'
-import { Box, Button, Input } from '@chakra-ui/react'
+import React, { FC, useState } from "react";
+import { useFocus } from "../../utils/useFocus";
+import { Box, Button, Input } from "@chakra-ui/react";
 
 interface NewItemFormProps {
-  onAdd(text: string): void
-  setShowForm(value: boolean): void
+  onAdd(text: string): void;
+  setShowForm(value: boolean): void;
 }
 
-export const NewItemForm = (props: NewItemFormProps) => {
-  const [text, setText] = useState('')
-  const inputRef = useFocus()
+export const NewItemForm: FC<NewItemFormProps> = (props) => {
+  const [text, setText] = useState("");
+  const inputRef = useFocus();
 
   return (
     <Box
@@ -19,8 +19,7 @@ export const NewItemForm = (props: NewItemFormProps) => {
       borderRadius={5}
       backgroundColor="#fff"
       minWidth="100%"
-      boxShadow="#091e4240 0px 1px 0px 0px"
-    >
+      boxShadow="#091e4240 0px 1px 0px 0px">
       <Input
         marginBottom={3}
         ref={inputRef}
@@ -34,5 +33,5 @@ export const NewItemForm = (props: NewItemFormProps) => {
       </Button>
       <Button onClick={() => props.setShowForm(false)}>Cancel</Button>
     </Box>
-  )
-}
+  );
+};

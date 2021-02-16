@@ -28,9 +28,6 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(authenticate.pending, (state, action) => {
-      // This one is passed as an example, if you don't want to do anything with the dispatched action you can just leave it out of the reducer
-    });
     builder.addCase(authenticate.fulfilled, (state, action) => {
       // here, because i'm expecting the payload to have a whole new user object, i'm returning that as the new state
       return action.payload.entities.users[action.payload.result];

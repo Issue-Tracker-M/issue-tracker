@@ -1,26 +1,25 @@
-import React from 'react'
+import React, { FC } from "react";
 import {
   Box,
   Text,
   Editable,
   EditableInput,
-  EditablePreview
-} from '@chakra-ui/react'
+  EditablePreview,
+} from "@chakra-ui/react";
 
 interface EditableProps {
-  label: string
-  title: string
+  label: string;
+  title: string;
 }
 
-const EditableComp = ({ title, label }: EditableProps) => {
+const EditableComp: FC<EditableProps> = ({ title, label }) => {
   return (
     <Box
       display="flex"
       justifyContent="space-between"
       alignItems="center"
       w="80%"
-      mb={4}
-    >
+      mb={4}>
       <Text mb={2} fontSize="sm">
         {label}
       </Text>
@@ -29,7 +28,7 @@ const EditableComp = ({ title, label }: EditableProps) => {
         <EditableInput />
       </Editable>
     </Box>
-  )
-}
+  );
+};
 
-export default EditableComp
+export default EditableComp;

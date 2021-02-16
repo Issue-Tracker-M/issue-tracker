@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
   Modal,
   Input,
@@ -18,17 +18,17 @@ import { addWorkspace } from "../../store/thunks";
 
 interface createWorkspaceModalProps {
   isOpen: boolean;
-  onClose(): any;
+  onClose(): unknown;
 }
 
 export interface createWorkspaceObject {
   name: string;
 }
 
-const CreateWorkspaceModal = ({
+const CreateWorkspaceModal: FC<createWorkspaceModalProps> = ({
   isOpen,
   onClose,
-}: createWorkspaceModalProps) => {
+}) => {
   const dispatch = useThunkDispatch();
   const validationSchema = yup.object().shape({
     name: yup.string().label("name").required(),
@@ -48,7 +48,7 @@ const CreateWorkspaceModal = ({
         <ModalBody>
           <Formik
             initialValues={initialValues}
-            onSubmit={(values, actions) => {
+            onSubmit={(values) => {
               const payload = { name: values.name };
               dispatch(addWorkspace(payload));
               onClose();
@@ -62,8 +62,8 @@ const CreateWorkspaceModal = ({
                 height: "100%",
               }}>
               <label htmlFor="name">
-                {/* Name{' '} */}
                 <Field name="name">
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {({ field, form }: any) => (
                     <FormControl
                       isInvalid={form.errors.name && form.touched.name}>

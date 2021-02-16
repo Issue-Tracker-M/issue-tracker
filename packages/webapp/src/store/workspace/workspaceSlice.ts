@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getWorkspaceResponse, Task, Workspace } from "./types";
+import { getWorkspaceResponse, Task } from "./types";
 import { baseUrl } from "../../config";
-import { axiosWithAuth } from "../../utils/withAuth";
 import { TaskInput } from "../../components/Board/column";
 import { DbDocument } from "../types";
 import normalizeWorkspaceResponse from "../../utils/normalizeWorkspaceResponse";
+import axios from "axios";
 
 interface workspaceState {
   filterText: string;
@@ -19,7 +19,7 @@ const initialState: workspaceState = {
 export const getCurrentWorkspace = createAsyncThunk(
   "workspace/getCurrentWorkspace",
   async (id: DbDocument["_id"]) => {
-    const res = await axiosWithAuth().get<getWorkspaceResponse>(
+    const res = await axios.get<getWorkspaceResponse>(
       `${baseUrl}/workspaces/${id}`
     );
     const r = normalizeWorkspaceResponse(res.data);
@@ -31,7 +31,7 @@ export const createTask = createAsyncThunk(
   "workspace/createTask",
   async (taskInput: TaskInput) => {
     const { workspace } = taskInput;
-    const response = await axiosWithAuth().post<Task>(
+    const response = await axios.post<Task>(
       `${baseUrl}/workspaces/${workspace}/tasks`,
       taskInput
     );

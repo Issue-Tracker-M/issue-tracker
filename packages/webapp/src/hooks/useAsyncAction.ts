@@ -18,8 +18,9 @@ interface useAsyncThunkReturn {
  * meaningful state changes are meant to be handled within the thunk.
  * @param thunk async thunk to be used in the effect
  * @param args args object to be passed to thunk
- * @param condition if passed, will be called to decide whether the thunk is dispatched
+ * @param condition if passed, action will be dispatched only if it returns true
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function useAsyncThunk<T extends AsyncThunk<any, any, any>>(
   thunk: T,
   args: Parameters<T>["0"],
@@ -36,7 +37,7 @@ export default function useAsyncThunk<T extends AsyncThunk<any, any, any>>(
       setLoading(true);
       dispatch(thunk(args)).then((res) => {
         if (res.meta.requestStatus === "rejected") setError(res.payload);
-        setLoading(false);
+        if (mounted) setLoading(false);
       });
     }
     return () => {

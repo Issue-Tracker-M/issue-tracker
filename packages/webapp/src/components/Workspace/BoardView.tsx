@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Box, Center, Spinner } from "@chakra-ui/react";
 import List from "../List";
 import { useEntity } from "../../hooks/useEntity";
@@ -10,19 +10,12 @@ interface BoardContainerProps {
   workspaceId: string;
 }
 
-function isLoaded(entity: any): entity is Workspace {
-  return !!entity.loaded;
-}
-
 const BoardView = ({ workspaceId }: BoardContainerProps) => {
   const workspace = useEntity("workspaces", workspaceId);
-  isLoaded(workspace);
-  const { loading, error } = useAsyncThunk(
-    getCurrentWorkspace,
-    workspaceId,
-    () => isLoaded(workspace)
-  );
-
+  const condition = useCallback(() => !!workspace && !workspace.loaded, [
+    workspace,
+  ]);
+  useAsyncThunk(getCurrentWorkspace, workspaceId, condition);
   return (
     <Box
       height="100%"
@@ -30,7 +23,7 @@ const BoardView = ({ workspaceId }: BoardContainerProps) => {
       flexDirection={{ md: "row" }}
       alignItems={{ md: "flex-start" }}
       overflow={{ md: "auto" }}>
-      {isLoaded(workspace) ? (
+      {workspace?.loaded ? (
         workspace.lists.map((listId) => <List key={listId} listId={listId} />)
       ) : (
         <Center w="100%" h="100%">

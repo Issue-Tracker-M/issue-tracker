@@ -1,3 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 
-export default () => <div>HELLo</div>;
+const List: FC = () => <div>HELLo</div>;
+export default List;

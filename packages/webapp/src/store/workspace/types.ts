@@ -45,7 +45,7 @@ export interface Task extends DbDocument, FullDocument {
   complete?: boolean;
   labels: Label["_id"][];
   users: User["_id"][];
-  comments: Comment[];
+  comments: Comment["_id"][];
 }
 
 export interface Comment extends DbDocument {

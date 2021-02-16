@@ -1,11 +1,11 @@
-import React from "react";
-import Board from "../components/Board/board";
+import React, { FC } from "react";
 import { AppLayout } from "../components/Layout/AppLayout";
+import Workspace from "../components/Workspace";
 
-const Dashboard = () => {
+const Dashboard: FC = () => {
   return (
     <AppLayout>
-      <Board />
+      <Workspace />
     </AppLayout>
   );
 };

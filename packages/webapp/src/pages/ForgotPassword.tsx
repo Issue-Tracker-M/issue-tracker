@@ -1,31 +1,30 @@
-import React from 'react'
-import { Formik, Form } from 'formik'
-import { string, object } from 'yup'
-import AuthFormWrapper from '../components/Form/AuthFormWrapper'
-import Axios from 'axios'
-import { baseUrl } from '../config'
-import FormikInput from '../components/FormikInputs/FormikInput'
-import { FormikSubmit } from '../components/FormikInputs/FormikSubmit'
+import React, { FC } from "react";
+import { Formik, Form } from "formik";
+import { string, object } from "yup";
+import AuthFormWrapper from "../components/Form/AuthFormWrapper";
+import Axios from "axios";
+import { baseUrl } from "../config";
+import FormikInput from "../components/FormikInputs/FormikInput";
+import { FormikSubmit } from "../components/FormikInputs/FormikSubmit";
 
 const validationSchema = object().shape({
-  email: string().label('Email').email().required()
-})
+  email: string().label("Email").email().required(),
+});
 
-export default function ForgotPassword() {
+const ForgotPassword: FC = () => {
   return (
     <AuthFormWrapper title="Forgot password?">
       <Formik
-        initialValues={{ email: '' }}
+        initialValues={{ email: "" }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           Axios.post(`${baseUrl}/auth/forgot_password`, values)
             .then((res) => {
-              console.log(res)
+              console.log(res);
             })
             .catch(console.error)
-            .finally(() => setSubmitting(false))
-        }}
-      >
+            .finally(() => setSubmitting(false));
+        }}>
         <Form>
           <FormikInput
             formik_name="email"
@@ -39,5 +38,6 @@ export default function ForgotPassword() {
         </Form>
       </Formik>
     </AuthFormWrapper>
-  )
-}
+  );
+};
+export default ForgotPassword;
