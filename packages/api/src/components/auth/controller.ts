@@ -203,6 +203,7 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
     if (!oldRefreshToken) return res.sendStatus(401);
     const user = await User.findById(oldRefreshToken.user_id).exec();
     if (!user) return res.sendStatus(404);
+    await user.populate("workspaces", "name").execPopulate();
     // Delete old refresh token
     await oldRefreshToken.remove();
     // Create new one
