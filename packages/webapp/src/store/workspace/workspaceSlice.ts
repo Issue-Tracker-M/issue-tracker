@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getWorkspaceResponse, Task } from "./types";
 import { baseUrl } from "../../config";
 import { TaskInput } from "../../components/Board/column";
@@ -45,7 +45,7 @@ const workspaceSlice = createSlice({
   initialState,
   reducers: {
     /* TODO */
-    changeFilterText: (state, action) => {
+    changeFilterText: (state, action: PayloadAction<string>) => {
       state.filterText = action.payload;
     },
     toggleSideBar: (state) => {
