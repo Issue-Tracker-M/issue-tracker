@@ -7,6 +7,7 @@ import helmet from "helmet";
 import authRouter from "./auth/routes";
 import workspaceRouter from "../components/workspaces/routes";
 import errorHandler from "errorhandler";
+import morgan from "morgan";
 
 const apiRouter = express.Router();
 apiRouter.use("/auth", authRouter);
@@ -16,6 +17,7 @@ const app = express();
 
 app.set("port", port);
 app.use(helmet());
+app.use(morgan("tiny"));
 app.use(
   cors({
     credentials: true,
