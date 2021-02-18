@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { Box, Text } from "@chakra-ui/react";
 import { object, string } from "yup";
 import AuthFormWrapper from "../components/Form/AuthFormWrapper";
@@ -27,6 +27,7 @@ const initialValues: loginCredentials = {
 const Login: FC = () => {
   const dispatch = useThunkDispatch();
   const history = useHistory();
+  const location = useLocation<{ referrer: Location } | undefined>();
   return (
     <AuthFormWrapper title="Login">
       <Formik
@@ -36,7 +37,9 @@ const Login: FC = () => {
           setSubmitting(true);
           dispatch(authenticate(values))
             .then(() => {
-              history.push(`/home`);
+              history.push(
+                location.state?.referrer ? location.state?.referrer : `/home`
+              );
               mounted = false;
             })
             .catch((err: unknown) => {
