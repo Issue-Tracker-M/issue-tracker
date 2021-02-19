@@ -41,7 +41,9 @@ const InviteMember: FC<{ workspaceId: string }> = ({ workspaceId }) => {
             onSubmit={(values, { setSubmitting, resetForm }) => {
               setSubmitting(true);
               axios
-                .post(`/workspace/${workspaceId}/invite`, values.email)
+                .post(`/workspaces/${workspaceId}/invite`, {
+                  email: values.email,
+                })
                 .then(() => {
                   toast({
                     title: `Invite sent to ${values.email}`,

@@ -23,7 +23,13 @@ const userEntity = new schema.Entity<User>(
   {
     workspaces: [workspaceEntity],
   },
-  { idAttribute: (user) => user._id.toString() }
+  {
+    idAttribute: (user) => user._id.toString(),
+    processStrategy(user) {
+      user.loaded = true;
+      return user;
+    },
+  }
 );
 
 export default function normalizeAuthResponse(

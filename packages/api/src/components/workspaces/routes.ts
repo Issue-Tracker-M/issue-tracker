@@ -7,6 +7,7 @@ import {
   editWorkspace,
   getWorkspaceById,
   deleteWorkspace,
+  inviteToWorkspace,
 } from "./controller";
 import {
   checkUserIsWorkspaceAdmin,
@@ -43,6 +44,8 @@ workspaceRouter.patch("/:workspace_id", validateWorkspaceEdit, editWorkspace);
 // @desc Get a workspaces
 // @access Private
 workspaceRouter.get("/:workspace_id", getWorkspaceById);
+
+workspaceRouter.post("/:workspace_id/invite", inviteToWorkspace);
 
 // @route DELETE /api/workspace/:workspace_id
 // @desc Delete a single workspace

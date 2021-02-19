@@ -10,6 +10,7 @@ import RefreshToken from "./models/RefreshToken";
 import PasswordResetToken from "./models/PasswordResetToken";
 import resetPasswordTemplate from "../../templates/resetPasswordTemplate";
 import User, { UserDocument } from "../users/model";
+import InvitationToken from "./models/InvitationToken";
 
 const cookieOptions = {
   maxAge: 1000 * 60 * 60 * 24 * 7,
@@ -214,6 +215,26 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
     // Send back user data, JWT, and the new refresh token
     const jwt = generateToken(user);
     return res.status(200).json({ token: jwt, user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const joinByInvite: RequestHandler<{ invite_token: string }> = async (
+  req,
+  res,
+  next
+) => {
+  const { invite_token } = req.params;
+  try {
+    const token_document = await InvitationToken.findOne({
+      token: invite_token,
+    }).exec();
+    // if token has expired - 404
+    if (!token_document) return res.sendStatus(404);
+    // if the user is already registered => add them to the workspace
+
+    // if user is not registered => register and add them to the workspace
   } catch (error) {
     next(error);
   }

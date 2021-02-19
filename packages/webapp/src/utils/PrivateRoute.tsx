@@ -1,15 +1,8 @@
 import { Center, Spinner } from "@chakra-ui/react";
-import React, { FC, useState, useEffect } from "react";
+import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import {
-  Route,
-  Redirect,
-  RouteProps,
-  useLocation,
-  useHistory,
-} from "react-router-dom";
+import { Route, Redirect, RouteProps, useLocation } from "react-router-dom";
 import useAsyncThunk from "../hooks/useAsyncAction";
-import { useThunkDispatch } from "../hooks/useThunkDispatch";
 import { refreshAuthToken } from "../store/authSlice";
 
 interface PrivateRouteProps extends RouteProps {
@@ -32,20 +25,7 @@ const Refresh: FC = () => {
   // 4. If unsuccessfull => remember the location we were at and redirect to login
   // 5. Once user has succesfully logged in => send the back to the location they were at
   const location = useLocation<{ referrer?: Location } | undefined>();
-  const history = useHistory();
-  console.log(history, history.action, history.location, document.cookie);
   const { loading, error } = useAsyncThunk(refreshAuthToken, undefined);
-  // const dispatch = useThunkDispatch();
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   let mounted = true;
-  //   dispatch(refreshAuthToken()).then(() => {
-  //     if (mounted) setLoading(false);
-  //   });
-  //   return () => {
-  //     mounted = false;
-  //   };
-  // }, [dispatch]);
   return loading ? (
     <Loading />
   ) : (

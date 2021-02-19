@@ -32,14 +32,14 @@ export const Sidebar: FC<IProps> = ({
   const animate = {
     animate: { opacity: 1, width: "max-content", scaleX: 1 },
     initial: open
-      ? { opacity: 1, width: "max-content", scaleX: 1 }
+      ? { opacity: 1, width: "0px", scaleX: 1 }
       : { opacity: 0, width: "0px", scaleX: 0 },
   };
 
   return (
     <AnimateSharedLayout>
       <MotionContainer layout position="relative" {...rest}>
-        <MotionContainer layout top="3" position="absolute" right="-3rem">
+        <MotionContainer layout top="2" position="absolute" right="-3rem">
           {toggleControl ? (
             toggleControl
           ) : (

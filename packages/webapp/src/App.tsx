@@ -18,6 +18,7 @@ import Home from "./pages/Home";
 import PrivateRoute from "./utils/PrivateRoute";
 import TaskView from "./components/Board/TaskView";
 import { FC } from "react";
+import { Invite } from "./pages/Invite";
 
 const App: FC = () => {
   const location = useLocation<{
@@ -28,8 +29,10 @@ const App: FC = () => {
     <ChakraProvider theme={theme} resetCSS>
       <Switch location={background || location}>
         <Route path="/login" component={Login} />
+        <Route path="/signup/:invite_token" component={Signup} />
         <Route path="/signup" component={Signup} />
         <Route path="/home" component={Home} />
+        <Route path="/invite/:invite_token" component={Invite} />
         <Route path="/forgot_password" component={ForgotPassword} />
         <Route path="/reset/:token" component={ResetPassword} />
         <Route path="/confirm/:token" component={ConfirmEmail} />

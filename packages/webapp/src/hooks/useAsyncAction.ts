@@ -31,16 +31,24 @@ export default function useAsyncThunk<T extends AsyncThunk<any, any, any>>(
   const dispatch = useThunkDispatch();
 
   useEffect(() => {
+    console.log("Running effect", args);
     let mounted = true;
-    if (loading) return;
+    if (loading)
+      return () => {
+        console.log("Loading cleanup");
+        mounted = false;
+      };
     if (!condition || condition()) {
+      console.log("No condition or condition true");
       setLoading(true);
       dispatch(thunk(args)).then((res) => {
+        console.log("Should set loading to false", mounted);
         if (res.meta.requestStatus === "rejected") setError(res.payload);
-        if (mounted) setLoading(false);
+        setLoading(false);
       });
     }
     return () => {
+      console.log("cleanup");
       mounted = false;
     };
   }, [args, condition, dispatch, loading, thunk]);

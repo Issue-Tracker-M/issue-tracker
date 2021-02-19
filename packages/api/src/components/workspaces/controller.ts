@@ -2,10 +2,16 @@ import Workspace, {
   WorkspaceDocument,
   WorkspacePopulatedDocument,
 } from "./model";
+import InvitationToken, {
+  InvitationToken as IInvitationToken,
+} from "../auth/models/InvitationToken";
 import { NextFunction, RequestHandler, Response } from "express";
 import { JSONed } from "../../utils/typeUtils";
 import { WorkspaceInput } from "./validation";
 import { AuthorizedRequest } from "../auth/middleware";
+import Users from "../users/model";
+import sendMail from "../../utils/sendEmail";
+import { inviteTemplate } from "../../templates/inviteTemplate";
 
 /**
  * @private
@@ -33,7 +39,7 @@ export const createWorkspace = async (
     //   { new: true }
     // );
     res.status(201).json(newWorkSpace);
-  } catch (error: unknown) {
+  } catch (error) {
     res.status(500).json(error);
   }
 };
@@ -59,7 +65,7 @@ export const deleteWorkspace: RequestHandler = async (req, res, next) => {
     );
     await workspace.remove();
     return res.sendStatus(200);
-  } catch (error: unknown) {
+  } catch (error) {
     next(error);
   }
 };
@@ -136,5 +142,52 @@ export const getWorkspaceById = async (
     return;
   } catch (err) {
     next(err);
+  }
+};
+
+/**
+ * Sends an invitation to a workspace to a given email.
+ * @param req
+ * @param res
+ * @param next
+ */
+export const inviteToWorkspace: RequestHandler<
+  { workspaceId: string },
+  { email: string }
+> = async (req, res, next) => {
+  const { workspace, user } = req;
+  if (!workspace) throw "Expected a workspace document";
+  if (!user) throw "Expected a user document";
+  const { email } = req.body;
+  try {
+    const invitee = await Users.findOne({ email }).exec();
+    let invitation_data: Omit<IInvitationToken, "token">;
+    if (invitee) {
+      invitation_data = {
+        workspace_id: workspace.id,
+        user_id: invitee.id,
+        email,
+      };
+    } else {
+      invitation_data = {
+        workspace_id: workspace.id,
+        user_id: null,
+        email,
+      };
+    }
+    const { token } = await new InvitationToken(invitation_data).save();
+    await sendMail({
+      subject: "Welcome to Issue Tracker!",
+      to: email,
+      html: inviteTemplate(
+        user.first_name + user.last_name,
+        workspace.name,
+        token,
+        !!invitee
+      ),
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    next(error);
   }
 };

@@ -4,7 +4,7 @@ import List from "../List";
 import { useEntity } from "../../hooks/useEntity";
 import { getCurrentWorkspace } from "../../store/workspace/workspaceSlice";
 import useAsyncThunk from "../../hooks/useAsyncAction";
-import { Workspace } from "../../store/workspace/types";
+import Loading from "../Layout/Loading";
 
 interface BoardContainerProps {
   workspaceId: string;
@@ -12,10 +12,14 @@ interface BoardContainerProps {
 
 const BoardView = ({ workspaceId }: BoardContainerProps) => {
   const workspace = useEntity("workspaces", workspaceId);
-  const condition = useCallback(() => !!workspace && !workspace.loaded, [
-    workspace,
-  ]);
-  useAsyncThunk(getCurrentWorkspace, workspaceId, condition);
+  const condition = useCallback(() => !workspace?.loaded, [workspace]);
+  const { loading, error } = useAsyncThunk(
+    getCurrentWorkspace,
+    workspaceId,
+    condition
+  );
+  if (loading) return <Loading />;
+  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
   return (
     <Box
       height="100%"

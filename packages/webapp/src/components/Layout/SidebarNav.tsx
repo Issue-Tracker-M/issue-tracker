@@ -4,6 +4,7 @@ import {
   Center,
   Collapse,
   Flex,
+  Heading,
   Link,
   Text,
   useDisclosure,
@@ -18,6 +19,7 @@ import { Link as RouterLink, useRouteMatch } from "react-router-dom";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
 import { workspaceSelectors } from "../../store/entities/workspaces";
 import { toggleSideBar } from "../../store/workspace/workspaceSlice";
+import { Logo } from "./Logo";
 import { Sidebar } from "./Sidebar";
 
 const WorkspacesNavs = () => {
@@ -92,6 +94,7 @@ export const SidebarNav: FC = () => {
       onClose={toggle}
       backgroundColor="gray.800"
       color="gray.200">
+      <Logo fontSize="2xl" textAlign="center" p="3" />
       <VStack spacing="0">
         <NavItem
           to="/home"
