@@ -161,30 +161,17 @@ export const inviteToWorkspace: RequestHandler<
   const { email } = req.body;
   try {
     const invitee = await Users.findOne({ email }).exec();
-    let invitation_data: Omit<IInvitationToken, "token">;
-    if (invitee) {
-      invitation_data = {
-        workspace_id: workspace.id,
-        user_id: invitee.id,
-        email,
-      };
-    } else {
-      invitation_data = {
-        workspace_id: workspace.id,
-        user_id: null,
-        email,
-      };
-    }
+    const invitation_data: Omit<IInvitationToken, "token"> = {
+      invited_by: user.id,
+      invited_to: workspace.id,
+      user_id: invitee ? invitee.id : null,
+      email,
+    };
     const { token } = await new InvitationToken(invitation_data).save();
     await sendMail({
       subject: "Welcome to Issue Tracker!",
       to: email,
-      html: inviteTemplate(
-        user.first_name + user.last_name,
-        workspace.name,
-        token,
-        !!invitee
-      ),
+      html: inviteTemplate(user.fullName, workspace.name, token, !!invitee),
     });
     res.sendStatus(200);
   } catch (error) {

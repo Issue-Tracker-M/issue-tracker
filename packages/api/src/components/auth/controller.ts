@@ -220,7 +220,13 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const joinByInvite: RequestHandler<{ invite_token: string }> = async (
+/**
+ * Returns the specifics of invitation
+ * @param req
+ * @param res
+ * @param next
+ */
+export const getInviteData: RequestHandler<{ invite_token: string }> = async (
   req,
   res,
   next
@@ -230,12 +236,51 @@ export const joinByInvite: RequestHandler<{ invite_token: string }> = async (
     const token_document = await InvitationToken.findOne({
       token: invite_token,
     }).exec();
-    // if token has expired - 404
     if (!token_document) return res.sendStatus(404);
-    // if the user is already registered => add them to the workspace
-
-    // if user is not registered => register and add them to the workspace
+    await token_document
+      .populate({ path: "invited_by" })
+      .populate({ path: "invited_to" })
+      .execPopulate();
+    res.status(200).json(token_document);
   } catch (error) {
     next(error);
   }
+};
+
+/**
+ * Processes user's response to the invite.
+ * The request has to be Authenticated
+ * @param req
+ * @param res
+ * @param next
+ */
+export const processInviteResponse: RequestHandler<
+  {
+    invite_token: string;
+  },
+  unknown,
+  { acceptInvite: boolean }
+> = async (req, res, next) => {
+  const { user } = req;
+  if (!user) throw new Error("Expected authenticated request");
+  const { invite_token } = req.params;
+  const { acceptInvite } = req.body;
+  try {
+    const token_document = await InvitationToken.findOne({
+      token: invite_token,
+    }).exec();
+    if (!token_document) return res.sendStatus(404);
+    const { invited_to } = (await token_document
+      .populate("invited_to")
+      .execPopulate()) as any;
+    if (acceptInvite) {
+      user.workspaces.push(invited_to._id);
+      invited_to.users.push(user._id);
+    }
+    await token_document.remove();
+    return res.sendStatus(200);
+  } catch (error) {
+    next(error);
+  }
+  return;
 };
