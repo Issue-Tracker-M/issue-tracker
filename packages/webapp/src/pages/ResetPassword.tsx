@@ -8,6 +8,7 @@ import Axios from "axios";
 import { baseUrl } from "../config";
 import { useRouteMatch } from "react-router-dom";
 import { FormikSubmit } from "../components/FormikInputs/FormikSubmit";
+import { FormLayout } from "../components/Layout/FormLayout";
 
 const validationSchema = object().shape({
   password: string()
@@ -37,40 +38,42 @@ const ResetPassword: FC = () => {
     case 3:
     default:
       return (
-        <AuthFormWrapper title="Forgot password?">
-          <Formik
-            initialValues={{ password: "", confirmPassword: "" }}
-            validationSchema={validationSchema}
-            onSubmit={(values, actions) => {
-              Axios.post(`${baseUrl}/auth/reset_password`, {
-                ...values,
-                token,
-              })
-                .then(() => setState(1))
-                .catch(() => setState(2))
-                .finally(() => {
-                  actions.setSubmitting(false);
-                });
-            }}>
-            <Form>
-              <StringField
-                formik_name="password"
-                labelText="Password"
-                helperText="Enter your new password"
-                type="password"
-              />
-              <StringField
-                formik_name="confirmPassword"
-                labelText="Confirm Password"
-                helperText="Confirm new password."
-                type="password"
-              />
-              <FormikSubmit mt={4} colorScheme="teal">
-                Submit
-              </FormikSubmit>
-            </Form>
-          </Formik>
-        </AuthFormWrapper>
+        <FormLayout>
+          <AuthFormWrapper title="Forgot password?">
+            <Formik
+              initialValues={{ password: "", confirmPassword: "" }}
+              validationSchema={validationSchema}
+              onSubmit={(values, actions) => {
+                Axios.post(`${baseUrl}/auth/reset_password`, {
+                  ...values,
+                  token,
+                })
+                  .then(() => setState(1))
+                  .catch(() => setState(2))
+                  .finally(() => {
+                    actions.setSubmitting(false);
+                  });
+              }}>
+              <Form>
+                <StringField
+                  formik_name="password"
+                  labelText="Password"
+                  helperText="Enter your new password"
+                  type="password"
+                />
+                <StringField
+                  formik_name="confirmPassword"
+                  labelText="Confirm Password"
+                  helperText="Confirm new password."
+                  type="password"
+                />
+                <FormikSubmit mt={4} colorScheme="teal">
+                  Submit
+                </FormikSubmit>
+              </Form>
+            </Formik>
+          </AuthFormWrapper>
+        </FormLayout>
       );
   }
 };

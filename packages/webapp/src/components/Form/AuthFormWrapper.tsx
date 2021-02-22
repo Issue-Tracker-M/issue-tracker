@@ -8,7 +8,7 @@ interface IProps {
 
 const AuthFormWrapper: FC<IProps> = ({ title, children }) => {
   return (
-    <Box margin="0 auto" pt={4} maxW={600}>
+    <Box margin="0 auto" pt={4} maxW={500} minW="300px" w="100%">
       <Heading color="teal.500" textAlign="center" size="2xl">
         {title}
       </Heading>
