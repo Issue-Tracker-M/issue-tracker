@@ -1,5 +1,5 @@
 [build]
-  command = "cd packages/webapp && yarn build"
+  command = "cd packages && tsc -b && cd webapp && yarn build"
   publish = "packages/webapp/build"
 
 [[redirects]]
