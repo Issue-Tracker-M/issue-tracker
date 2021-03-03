@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Box, Center, Spinner } from "@chakra-ui/react";
 import List from "../List";
 import { useEntity } from "../../hooks/useEntity";
-import { getCurrentWorkspace } from "../../store/workspace/workspaceSlice";
+import { getCurrentWorkspace } from "../../store/display/displaySlice";
 import useAsyncThunk from "../../hooks/useAsyncAction";
 import Loading from "../Layout/Loading";
 

@@ -2,8 +2,8 @@ import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../rootReducer";
 import { addComment, fetchTask, patchTask } from "../thunks";
 import { EntityNames } from "../types";
-import { Task, TaskStub } from "../workspace/types";
-import { createTask, getCurrentWorkspace } from "../workspace/workspaceSlice";
+import { Task, TaskStub } from "../display/types";
+import { createTask, getCurrentWorkspace } from "../display/displaySlice";
 
 export const taskAdapter = createEntityAdapter<Task | TaskStub>({
   selectId: (user) => user._id,

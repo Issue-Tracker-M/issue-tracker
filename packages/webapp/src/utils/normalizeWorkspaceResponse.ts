@@ -7,14 +7,19 @@ import {
   List,
   TaskStub,
   Workspace,
-} from "../store/workspace/types";
+} from "../store/display/types";
 
 const userEntity = new schema.Entity<UserStub>(
   EntityNames.users,
   {},
   {
     idAttribute: (u) => u._id,
-    processStrategy: (user) => ({ ...user, loaded: false }),
+    processStrategy(user) {
+      if (user.createdAt) {
+        user.loaded = true;
+      }
+      return user;
+    },
   }
 );
 

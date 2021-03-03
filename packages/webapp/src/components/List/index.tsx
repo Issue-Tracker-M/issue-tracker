@@ -7,7 +7,7 @@ import { useThunkDispatch } from "../../hooks/useThunkDispatch";
 import TaskPreview from "../Board/TaskPreview";
 import ListHeader from "./ListHeader";
 import { useSelector } from "react-redux";
-import { Task } from "../../store/workspace/types";
+import { Task } from "../../store/display/types";
 
 export const List: FC<{ listId: string }> = ({ listId }) => {
   const list = useEntity("lists", listId);

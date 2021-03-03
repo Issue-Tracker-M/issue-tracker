@@ -20,7 +20,7 @@ import { commentSelectors } from "../../store/entities/comments";
 import { userSelectors } from "../../store/entities/users";
 import { deleteComment } from "../../store/thunks";
 import { User, UserStub } from "../../store/user/types";
-import { Comment, Task } from "../../store/workspace/types";
+import { Comment, Task } from "../../store/display/types";
 import CommentInput from "./CommentInput";
 
 interface IProps {

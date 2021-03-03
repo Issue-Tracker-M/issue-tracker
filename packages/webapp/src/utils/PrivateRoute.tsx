@@ -18,6 +18,9 @@ const Loading: FC = () => {
   );
 };
 
+/**
+ * Try to refresh the access JWT, if unsuccesfull - redirect back to login page.
+ */
 const Refresh: FC = () => {
   // 1. User refreshes the page
   // 2. We try to refresh the JWT
@@ -44,11 +47,13 @@ const Refresh: FC = () => {
 
 const PrivateRoute: FC<PrivateRouteProps> = (props) => {
   const { component: Component, ...rest } = props;
-  const hasToken = !!useSelector((state) => state.auth.token);
+  const isAthenticated = useSelector((state) => !!state.auth.token);
   return (
     <Route
       {...rest}
-      render={(props) => (hasToken ? <Component {...props} /> : <Refresh />)}
+      render={(props) =>
+        isAthenticated ? <Component {...props} /> : <Refresh />
+      }
     />
   );
 };

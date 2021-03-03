@@ -1,7 +1,7 @@
 import { normalize, NormalizedSchema, schema } from "normalizr";
 import { EntityNames } from "../store/types";
 import { User, UserAPIResponse } from "../store/user/types";
-import { Workspace, WorkspaceStub } from "../store/workspace/types";
+import { Workspace, WorkspaceStub } from "../store/display/types";
 
 const workspaceEntity = new schema.Entity<WorkspaceStub | Workspace>(
   EntityNames.workspaces,
@@ -26,7 +26,9 @@ const userEntity = new schema.Entity<User>(
   {
     idAttribute: (user) => user._id.toString(),
     processStrategy(user) {
-      user.loaded = true;
+      if (user.createdAt) {
+        user.loaded = true;
+      }
       return user;
     },
   }

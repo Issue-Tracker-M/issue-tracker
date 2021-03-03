@@ -1,11 +1,11 @@
 import React, { FC } from "react";
-import { NavLink, useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory, Link as RouterLink, useLocation } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { object, string } from "yup";
 import StringField from "../components/FormikInputs/FormikInput";
 import AuthFormWrapper from "../components/Form/AuthFormWrapper";
 import { FormikSubmit } from "../components/FormikInputs/FormikSubmit";
-import { Box, Link, Text } from "@chakra-ui/react";
+import { Box, Link, Text, useToast } from "@chakra-ui/react";
 import Axios from "axios";
 import { baseUrl } from "../config";
 import { FormLayout } from "../components/Layout/FormLayout";
@@ -36,21 +36,35 @@ const initialValues = {
 
 const SignUp: FC = () => {
   const history = useHistory();
+  const location = useLocation<{ referrer: Location } | undefined>();
+  const toast = useToast();
+  console.log(location);
   return (
     <FormLayout>
       <AuthFormWrapper title="Sign up">
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={(values, actions) => {
+          onSubmit={({ first_name, last_name, email, password }, actions) => {
             actions.setSubmitting(true);
             Axios.post(`${baseUrl}/auth/register`, {
-              first_name: values.first_name,
-              last_name: values.last_name,
-              email: values.email,
-              password: values.password,
+              first_name,
+              last_name,
+              email,
+              password,
             })
-              .then(() => history.push("/dashboard"))
+              .then(() => {
+                history.push(
+                  location.state?.referrer ? location.pathname : "/home"
+                );
+                toast({
+                  title: "Account created!",
+                  description: `We've sent a confirmation email to ${email}. If you dont confirm your email, your account will be disabled in a week.`,
+                  status: "success",
+                  duration: 15000,
+                  isClosable: true,
+                });
+              })
               .catch((e) => console.error(e))
               .finally(() => actions.setSubmitting(false));
           }}>

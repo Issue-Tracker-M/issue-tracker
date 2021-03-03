@@ -6,14 +6,16 @@ import { DbDocument } from "../types";
 import normalizeWorkspaceResponse from "../../utils/normalizeWorkspaceResponse";
 import axios from "axios";
 
-interface workspaceState {
+interface displayState {
   filterText: string;
   isSidebarOpen: boolean;
+  isWorkspaceListOpen: boolean;
 }
 
-const initialState: workspaceState = {
+const initialState: displayState = {
   filterText: "",
   isSidebarOpen: false,
+  isWorkspaceListOpen: false,
 };
 
 export const getCurrentWorkspace = createAsyncThunk(
@@ -40,8 +42,8 @@ export const createTask = createAsyncThunk(
   }
 );
 
-const workspaceSlice = createSlice({
-  name: "workspace",
+const displaySlice = createSlice({
+  name: "display",
   initialState,
   reducers: {
     /* TODO */
@@ -51,6 +53,9 @@ const workspaceSlice = createSlice({
     toggleSideBar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
+    toggleWorkspaceList: (state) => {
+      state.isWorkspaceListOpen = !state.isWorkspaceListOpen;
+    },
   },
   // extraReducers: (builder) => {
   //   builder.addCase(getCurrentWorkspace.fulfilled, (state, action) => {
@@ -59,6 +64,10 @@ const workspaceSlice = createSlice({
   // },
 });
 
-export const { changeFilterText, toggleSideBar } = workspaceSlice.actions;
+export const {
+  changeFilterText,
+  toggleSideBar,
+  toggleWorkspaceList,
+} = displaySlice.actions;
 
-export default workspaceSlice.reducer;
+export default displaySlice.reducer;

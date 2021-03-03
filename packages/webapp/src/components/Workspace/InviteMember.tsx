@@ -19,7 +19,7 @@ import StyledForm from "../FormikInputs/StyledForm";
 const InviteMember: FC<{ workspaceId: string }> = ({ workspaceId }) => {
   const toast = useToast();
   return (
-    <Popover>
+    <Popover id="invite" isLazy>
       <PopoverTrigger>
         <Button
           variant="outline"
@@ -91,4 +91,4 @@ const InviteMember: FC<{ workspaceId: string }> = ({ workspaceId }) => {
   );
 };
 
-export default React.memo(InviteMember);
+export default InviteMember;

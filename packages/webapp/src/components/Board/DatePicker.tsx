@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
 import { taskSelectors } from "../../store/entities/tasks";
 import { patchTask } from "../../store/thunks";
-import { Task } from "../../store/workspace/types";
+import { Task } from "../../store/display/types";
 
 interface IProps {
   task_id: Task["_id"];
@@ -67,9 +67,12 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
         onChange={(date: Date) => {
           dispatch(
             patchTask({
-              _id: task._id,
-              workspace: task.workspace,
-              due_date: date,
+              current: task,
+              update: {
+                _id: task._id,
+                workspace: task.workspace,
+                due_date: date,
+              },
             })
           );
         }}
@@ -81,9 +84,12 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
             onComplete={(e: any) => {
               dispatch(
                 patchTask({
-                  _id: task._id,
-                  workspace: task.workspace,
-                  complete: e.target.checked,
+                  current: task,
+                  update: {
+                    _id: task._id,
+                    workspace: task.workspace,
+                    complete: e.target.checked,
+                  },
                 })
               );
             }}
@@ -98,10 +104,13 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
         onClick={(e) => {
           dispatch(
             patchTask({
-              _id: task._id,
-              workspace: task.workspace,
-              due_date: null,
-              complete: false,
+              current: task,
+              update: {
+                _id: task._id,
+                workspace: task.workspace,
+                due_date: null,
+                complete: false,
+              },
             })
           );
         }}
@@ -116,9 +125,12 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
       onClick={(e) => {
         dispatch(
           patchTask({
-            _id: task._id,
-            workspace: task.workspace,
-            due_date: new Date(),
+            current: task,
+            update: {
+              _id: task._id,
+              workspace: task.workspace,
+              due_date: new Date(),
+            },
           })
         );
       }}>

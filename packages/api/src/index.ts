@@ -18,7 +18,7 @@ async function bootstrap() {
     /**
      * Start Express server.
      */
-    const server = app.listen(app.get("port"), () => {
+    app.listen(app.get("port"), () => {
       console.log(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `App is running at http://localhost:${app.get("port")} in ${app.get(
@@ -27,7 +27,6 @@ async function bootstrap() {
       );
       console.log("  Press CTRL-C to stop\n");
     });
-    return server;
   } catch (error) {
     console.log(error, "This shouldn't be happening");
   }
@@ -39,3 +38,4 @@ export * from "./utils/typeUtils";
 export * from "./components/auth/middleware";
 export * from "./components/auth/validation";
 export { registerInput } from "./components/auth/controller";
+export { getInviteData } from "./publicTypes/index";

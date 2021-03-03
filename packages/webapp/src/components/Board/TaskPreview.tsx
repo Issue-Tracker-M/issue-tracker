@@ -2,7 +2,7 @@ import { Box, Text, useDisclosure } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useEntity } from "../../hooks/useEntity";
-import { Task } from "../../store/workspace/types";
+import { Task } from "../../store/display/types";
 import TaskView from "./TaskView";
 
 interface TaskPreviewProps {

@@ -14,7 +14,7 @@ import React from "react";
 import { useEntity } from "../hooks/useEntity";
 import { useThunkDispatch } from "../hooks/useThunkDispatch";
 import { patchTask } from "../store/thunks";
-import { Task } from "../store/workspace/types";
+import { Task } from "../store/display/types";
 
 const MemberPreview = ({ userId }: { userId: string }) => {
   const user = useEntity("users", userId);
@@ -56,9 +56,12 @@ export const MemberSelect = forwardRef<IProps, "button">(
             onChange={(value) => {
               dispatch(
                 patchTask({
-                  _id: taskId,
-                  workspace: task?.workspace,
-                  users: value as string[],
+                  current: task,
+                  update: {
+                    _id: taskId,
+                    workspace: task?.workspace,
+                    users: value as string[],
+                  },
                 })
               );
             }}>

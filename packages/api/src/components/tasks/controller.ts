@@ -12,7 +12,7 @@ type TaskInput = Pick<TaskDocument, "title" | "list">;
  */
 export const createTask: RequestHandler<
   { workspace_id: string },
-  any,
+  unknown,
   TaskInput
 > = async (req, res, next) => {
   try {
@@ -63,8 +63,8 @@ export const deleteTask: RequestHandler = async (req, res, next) => {
  * @param next
  */
 export const patchTask: RequestHandler<
-  any,
-  any,
+  unknown,
+  unknown,
   Partial<JSONed<TaskDocument>>
 > = async (req, res, next) => {
   const workspace = req.workspace;
@@ -94,7 +94,11 @@ export const patchTask: RequestHandler<
  * @param res
  * @param next
  */
-export const getTask: RequestHandler<any, any, null> = (req, res, next) => {
+export const getTask: RequestHandler<unknown, unknown, null> = (
+  req,
+  res,
+  next
+) => {
   try {
     const task = req.task;
     if (!task) throw new Error("Expected task document in request");

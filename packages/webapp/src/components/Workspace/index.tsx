@@ -6,13 +6,17 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  VStack,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import React, { FC, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import useAsyncThunk from "../../hooks/useAsyncAction";
 import { useEntity } from "../../hooks/useEntity";
 import PageNotFound from "../../pages/PageNotFound";
-import { getCurrentWorkspace } from "../../store/workspace/workspaceSlice";
+import { getCurrentWorkspace } from "../../store/display/displaySlice";
+import MemberPreview from "../Board/MemberPreview";
 import Loading from "../Layout/Loading";
 import BoardView from "./BoardView";
 import FilterInput from "./FilterInput";
@@ -34,18 +38,22 @@ const Workspace: FC = () => {
   if (!workspace) return <PageNotFound />;
   return (
     <Flex h="100%" flexDir="column">
-      <Flex
-        flex="0 0 auto"
-        alignItems={["center", "end"]}
-        pt="2"
-        pb="2"
-        flexDir={["column", "row"]}>
-        <Heading ml={["0", "3.5rem"]} mr={["0", "1rem"]}>
-          {workspace.name}
-        </Heading>
-        <FilterInput />
-        <InviteMember workspaceId={workspaceId} />
-      </Flex>
+      <Wrap ml={["0", "3.5rem"]} pt="4" pb="1" spacing="2">
+        <WrapItem>
+          <Heading mr={["0", "1rem"]} fontSize="2xl">
+            {workspace.name}
+          </Heading>
+        </WrapItem>
+        <WrapItem>
+          <FilterInput />
+        </WrapItem>
+        <WrapItem>
+          <MemberPreview members={workspace.loaded ? workspace.users : []} />
+        </WrapItem>
+        <WrapItem>
+          <InviteMember workspaceId={workspaceId} />
+        </WrapItem>
+      </Wrap>
       <Tabs flex="1 1 auto" display="flex" flexDir="column">
         <TabList flex="0 0 auto">
           <Tab>Board</Tab>

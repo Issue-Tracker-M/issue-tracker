@@ -65,5 +65,5 @@ const Tasks = model(
     { timestamps: true }
   )
 );
-
+Tasks.watch().on("change", console.log);
 export default Tasks;

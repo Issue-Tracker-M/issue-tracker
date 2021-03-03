@@ -1,6 +1,6 @@
 import { schema, normalize, NormalizedSchema } from "normalizr";
 import { EntityNames } from "../store/types";
-import { Comment, Task } from "../store/workspace/types";
+import { Comment, Task } from "../store/display/types";
 
 const commentEntity = new schema.Entity<Comment>(
   EntityNames.comments,

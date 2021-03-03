@@ -10,7 +10,7 @@ import { getInviteData } from "@issue-tracker/api";
 import axios from "axios";
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import { AppLayout } from "../components/Layout/AppLayout";
 import { Header } from "../components/Layout/Header";
 import Loading from "../components/Layout/Loading";
@@ -24,6 +24,7 @@ import PageNotFound from "./PageNotFound";
 const AskToAuth: FC<{ invitationData: getInviteData }> = ({
   invitationData,
 }) => {
+  const location = useLocation();
   return (
     <>
       <Heading textAlign="center">
@@ -34,11 +35,11 @@ const AskToAuth: FC<{ invitationData: getInviteData }> = ({
       <Center>
         <ButtonGroup size="lg" spacing="6">
           {invitationData.user_id ? (
-            <Link to={{ pathname: "/login", state: invitationData }}>
+            <Link to={{ pathname: "/login", state: { referrer: location } }}>
               <Button colorScheme="twitter">Log in</Button>
             </Link>
           ) : (
-            <Link to={{ pathname: "/signup", state: invitationData }}>
+            <Link to={{ pathname: "/signup", state: { referrer: location } }}>
               <Button colorScheme="teal">Sign up</Button>
             </Link>
           )}
@@ -106,7 +107,7 @@ export const Invite: FC = () => {
                     colorScheme="teal"
                     onClick={() => {
                       axios
-                        .post(`/auth/${invite_token}`, {
+                        .post(`/auth/invite/${invite_token}`, {
                           acceptInvite: true,
                         })
                         .then(() =>
@@ -130,7 +131,7 @@ export const Invite: FC = () => {
                     colorScheme="red"
                     onClick={() => {
                       axios
-                        .post(`/auth/${invite_token}`, {
+                        .post(`/auth/invite/${invite_token}`, {
                           acceptInvite: false,
                         })
                         .then(() => history.push(`/home`));

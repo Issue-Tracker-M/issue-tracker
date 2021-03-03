@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { Header } from "./Header";
 import { MotionContainer } from "./MotionContainer";
 import { SidebarNav } from "./SidebarNav";
 
@@ -11,9 +10,9 @@ export const AppLayout: FC = ({ children }) => {
         as="main"
         width="100%"
         height="100vh"
+        flex="1 1 auto"
         overflowX="hidden"
         overflowY="hidden">
-        <Header />
         {children}
       </MotionContainer>
     </MotionContainer>

@@ -14,6 +14,7 @@ import {
   refreshToken,
   getInviteData,
   processInviteResponse,
+  logOut,
 } from "./controller";
 import { checkForCredentials, checkToken, getUserByEmail } from "./middleware";
 import { Router } from "express";
@@ -21,6 +22,7 @@ import { Router } from "express";
 const router = Router();
 router.post("/register", validateRegisterInput, register);
 router.post("/login", validateLoginInput, getUserByEmail, login);
+router.get("/logout", logOut);
 router.post("/confirm_email", validateEmailConfirmation, confirmEmail);
 router.post("/forgot_password", validateForgotPassword, forgotPassword);
 router.post("/reset_password", validateResetPassword, resetPassword);

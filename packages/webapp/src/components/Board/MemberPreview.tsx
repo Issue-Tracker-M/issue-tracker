@@ -1,16 +1,16 @@
-import { Avatar, AvatarGroup } from "@chakra-ui/react";
+import { Avatar, AvatarGroup, PropsOf } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useEntities } from "../../hooks/useEntity";
-import { Task } from "../../store/workspace/types";
+import { Task } from "../../store/display/types";
 
-interface IProps {
+interface IProps extends PropsOf<typeof AvatarGroup> {
   members: Task["users"];
 }
 
-const MemberPreview: FC<IProps> = ({ members }) => {
+const MemberPreview: FC<IProps> = ({ members, ...rest }) => {
   const memberData = useEntities("users", members);
   return (
-    <AvatarGroup size="sm" max={4}>
+    <AvatarGroup size="sm" max={4} {...rest}>
       {memberData.map((m) =>
         m ? (
           <Avatar

@@ -14,7 +14,7 @@ import {
 import * as yup from "yup";
 import { Formik, Form, Field } from "formik";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
-import { addWorkspace } from "../../store/thunks";
+import { createWorkspace } from "../../store/thunks";
 
 interface createWorkspaceModalProps {
   isOpen: boolean;
@@ -50,7 +50,7 @@ const CreateWorkspaceModal: FC<createWorkspaceModalProps> = ({
             initialValues={initialValues}
             onSubmit={(values) => {
               const payload = { name: values.name };
-              dispatch(addWorkspace(payload));
+              dispatch(createWorkspace(payload));
               onClose();
             }}
             validationSchema={validationSchema}>

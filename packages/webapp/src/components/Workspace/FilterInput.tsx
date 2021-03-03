@@ -5,16 +5,18 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  PropsOf,
 } from "@chakra-ui/react";
 import React, { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
-import { changeFilterText } from "../../store/workspace/workspaceSlice";
+import { changeFilterText } from "../../store/display/displaySlice";
 
-const FilterInput: FC = () => {
+const FilterInput: FC<PropsOf<typeof InputGroup>> = (props) => {
   const dispatch = useThunkDispatch();
   const filterText = useSelector((state) => state.workspaceDisplay.filterText);
 
+  // Clear filter text on unmount
   useEffect(
     () => () => {
       dispatch(changeFilterText(""));
@@ -22,7 +24,7 @@ const FilterInput: FC = () => {
     [dispatch]
   );
   return (
-    <InputGroup maxW="20rem" w="calc(100% - 4rem)" mr={2} size="sm">
+    <InputGroup size="sm" {...props}>
       <InputLeftElement children={<Search2Icon />} />
       <Input
         rounded={2}
@@ -31,10 +33,10 @@ const FilterInput: FC = () => {
         onChange={(e) => dispatch(changeFilterText(e.target.value))}
       />
       <InputRightElement
-        onClick={() => dispatch(changeFilterText(""))}
         children={
           filterText ? (
             <IconButton
+              onClick={() => dispatch(changeFilterText(""))}
               aria-label="Clear filter"
               size="sm"
               variant="ghost"

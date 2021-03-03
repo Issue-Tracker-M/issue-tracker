@@ -2,7 +2,7 @@ import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../rootReducer";
 import { addComment, fetchTask, patchTask } from "../thunks";
 import { EntityNames } from "../types";
-import { Comment } from "../workspace/types";
+import { Comment } from "../display/types";
 
 export const commentAdapter = createEntityAdapter<Comment>({
   selectId: (comment) => comment._id,

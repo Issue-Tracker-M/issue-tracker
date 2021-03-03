@@ -1,9 +1,9 @@
+import { getInviteData } from "@issue-tracker/api";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { schema, normalize } from "normalizr";
 import { AppDispatch } from "..";
 import { createWorkspaceObject } from "../../components/Modals/createWorkspaceModal";
-import { baseUrl } from "../../config";
 import { AtLeastOne } from "../../globals";
 import { setToken } from "../../helpers";
 import normalizeAuthResponse from "../../utils/normalizeAuthResponse";
@@ -15,9 +15,10 @@ import {
   Comment,
   List,
   Task,
+  TaskStub,
   Workspace,
   WorkspaceStub,
-} from "../workspace/types";
+} from "../display/types";
 
 // This creates an async action creator which later can be used like regular action
 export const authenticate = createAsyncThunk(
@@ -25,10 +26,7 @@ export const authenticate = createAsyncThunk(
   async (credentials: loginCredentials) => {
     const {
       data: { user, token },
-    } = await axios.post<succesfullAuthObject>(
-      `${baseUrl}/auth/login`,
-      credentials
-    );
+    } = await axios.post<succesfullAuthObject>(`/auth/login`, credentials);
     return { ...normalizeAuthResponse(user), token };
   }
 );
@@ -36,12 +34,9 @@ export const authenticate = createAsyncThunk(
 export const confirmEmail = createAsyncThunk(
   "user/confirmEmail",
   async (token: string) => {
-    const res = await axios.post<succesfullAuthObject>(
-      `${baseUrl}/auth/confirm_email`,
-      {
-        token,
-      }
-    );
+    const res = await axios.post<succesfullAuthObject>(`/auth/confirm_email`, {
+      token,
+    });
     setToken(res.data.token);
     return normalizeAuthResponse(res.data.user);
   }
@@ -50,7 +45,7 @@ export const confirmEmail = createAsyncThunk(
 export const getWorkspaces = createAsyncThunk(
   "user/getWorkspaces",
   async () => {
-    const response = await axios.get<WorkspaceStub[]>(`${baseUrl}/workspaces/`);
+    const response = await axios.get<WorkspaceStub[]>(`/workspaces/`);
     return normalize(response.data, [
       new schema.Entity<WorkspaceStub>(
         EntityNames.workspaces,
@@ -61,13 +56,10 @@ export const getWorkspaces = createAsyncThunk(
   }
 );
 
-export const addWorkspace = createAsyncThunk(
-  "user/addWorkspace",
+export const createWorkspace = createAsyncThunk(
+  "createWorkspace",
   async (workspace: createWorkspaceObject) => {
-    const response = await axios.post<Workspace>(
-      `${baseUrl}/workspaces/`,
-      workspace
-    );
+    const response = await axios.post<Workspace>(`/workspaces/`, workspace);
     return response.data;
   }
 );
@@ -83,24 +75,25 @@ export const fetchTask = createAsyncThunk<
   ThunkConfig
 >(`${EntityNames.tasks}/fetchTask`, async ({ taskId, workspaceId }) => {
   const res = await axios.get<Task>(
-    `${baseUrl}/workspaces/${workspaceId}/tasks/${taskId}`
+    `/workspaces/${workspaceId}/tasks/${taskId}`
   );
   return normalizeTaskResponse(res.data);
 });
 
+interface IPatch {
+  update: AtLeastOne<Task> & Pick<Task, "_id" | "workspace">;
+  current: Task | TaskStub;
+}
 /**
  * Performs a partial update on the task.
  * Requires the task id and at least one other property
  */
 export const patchTask = createAsyncThunk(
   `${EntityNames.tasks}/patchTask`,
-  async (
-    data: AtLeastOne<Omit<Task, "_id" | "loaded" | "workspace">> &
-      Pick<Task, "_id" | "workspace">
-  ) => {
-    const { _id, workspace, ...rest } = data;
+  async (data: IPatch) => {
+    const { _id, workspace, ...rest } = data.update;
     const res = await axios.patch<Task>(
-      `${baseUrl}/workspaces/${workspace}/tasks/${_id}`,
+      `/workspaces/${workspace}/tasks/${_id}`,
       rest
     );
     return normalizeTaskResponse(res.data);
@@ -111,10 +104,9 @@ export const addComment = createAsyncThunk(
   `${EntityNames.comments}/addComment`,
   async (data: { taskId: Task["_id"]; content: Comment["content"] }) => {
     const { taskId, content } = data;
-    const res = await axios.post<Comment>(
-      `${baseUrl}/tasks/${taskId}/comment`,
-      { content }
-    );
+    const res = await axios.post<Comment>(`/tasks/${taskId}/comment`, {
+      content,
+    });
     return { taskId, comment: res.data };
   }
 );
@@ -126,18 +118,25 @@ interface deleteCommentInput {
 export const deleteComment = createAsyncThunk(
   `${EntityNames.comments}/deleteComment`,
   async ({ taskId, commentId }: deleteCommentInput) => {
-    await axios.delete(`${baseUrl}/tasks/${taskId}/comment/${commentId}`);
+    await axios.delete(`/tasks/${taskId}/comment/${commentId}`);
   }
 );
 
 export const addList = createAsyncThunk(
   `${EntityNames.comments}/addList`,
   async ({ workspaceId, name }: { workspaceId: string; name: string }) => {
-    const res = await axios.post<List>(
-      `${baseUrl}/workspaces/${workspaceId}/lists`,
-      { name }
-    );
+    const res = await axios.post<List>(`/workspaces/${workspaceId}/lists`, {
+      name,
+    });
     const newList = res.data;
     return newList;
+  }
+);
+
+export const fetchInvitationData = createAsyncThunk(
+  "fetchInvitationData",
+  async (token: string) => {
+    const res = await axios.get<getInviteData>(`/auth/invite/${token}`);
+    return res.data;
   }
 );

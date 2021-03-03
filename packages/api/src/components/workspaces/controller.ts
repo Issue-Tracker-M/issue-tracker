@@ -153,6 +153,7 @@ export const getWorkspaceById = async (
  */
 export const inviteToWorkspace: RequestHandler<
   { workspaceId: string },
+  any,
   { email: string }
 > = async (req, res, next) => {
   const { workspace, user } = req;
@@ -161,6 +162,10 @@ export const inviteToWorkspace: RequestHandler<
   const { email } = req.body;
   try {
     const invitee = await Users.findOne({ email }).exec();
+    if (invitee?.workspaces.includes(workspace.id))
+      return res
+        .status(401)
+        .json({ message: "User already a part of the workspace" });
     const invitation_data: Omit<IInvitationToken, "token"> = {
       invited_by: user.id,
       invited_to: workspace.id,
@@ -169,9 +174,14 @@ export const inviteToWorkspace: RequestHandler<
     };
     const { token } = await new InvitationToken(invitation_data).save();
     await sendMail({
-      subject: "Welcome to Issue Tracker!",
+      subject: `${user.fullName} has invited you to a new workspace!`,
       to: email,
-      html: inviteTemplate(user.fullName, workspace.name, token, !!invitee),
+      html: inviteTemplate(
+        user.fullName,
+        workspace.name,
+        token,
+        invitee?.fullName
+      ),
     });
     res.sendStatus(200);
   } catch (error) {

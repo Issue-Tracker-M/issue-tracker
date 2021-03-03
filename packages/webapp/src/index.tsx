@@ -8,10 +8,12 @@ import App from "./App";
 import store from "./store";
 import * as serviceWorker from "./serviceWorker";
 import { baseUrl } from "./config";
+import { ColorModeScript } from "@chakra-ui/react";
 baseUrl;
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
+      <ColorModeScript />
       <Router>
         <App />
       </Router>

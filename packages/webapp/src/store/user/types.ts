@@ -1,10 +1,11 @@
 import { DbDocument, FullDocument, Stub } from "../types";
-import { Workspace } from "../workspace/types";
+import { Workspace } from "../display/types";
 
 interface UserBase extends DbDocument {
   readonly email: string;
   readonly first_name: string;
   readonly last_name: string;
+  readonly fullName: string;
 }
 
 export interface UserAPIResponse extends UserBase {

@@ -1,15 +1,17 @@
-import { Document, Model, Schema, model } from "mongoose";
+import { Document, Model, Schema, model, ObjectId, Types } from "mongoose";
 import generateInvitationToken from "../../../utils/generatePasswordResetToken";
+import { UserDocument } from "../../users/model";
+import { WorkspaceDocument } from "../../workspaces/model";
 
 export interface InvitationToken {
   /**
    * Id of the user who sent the invite
    */
-  invited_by: string;
+  invited_by: unknown;
   /**
    * Id of the workspace user is invited to
    */
-  invited_to: string;
+  invited_to: unknown;
   /**
    * Email to which the invite has been sent
    */
@@ -17,7 +19,7 @@ export interface InvitationToken {
   /**
    * Id of the user invite has been sent to, null if user with such email does not exist in the db
    */
-  user_id: string | null;
+  user_id: unknown;
   /**
    * Unique token string used as the identifier for the invitation
    */
@@ -46,7 +48,22 @@ const tokenSchema = new Schema<InvitationTokenDocument>({
   createdAt: { type: Date, required: true, expires: 43200, default: Date.now },
 });
 
-export interface InvitationTokenDocument extends InvitationToken, Document {}
+interface InvitationTokenBaseDocument extends InvitationToken, Document {
+  _id: Types.ObjectId;
+}
+
+export interface InvitationTokenDocument extends InvitationTokenBaseDocument {
+  invited_by: ObjectId;
+  invited_to: ObjectId;
+  user_id: ObjectId | null;
+}
+
+export interface InvitationTokenPopulatedDocument
+  extends InvitationTokenBaseDocument {
+  invited_by: UserDocument;
+  invited_to: WorkspaceDocument;
+  user_id: UserDocument | null;
+}
 
 export type TokenModel = Model<InvitationTokenDocument>;
 
