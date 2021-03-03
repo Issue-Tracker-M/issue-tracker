@@ -39,22 +39,9 @@ export const Sidebar: FC<IProps> = ({
       ? { opacity: 0, width: "0px", scaleX: 0 }
       : { opacity: 1, width: "max-content", scaleX: 1 },
   };
-  const colorModeProps =
-    colorMode === "light"
-      ? ({} as const)
-      : ({
-          borderRightColor: "gray.100",
-          borderRightStyle: "solid",
-          borderRightWidth: "2px",
-        } as const);
   return (
     <AnimateSharedLayout>
-      <MotionContainer
-        layout
-        position="relative"
-        {...rest}
-        flex="0 0 auto"
-        {...colorModeProps}>
+      <MotionContainer layout position="relative" {...rest} flex="0 0 auto">
         <MotionContainer layout top="2" position="absolute" right="-3rem">
           {toggleControl ? (
             toggleControl
@@ -70,12 +57,13 @@ export const Sidebar: FC<IProps> = ({
         </MotionContainer>
         <AnimatePresence>
           {isOpen && (
-            <motion.div
+            <MotionContainer
               layout
+              h="100%"
               {...animate}
               exit={{ opacity: 0, width: "0px", scaleX: 0 }}>
               {children}
-            </motion.div>
+            </MotionContainer>
           )}
         </AnimatePresence>
       </MotionContainer>

@@ -9,6 +9,7 @@ import {
   Button,
   Center,
   Collapse,
+  Divider,
   HStack,
   Icon,
   IconButton,
@@ -175,26 +176,29 @@ export const SidebarNav: FC = () => {
       onClose={toggle}
       backgroundColor="gray.800"
       color="gray.200">
-      <Logo fontSize="2xl" textAlign="center" p="3" />
-      <VStack spacing="0">
-        {isAuthenticated ? (
-          <>
-            <Profile />
-            <NavItem to="/home" leftIcon={<AiOutlineHome />}>
-              Home
-            </NavItem>
-            <NavItem to="/w" leftIcon={<BsCardList />}>
-              Your workspaces
-            </NavItem>
-            <WorkspacesLinks />
-          </>
-        ) : (
-          <>
-            <NavItem to="/login">Login</NavItem>
-            <NavItem to="/signup">Sign up</NavItem>
-          </>
-        )}
-      </VStack>
+      <HStack h="100%" alignItems="start">
+        <VStack spacing="0">
+          <Logo fontSize="2xl" textAlign="center" p="3" />
+          {isAuthenticated ? (
+            <>
+              <Profile />
+              <NavItem to="/home" leftIcon={<AiOutlineHome />}>
+                Home
+              </NavItem>
+              <NavItem to="/w" leftIcon={<BsCardList />}>
+                Your workspaces
+              </NavItem>
+              <WorkspacesLinks />
+            </>
+          ) : (
+            <>
+              <NavItem to="/login">Login</NavItem>
+              <NavItem to="/signup">Sign up</NavItem>
+            </>
+          )}
+        </VStack>
+        <Divider orientation="vertical" />
+      </HStack>
     </Sidebar>
   );
 };
