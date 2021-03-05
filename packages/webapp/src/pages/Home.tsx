@@ -1,4 +1,4 @@
-import { Center, Heading } from "@chakra-ui/react";
+import { Button, Center, Heading, VStack } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { AppLayout } from "../components/Layout/AppLayout";
 import { Logo } from "../components/Layout/Logo";

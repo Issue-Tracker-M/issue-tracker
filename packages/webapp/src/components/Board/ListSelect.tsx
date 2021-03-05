@@ -29,7 +29,7 @@ export const ListSelect: FC<IProps> = ({ task, ...rest }) => {
           width="max-content"
           colorScheme="teal"
           defaultValue={selectedList._id}
-          variant="flushed"
+          variant={disabled ? "outline" : "flushed"}
           disabled={disabled}
           onChange={(e) => {
             setDisabled(true);
@@ -46,7 +46,12 @@ export const ListSelect: FC<IProps> = ({ task, ...rest }) => {
           }}
           {...rest}>
           {workspaceLists.map(
-            (list) => list && <option value={list._id}>{list.name}</option>
+            (list) =>
+              list && (
+                <option value={list._id} key={list._id}>
+                  {list.name}
+                </option>
+              )
           )}
         </Select>
       )}

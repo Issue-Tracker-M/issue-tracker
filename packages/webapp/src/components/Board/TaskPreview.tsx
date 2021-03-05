@@ -1,9 +1,8 @@
-import { Box, Text, useDisclosure } from "@chakra-ui/react";
+import { Link, useColorMode } from "@chakra-ui/react";
 import React, { FC } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useEntity } from "../../hooks/useEntity";
 import { Task } from "../../store/display/types";
-import TaskView from "./TaskView";
 
 interface TaskPreviewProps {
   taskId: Task["_id"];
@@ -13,27 +12,27 @@ interface TaskPreviewProps {
 const TaskPreview: FC<TaskPreviewProps> = ({ taskId }) => {
   const task = useEntity("tasks", taskId);
   const location = useLocation();
+  const { colorMode } = useColorMode();
+  const colorProps =
+    colorMode === "light" ? { bgColor: "gray.50" } : { bgColor: "gray.600" };
   if (!task) throw new Error("Task not found in the entities");
   return (
     <Link
+      as={RouterLink}
+      rounded="md"
+      display="block"
+      whiteSpace="normal"
+      m=".5rem auto"
+      shadow="md"
+      padding=".375rem .5rem .375rem"
+      fontSize="sm"
       to={{
         pathname: `/t/${taskId}`,
-        // This is the trick! This link sets
-        // the `background` in location state.
+        // Set location state to keep rendering whetever it is we were rendering while changing the URL
         state: { background: location },
-      }}>
-      <Box
-        cursor="pointer"
-        mb="2"
-        borderRadius="md"
-        backgroundColor="white"
-        minWidth="100%"
-        shadow="md"
-        padding=".375rem .5rem .125rem">
-        <Text mb={2} fontSize="sm">
-          {task.title}
-        </Text>
-      </Box>
+      }}
+      {...colorProps}>
+      {task.title}
     </Link>
   );
 };

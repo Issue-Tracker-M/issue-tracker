@@ -31,11 +31,11 @@ const App: FC = () => {
         <Route path="/login" component={Login} />
         <Route path="/signup/:invite_token" component={Signup} />
         <Route path="/signup" component={Signup} />
-        <Route path="/home" component={Home} />
         <Route path="/invite/:invite_token" component={Invite} />
         <Route path="/forgot_password" component={ForgotPassword} />
         <Route path="/reset/:token" component={ResetPassword} />
         <Route path="/confirm/:token" component={ConfirmEmail} />
+        <PrivateRoute path="/home" component={Home} />
         <PrivateRoute path="/w/:workspaceId" component={Dashboard} />
         <PrivateRoute path="/w" component={Workspaces} />
         <Route component={PageNotFound} />

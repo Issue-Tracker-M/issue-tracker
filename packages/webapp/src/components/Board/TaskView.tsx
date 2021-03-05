@@ -46,7 +46,7 @@ const TaskView: FC = () => {
 
   const { loading, error } = useAsyncThunk(
     fetchTask,
-    { taskId, workspaceId: task.workspace },
+    { taskId, workspaceId: task?.workspace },
     () => task && !task.loaded
   );
 

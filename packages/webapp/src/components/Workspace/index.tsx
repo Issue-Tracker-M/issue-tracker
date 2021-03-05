@@ -6,7 +6,6 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  VStack,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
@@ -38,7 +37,7 @@ const Workspace: FC = () => {
   if (!workspace) return <PageNotFound />;
   return (
     <Flex h="100%" flexDir="column">
-      <Wrap ml={["0", "3.5rem"]} pt="4" pb="1" spacing="2">
+      <Wrap ml={["0", "3.5rem"]} pt="4" pb="1" spacing="2" flex="0 0 auto">
         <WrapItem>
           <Heading mr={["0", "1rem"]} fontSize="2xl">
             {workspace.name}
@@ -54,20 +53,25 @@ const Workspace: FC = () => {
           <InviteMember workspaceId={workspaceId} />
         </WrapItem>
       </Wrap>
-      <Tabs flex="1 1 auto" display="flex" flexDir="column">
+      <Tabs
+        flex="1 1 auto"
+        display="flex"
+        flexDir="column"
+        colorScheme="teal"
+        height="full">
         <TabList flex="0 0 auto">
           <Tab>Board</Tab>
           <Tab>List</Tab>
           <Tab>Archive</Tab>
         </TabList>
         <TabPanels flex="1 1 auto">
-          <TabPanel h="100%">
+          <TabPanel h="100%" p=".5rem 0 0 0" position="relative">
             <BoardView workspaceId={workspaceId} />
           </TabPanel>
-          <TabPanel h="100%">
+          <TabPanel h="100%" p=".5rem 0 0 0">
             <ListView />
           </TabPanel>
-          <TabPanel h="100%">
+          <TabPanel h="100%" p=".5rem 0 0 0">
             {/* <BoardView workspaceId={workspaceId} /> */}
           </TabPanel>
         </TabPanels>

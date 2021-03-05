@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getWorkspaceResponse, Task } from "./types";
 import { baseUrl } from "../../config";
-import { TaskInput } from "../../components/Board/column";
 import { DbDocument } from "../types";
 import normalizeWorkspaceResponse from "../../utils/normalizeWorkspaceResponse";
 import axios from "axios";
@@ -31,7 +30,7 @@ export const getCurrentWorkspace = createAsyncThunk(
 
 export const createTask = createAsyncThunk(
   "workspace/createTask",
-  async (taskInput: TaskInput) => {
+  async (taskInput: Pick<Task, "title" | "workspace" | "list">) => {
     const { workspace } = taskInput;
     const response = await axios.post<Task>(
       `${baseUrl}/workspaces/${workspace}/tasks`,

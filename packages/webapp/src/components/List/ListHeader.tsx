@@ -4,6 +4,7 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
+  HStack,
   UseEditableProps,
 } from "@chakra-ui/react";
 import React from "react";
@@ -14,11 +15,12 @@ const ListHeader: FC<{
   onNameSubmit: UseEditableProps["onSubmit"];
 }> = ({ listName, onNameSubmit }) => {
   return (
-    <Box
-      display="flex"
-      flexDir="row"
+    <HStack
       alignItems="center"
-      justifyContent="space-between">
+      justifyContent="space-between"
+      w="100%"
+      flex="0 0 auto"
+      borderBottom="1px solid gray">
       <Editable
         defaultValue={listName}
         h="10"
@@ -30,7 +32,7 @@ const ListHeader: FC<{
         <EditableInput backgroundColor="white" />
       </Editable>
       <HamburgerIcon />
-    </Box>
+    </HStack>
   );
 };
 

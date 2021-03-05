@@ -1,26 +1,31 @@
-import { Box } from "@chakra-ui/react";
-import React, { FC, PropsWithChildren } from "react";
+import { Box, PropsOf, useColorMode, VStack } from "@chakra-ui/react";
+import React, { FC } from "react";
 
 /**
  * Fixed width container for lists of tasks
  */
-const VerticalList: FC<PropsWithChildren<any>> = ({ children }) => {
+const VerticalList: FC<PropsOf<typeof VStack>> = ({ children, ...rest }) => {
+  const { colorMode } = useColorMode();
+  const colorProps =
+    colorMode === "light" ? { bgColor: "gray.100" } : { bgColor: "gray.700" };
   return (
-    <Box width="17rem" margin="0 .25rem" h="100%" color="black">
-      <Box backgroundColor="gray.100" borderRadius="3px">
-        <Box
-          display="flex"
-          flexDir="column"
-          maxH="100%"
-          position="relative"
-          as="ul"
-          margin="0 .25rem"
-          padding="0 .25rem">
-          {children}
-        </Box>
+    <Box h="100%" display="inline-block">
+      <Box
+        rounded="md"
+        minWidth="17rem"
+        boxShadow="lg"
+        {...colorProps}
+        maxH="100%"
+        display="flex"
+        margin="0 .25rem"
+        justify="space-between"
+        padding=".375rem .25rem"
+        flexDir="column"
+        {...rest}>
+        {children}
       </Box>
     </Box>
   );
 };
 
-export default React.memo(VerticalList);
+export default VerticalList;

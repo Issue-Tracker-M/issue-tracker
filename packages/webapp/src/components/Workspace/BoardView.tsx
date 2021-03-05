@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { Box, Center, Spinner } from "@chakra-ui/react";
+import React, { FC, useCallback } from "react";
+import { Box, Center, HStack, Spinner } from "@chakra-ui/react";
 import List from "../List";
 import { useEntity } from "../../hooks/useEntity";
 import { getCurrentWorkspace } from "../../store/display/displaySlice";
@@ -10,7 +10,7 @@ interface BoardContainerProps {
   workspaceId: string;
 }
 
-const BoardView = ({ workspaceId }: BoardContainerProps) => {
+const BoardView: FC<BoardContainerProps> = ({ workspaceId }) => {
   const workspace = useEntity("workspaces", workspaceId);
   const condition = useCallback(() => !workspace?.loaded, [workspace]);
   const { loading, error } = useAsyncThunk(
@@ -22,20 +22,23 @@ const BoardView = ({ workspaceId }: BoardContainerProps) => {
   if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
   return (
     <Box
-      height="100%"
-      display={{ md: "flex" }}
-      flexDirection={{ md: "row" }}
-      alignItems={{ md: "flex-start" }}
-      overflow={{ md: "auto" }}>
+      maxHeight="100%"
+      overflowX="auto"
+      overflowY="hidden"
+      p="2"
+      position="absolute"
+      whiteSpace="nowrap"
+      top="0"
+      right="0"
+      bottom="0"
+      left="0">
       {workspace?.loaded ? (
         workspace.lists.map((listId) => <List key={listId} listId={listId} />)
       ) : (
-        <Center w="100%" h="100%">
-          <Spinner size="xl" colorScheme="teal" thickness="3" />
-        </Center>
+        <Loading />
       )}
     </Box>
   );
 };
 
-export default React.memo(BoardView);
+export default BoardView;
