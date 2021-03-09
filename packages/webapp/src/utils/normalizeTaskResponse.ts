@@ -17,7 +17,10 @@ const taskEntity = new schema.Entity<Task>(
   },
   {
     idAttribute: (t) => t._id,
-    processStrategy: (task) => ({ ...task, loaded: true }),
+    processStrategy: (task) => {
+      if (task.createdAt) task.loaded = true;
+      return task;
+    },
   }
 );
 

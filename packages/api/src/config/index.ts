@@ -3,7 +3,7 @@ require("dotenv").config();
 
 export const port = process.env.PORT || 5000;
 export const JWT_SECRET = process.env.JWT_SECRET || "bloop";
-const NODE_ENV = process.env.NODE_ENV || "dev";
+export const NODE_ENV = process.env.NODE_ENV || "dev";
 const { DB_CONNECTION, DB_CONNECTION_TEST } = process.env;
 export let mongoURI = "";
 export const SENDER_EMAIL = process.env.SENDER_EMAIL || "test@email.com";

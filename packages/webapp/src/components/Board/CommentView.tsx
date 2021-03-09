@@ -86,13 +86,13 @@ const CommentView: FC<IProps> = ({ commentId, taskId }) => {
               padding=".5rem">
               {commentData.content}
             </Text>
-            <Button
+            {/* <Button
               variant="link"
               size="xs"
               color="gray.500"
               onClick={() => setIsEditing(true)}>
               Edit
-            </Button>
+            </Button> */}
             <Popover>
               <PopoverTrigger>
                 <Button ml=".5rem" variant="link" size="xs" color="gray.500">

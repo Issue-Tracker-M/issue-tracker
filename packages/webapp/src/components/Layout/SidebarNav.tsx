@@ -128,7 +128,6 @@ const NavItem: FC<NavItemProps> = ({ to, ...rest }) => {
 const Profile: FC = () => {
   const user = useCurrentUser();
   const dispatch = useThunkDispatch();
-  const history = useHistory();
   return (
     <HStack pr="8" pb="1">
       <ToggleColorMode />
@@ -152,7 +151,7 @@ const Profile: FC = () => {
               variant="outline"
               onClick={() => {
                 dispatch(logOutUser()).finally(() => {
-                  history.push("/login");
+                  dispatch({ type: "RESET_APP" });
                 });
               }}>
               Log out

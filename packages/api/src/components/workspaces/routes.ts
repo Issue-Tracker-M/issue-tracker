@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { checkForCredentials, checkToken } from "../auth/middleware";
-import taskRouter from "../tasks/routes";
+import { checkForCredentials, authenticate } from "../auth/middleware";
+import listRouter from "./lists/routes";
 import {
   getWorkspaces,
   createWorkspace,
@@ -17,7 +17,7 @@ import {
 import { validateWorkspaceEdit, validateWorkspaceInput } from "./validation";
 const workspaceRouter = Router();
 
-workspaceRouter.use("/", checkForCredentials, checkToken);
+workspaceRouter.use("/", checkForCredentials, authenticate);
 
 // @route POST /api/workspace/
 // @desc Add a workspace
@@ -56,6 +56,6 @@ workspaceRouter.delete(
   deleteWorkspace
 );
 
-workspaceRouter.use("/:workspace_id/tasks", taskRouter);
+workspaceRouter.use("/:workspace_id/lists", listRouter);
 
 export default workspaceRouter;

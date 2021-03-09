@@ -1,9 +1,27 @@
-import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createEntityAdapter,
+  createSlice,
+} from "@reduxjs/toolkit";
 import { RootState } from "../rootReducer";
 import { addComment, fetchTask, patchTask } from "../thunks";
 import { EntityNames } from "../types";
 import { Task, TaskStub } from "../display/types";
 import { createTask, getCurrentWorkspace } from "../display/displaySlice";
+import axios from "axios";
+import normalizeTaskResponse from "../../utils/normalizeTaskResponse";
+
+export const archiveTask = createAsyncThunk(
+  "tasks/archiveTask",
+  async (taskId: string, thunkAPI) => {
+    try {
+      const res = await axios.patch(`/tasks/${taskId}`, { archived: true });
+      return normalizeTaskResponse(res.data);
+    } catch (error) {
+      thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 export const taskAdapter = createEntityAdapter<Task | TaskStub>({
   selectId: (user) => user._id,

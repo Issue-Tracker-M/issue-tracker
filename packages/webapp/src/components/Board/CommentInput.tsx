@@ -18,7 +18,11 @@ const CommentInput: FC<IProps> = ({
   const [content, setContent] = useState(initialContent);
   const dispatch = useThunkDispatch();
   return (
-    <chakra.form onSubmit={onSubmit}>
+    <chakra.form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (onSubmit) onSubmit(e);
+      }}>
       <Textarea
         placeholder="Write a comment..."
         value={content}

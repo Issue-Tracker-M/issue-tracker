@@ -1,20 +1,12 @@
 import dotenv from "dotenv";
-import { mongoURI } from "./config/index";
-import mongoose from "mongoose";
 
 import app from "./components/app";
 dotenv.config();
 
-async function bootstrap() {
+export function bootstrap(): void {
   try {
     // init db connection
-    const conn = await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-    });
-    app.set("db_connection", conn);
+
     /**
      * Start Express server.
      */
@@ -32,7 +24,7 @@ async function bootstrap() {
   }
 }
 
-bootstrap().catch(console.log);
+bootstrap();
 
 export * from "./utils/typeUtils";
 export * from "./components/auth/middleware";

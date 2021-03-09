@@ -19,7 +19,7 @@ export interface AuthorizedRequest<P = any, B = any>
  * @param res
  * @param next
  */
-export const checkToken = async (
+export const authenticate = async (
   req: RequestWithCredentials<any, any>,
   res: Response,
   next: NextFunction
@@ -37,7 +37,7 @@ export const checkToken = async (
     }
     req.user = user;
     next();
-  } catch (error: unknown) {
+  } catch (error) {
     if (!(error instanceof Error)) return next(error);
     res.status(500).json({ message: `Confirmation failed ${error.message}` });
   }
@@ -63,7 +63,7 @@ export const checkForCredentials: RequestHandler = (req, res, next) => {
 export const getUserByEmail: RequestHandler = async (req, res, next) => {
   const { email } = req.body;
   try {
-    const user = await User.findOne({ email }).exec();
+    const user = await User.findByEmail(email);
     if (!user)
       return res.status(404).json({ message: "No user with such email" });
     req.user = user;

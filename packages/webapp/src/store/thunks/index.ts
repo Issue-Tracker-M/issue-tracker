@@ -74,9 +74,7 @@ export const fetchTask = createAsyncThunk<
   { taskId: string; workspaceId: string },
   ThunkConfig
 >(`${EntityNames.tasks}/fetchTask`, async ({ taskId, workspaceId }) => {
-  const res = await axios.get<Task>(
-    `/workspaces/${workspaceId}/tasks/${taskId}`
-  );
+  const res = await axios.get<Task>(`/tasks/${taskId}`);
   return normalizeTaskResponse(res.data);
 });
 
@@ -92,10 +90,7 @@ export const patchTask = createAsyncThunk(
   `${EntityNames.tasks}/patchTask`,
   async (data: IPatch) => {
     const { _id, workspace, ...rest } = data.update;
-    const res = await axios.patch<Task>(
-      `/workspaces/${workspace}/tasks/${_id}`,
-      rest
-    );
+    const res = await axios.patch<Task>(`/tasks/${_id}`, rest);
     return normalizeTaskResponse(res.data);
   }
 );
@@ -104,7 +99,7 @@ export const addComment = createAsyncThunk(
   `${EntityNames.comments}/addComment`,
   async (data: { taskId: Task["_id"]; content: Comment["content"] }) => {
     const { taskId, content } = data;
-    const res = await axios.post<Comment>(`/tasks/${taskId}/comment`, {
+    const res = await axios.post<Comment>(`/tasks/${taskId}/comments`, {
       content,
     });
     return { taskId, comment: res.data };
@@ -118,12 +113,12 @@ interface deleteCommentInput {
 export const deleteComment = createAsyncThunk(
   `${EntityNames.comments}/deleteComment`,
   async ({ taskId, commentId }: deleteCommentInput) => {
-    await axios.delete(`/tasks/${taskId}/comment/${commentId}`);
+    await axios.delete(`/tasks/${taskId}/comments/${commentId}`);
   }
 );
 
 export const addList = createAsyncThunk(
-  `${EntityNames.comments}/addList`,
+  `${EntityNames.lists}/addList`,
   async ({ workspaceId, name }: { workspaceId: string; name: string }) => {
     const res = await axios.post<List>(`/workspaces/${workspaceId}/lists`, {
       name,

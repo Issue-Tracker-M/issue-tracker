@@ -1,36 +1,53 @@
-import { port } from "./../config/index";
+import { CLIENT_URL, mongoURI, NODE_ENV, port } from "./../config/index";
 import express from "express";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import authRouter from "./auth/routes";
+import tasksRouter from "./tasks/routes";
 import workspaceRouter from "../components/workspaces/routes";
 import errorHandler from "errorhandler";
 import morgan from "morgan";
+import mongoose from "mongoose";
+mongoose
+  .connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
+  .then((conn) => {
+    app.set("db_connection", conn);
+    // console.log(
+    //   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    //   `MongoDB connection with url successful @: ${conn.connection.host}:${conn.connection.port}`
+    // );
+  })
+  .catch((err) => {
+    console.log(err, "This shouldn't be happening");
+  });
 
 const apiRouter = express.Router();
 apiRouter.use("/auth", authRouter);
+apiRouter.use("/tasks", tasksRouter);
 apiRouter.use("/workspaces", workspaceRouter);
 
 const app = express();
 
 app.set("port", port);
 app.use(helmet());
-app.use(morgan("tiny"));
+if (!(NODE_ENV === "dev" || NODE_ENV === "test")) {
+  app.use(morgan("tiny"));
+}
 app.use(
   cors({
     credentials: true,
     exposedHeaders: ["set-cookie"],
-    origin: [
-      "http://localhost:3000",
-      "http://127.0.0.1",
-      "http://104.142.122.231",
-    ],
+    origin: [CLIENT_URL, "http://127.0.0.1", "http://104.142.122.231"],
   })
 );
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use("/api", apiRouter);
 
@@ -38,7 +55,7 @@ app.get("/", (_, res: express.Response) => {
   return res.status(200).json({ message: "API is up 🚀" });
 });
 
-if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "test") {
+if (NODE_ENV === "dev" || NODE_ENV === "test") {
   app.use(errorHandler());
 }
 app.all("*", (_, res: express.Response) => {

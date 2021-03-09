@@ -16,7 +16,11 @@ import {
   processInviteResponse,
   logOut,
 } from "./controller";
-import { checkForCredentials, checkToken, getUserByEmail } from "./middleware";
+import {
+  checkForCredentials,
+  authenticate,
+  getUserByEmail,
+} from "./middleware";
 import { Router } from "express";
 
 const router = Router();
@@ -31,7 +35,7 @@ router.get("/invite/:invite_token", getInviteData);
 router.post(
   "/invite/:invite_token",
   checkForCredentials,
-  checkToken,
+  authenticate,
   processInviteResponse
 );
 

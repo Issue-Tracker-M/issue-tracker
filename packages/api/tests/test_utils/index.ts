@@ -2,7 +2,9 @@ import { Types } from "mongoose";
 import app from "../../src/components/app";
 import { registerInput } from "../../src/components/auth/controller";
 import ConfirmationToken from "../../src/components/auth/models/ConfirmationToken";
+import InvitationToken from "../../src/components/auth/models/InvitationToken";
 import PasswordResetToken from "../../src/components/auth/models/PasswordResetToken";
+import RefreshToken from "../../src/components/auth/models/RefreshToken";
 import Tasks, { TaskDocument } from "../../src/components/tasks/model";
 import Users, { UserDocument } from "../../src/components/users/model";
 import Workspaces, {
@@ -15,7 +17,7 @@ import { JSONify } from "../../src/utils/typeUtils";
 export const newUser: registerInput = {
   first_name: "Max",
   last_name: "Plank",
-  email: "mplank@gmail.com",
+  email: "mplank@coolmail.com",
   password: "6.626073",
   is_verified: false,
 };
@@ -112,12 +114,18 @@ export const clearTokens = async (): Promise<void> => {
   await Promise.all([
     ConfirmationToken.deleteMany({}),
     PasswordResetToken.deleteMany({}),
+    InvitationToken.deleteMany({}),
+    RefreshToken.deleteMany({}),
   ]);
 };
 
 export const clearTasks = async (): Promise<void> => {
   await Tasks.deleteMany({});
 };
+
+/**
+ * Clear the current db.
+ */
 export const clearDB = async (): Promise<void> => {
   await Promise.all([
     clearTokens(),
@@ -127,9 +135,11 @@ export const clearDB = async (): Promise<void> => {
   ]);
 };
 
-export const teardown = async (done) => {
+/**
+ * Drop the current DB and disconnect from mongo. Use at the end of each test file.
+ */
+export const teardown = async (): Promise<void> => {
   await clearDB();
   await app.get("db_connection").connection.dropDatabase();
   await app.get("db_connection").disconnect();
-  done();
 };

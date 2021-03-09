@@ -3,6 +3,7 @@ import { RootState } from "../rootReducer";
 import { addComment, fetchTask, patchTask } from "../thunks";
 import { EntityNames } from "../types";
 import { Comment } from "../display/types";
+import { getCurrentWorkspace } from "../display/displaySlice";
 
 export const commentAdapter = createEntityAdapter<Comment>({
   selectId: (comment) => comment._id,
@@ -17,6 +18,13 @@ const commentSlice = createSlice({
       if (entities.comments)
         commentAdapter.upsertMany(state, entities.comments);
     });
+    builder.addCase(
+      getCurrentWorkspace.fulfilled,
+      (state, { payload: { entities } }) => {
+        if (entities.comments)
+          commentAdapter.upsertMany(state, entities.comments);
+      }
+    );
     builder.addCase(patchTask.fulfilled, (state, { payload: { entities } }) => {
       if (entities.comments)
         commentAdapter.upsertMany(state, entities.comments);

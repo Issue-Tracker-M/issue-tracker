@@ -41,7 +41,7 @@ export interface Task extends DbDocument, FullDocument {
   description?: string;
   workspace: Workspace["_id"];
   list: List["_id"];
-  due_date: Date | null;
+  due_date: string | null;
   complete?: boolean;
   labels: Label["_id"][];
   users: User["_id"][];

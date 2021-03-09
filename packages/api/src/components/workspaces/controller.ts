@@ -104,7 +104,7 @@ export const getWorkspaces: RequestHandler = async (req, res, next) => {
   try {
     if (!user) throw "Expected a user document";
     await user
-      .populate({ path: "workspaces", select: ["name"] })
+      .populate({ path: "workspaces", populate: { path: "lists.tasks" } })
       .execPopulate();
     return res.status(200).json(user.workspaces);
   } catch (err) {
@@ -127,7 +127,6 @@ export const getWorkspaceById = async (
     const workspace = await Workspace.findById(req.params.workspace_id)
       .populate({
         path: "lists.tasks",
-        select: ["title", "labels", "workspace", "list"],
       })
       .populate({
         path: "users",

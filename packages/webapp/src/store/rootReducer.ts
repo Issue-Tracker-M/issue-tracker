@@ -8,7 +8,7 @@ import commentsReducer from "./entities/comments";
 import listsReducer from "./entities/lists";
 import authReducer from "./authSlice";
 
-export const rootReducer = combineReducers({
+export const appReducer = combineReducers({
   auth: authReducer,
   workspaceDisplay: workspaceDisplayReducer,
   [EntityNames.workspaces]: workspacesReducer,
@@ -18,4 +18,12 @@ export const rootReducer = combineReducers({
   [EntityNames.lists]: listsReducer,
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
+export const rootReducer: typeof appReducer = (state, action) => {
+  if (action.type === "RESET_APP") {
+    state = undefined;
+  }
+
+  return appReducer(state, action);
+};
+
+export type RootState = ReturnType<typeof appReducer>;

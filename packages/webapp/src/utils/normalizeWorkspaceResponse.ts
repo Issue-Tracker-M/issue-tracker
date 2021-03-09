@@ -3,6 +3,7 @@ import { schema, normalize, NormalizedSchema } from "normalizr";
 import { EntityNames } from "../store/types";
 import { UserStub } from "../store/user/types";
 import {
+  Comment,
   getWorkspaceResponse,
   List,
   TaskStub,
@@ -23,12 +24,21 @@ const userEntity = new schema.Entity<UserStub>(
   }
 );
 
+const commentEntity = new schema.Entity<Comment>(
+  EntityNames.comments,
+  {},
+  { idAttribute: (u) => u._id }
+);
+
 const taskEntity = new schema.Entity<TaskStub>(
   EntityNames.tasks,
-  {},
+  { comments: [commentEntity] },
   {
     idAttribute: (t) => t._id,
-    processStrategy: (task) => ({ ...task, loaded: false }),
+    processStrategy: (task) => ({
+      ...task,
+      loaded: task.createdAt ? true : false,
+    }),
   }
 );
 
@@ -67,6 +77,7 @@ const normalizeWorkspaceResponse = (
     [EntityNames.users]: { [key: string]: UserStub };
     [EntityNames.tasks]: { [key: string]: TaskStub };
     [EntityNames.lists]: { [key: string]: List };
+    [EntityNames.comments]: { [key: string]: Comment };
   },
   string
 > => {

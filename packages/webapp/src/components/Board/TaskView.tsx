@@ -2,6 +2,7 @@ import {
   AddIcon,
   AtSignIcon,
   ChevronDownIcon,
+  DeleteIcon,
   HamburgerIcon,
   TimeIcon,
 } from "@chakra-ui/icons";
@@ -18,6 +19,7 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
+  Icon,
   IconButton,
   Text,
   Textarea,
@@ -64,11 +66,10 @@ const TaskView: FC = () => {
           <Loading />
         ) : (
           <>
-            <DrawerHeader
-              display="flex"
-              justifyContent="flex-start"
-              alignItems="center">
-              <AiOutlineCreditCard color="gray" />
+            <DrawerHeader display="flex" flexWrap="wrap" alignItems="center">
+              <Icon color="gray">
+                <AiOutlineCreditCard />
+              </Icon>
               <Editable
                 paddingLeft="1rem"
                 defaultValue={task.title}
@@ -88,6 +89,13 @@ const TaskView: FC = () => {
                 <EditablePreview />
                 <EditableInput />
               </Editable>
+              <IconButton
+                marginLeft="auto"
+                size="sm"
+                aria-label="Archive"
+                icon={<DeleteIcon />}
+                mr="4"
+              />
             </DrawerHeader>
             <DrawerBody>
               {task.loaded ? (

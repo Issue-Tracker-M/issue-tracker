@@ -71,7 +71,7 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
               update: {
                 _id: task._id,
                 workspace: task.workspace,
-                due_date: date,
+                due_date: date.toString(),
               },
             })
           );
@@ -129,7 +129,7 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
             update: {
               _id: task._id,
               workspace: task.workspace,
-              due_date: new Date(),
+              due_date: new Date().toString(),
             },
           })
         );

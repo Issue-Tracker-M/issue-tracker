@@ -32,7 +32,7 @@ afterAll(teardown);
 describe("Tasks", () => {
   test("User can create a new task", async (done) => {
     const response = await supertest(app)
-      .post(`/api/workspaces/${workspace._id}/tasks`)
+      .post(`/api/tasks`)
       .set("Authorization", token)
       .send({
         title: "Test Task",
@@ -52,7 +52,7 @@ describe("Tasks", () => {
   test("User can edit an existing task", async () => {
     const task = await createTask(workspace._id, workspace.lists[0]._id);
     const res = await supertest(app)
-      .patch(`/api/workspaces/${workspace._id}/tasks/${task._id}`)
+      .patch(`/api/tasks/${task._id}`)
       .set("Authorization", token)
       .send({ title: "Changed title" });
     expect(res.status).toBe(200);
@@ -61,7 +61,7 @@ describe("Tasks", () => {
   test("User can delete an existing task", async () => {
     const task = await createTask(workspace._id, workspace.lists[0]._id);
     const res = await supertest(app)
-      .delete(`/api/workspaces/${workspace._id}/tasks/${task._id}`)
+      .delete(`/api/tasks/${task._id}`)
       .set("Authorization", token);
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ message: "Task has been deleted" });
@@ -70,7 +70,7 @@ describe("Tasks", () => {
   test("User can get an existing task", async () => {
     const task = await createTask(workspace._id, workspace.lists[0]._id);
     const res = await supertest(app)
-      .get(`/api/workspaces/${workspace._id}/tasks/${task.id}`)
+      .get(`/api/tasks/${task.id}`)
       .set("Authorization", token);
     expect(res.status).toBe(200);
   });
@@ -80,7 +80,7 @@ describe("Comments", () => {
   test("User can post a comment to a task", async () => {
     const task = await createTask(workspace._id, workspace.lists[0]._id);
     const res = await supertest(app)
-      .post(`/api/workspaces/${workspace._id}/tasks/${task.id}/comments`)
+      .post(`/api/tasks/${task.id}/comments`)
       .set("Authorization", token)
       .send({ content: "Smell of types in the morning", author: user.id });
     expect(res.status).toBe(201);
@@ -90,9 +90,7 @@ describe("Comments", () => {
     task.comments.push({ content: "Initial comment", author: user.id });
     await task.save();
     const res = await supertest(app)
-      .patch(
-        `/api/workspaces/${workspace._id}/tasks/${task.id}/comments/${task.comments[0].id}`
-      )
+      .patch(`/api/tasks/${task.id}/comments/${task.comments[0].id}`)
       .set("Authorization", token)
       .send({ content: "I'm changed!" });
     expect(res.status).toBe(200);
@@ -103,9 +101,7 @@ describe("Comments", () => {
     task.comments.push({ content: "Initial comment", author: user.id });
     await task.save();
     const res = await supertest(app)
-      .delete(
-        `/api/workspaces/${workspace._id}/tasks/${task.id}/comments/${task.comments[0].id}`
-      )
+      .delete(`/api/tasks/${task.id}/comments/${task.comments[0].id}`)
       .set("Authorization", token);
     expect(res.status).toBe(200);
   });

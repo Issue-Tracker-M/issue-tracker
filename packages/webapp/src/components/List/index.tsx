@@ -67,6 +67,7 @@ const NewTaskForm: FC<{ listId: string; workspaceId: string }> = ({
                 aria-label="Close form"
                 icon={<CloseIcon />}
                 onClick={onClose}
+                onBlur={() => setHasFocus(false)}
               />
             </ButtonGroup>
           </StyledForm>
