@@ -65,5 +65,4 @@ const Tasks = model(
     { timestamps: true }
   )
 );
-
 export default Tasks;

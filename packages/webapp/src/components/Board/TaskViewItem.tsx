@@ -1,16 +1,19 @@
-import { WarningTwoIcon } from '@chakra-ui/icons'
-import { Box, Heading } from '@chakra-ui/react'
-import React, { FC } from 'react'
+import { WarningTwoIcon } from "@chakra-ui/icons";
+import { Box, Heading } from "@chakra-ui/react";
+import React, { FC, PropsWithChildren, ReactNode } from "react";
 
-const TaskViewItem: FC<any> = ({ children, icon, title, size = 'sm' }) => {
+const TaskViewItem: FC<PropsWithChildren<{
+  icon: ReactNode;
+  title: string;
+  size?: string;
+}>> = ({ children, icon, title, size = "sm" }) => {
   return (
     <Box pb=".5rem">
       <Box
         display="flex"
         justifyContent="flex-start"
         alignItems="center"
-        pb=".5rem"
-      >
+        pb=".5rem">
         {icon ? icon : <WarningTwoIcon color="red.500" />}
         <Heading size={size} paddingLeft="1rem">
           {title}
@@ -18,7 +21,7 @@ const TaskViewItem: FC<any> = ({ children, icon, title, size = 'sm' }) => {
       </Box>
       <Box pl="2rem">{children}</Box>
     </Box>
-  )
-}
+  );
+};
 
-export default TaskViewItem
+export default TaskViewItem;

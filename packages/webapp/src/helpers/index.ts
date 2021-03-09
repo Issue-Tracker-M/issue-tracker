@@ -1,48 +1,18 @@
-import decode from 'jwt-decode'
+import decode from "jwt-decode";
 
-const KEY = 'cfa8ebf4'
+const KEY = "cfa8ebf4";
 
-export const setToken = (token: string) => {
+export const setToken = (token: string): void => {
+  const item = JSON.stringify(token);
+  localStorage.setItem(KEY, item);
+};
+
+export const isTokenExpired = (token: string): boolean => {
   try {
-    const item = JSON.stringify(token)
-    localStorage.setItem(KEY, item)
-    return true
+    const decoded = decode<{ exp: number }>(token);
+    if (decoded.exp < Date.now() / 1000) return true;
+    return false;
   } catch (error) {
-    return undefined
+    return false;
   }
-}
-
-export const isTokenExpired = (token: any) => {
-  try {
-    const decoded: any = decode(token)
-    if (decoded.exp < Date.now() / 1000) {
-      return true
-    }
-    return false
-  } catch (error) {
-    return false
-  }
-}
-
-export const clearLocalStorage = () => {
-  localStorage.removeItem(KEY)
-}
-
-export const getToken = () => {
-  try {
-    const token = localStorage.getItem(KEY)
-    if (token === null || !token) {
-      return undefined
-    }
-    const isExpired = isTokenExpired(token)
-    if (isExpired) {
-      clearLocalStorage()
-      return undefined
-    }
-    return JSON.parse(token)
-  } catch (error) {
-    // if error decoding, clear what is in local storage with key
-    clearLocalStorage()
-    return undefined
-  }
-}
+};

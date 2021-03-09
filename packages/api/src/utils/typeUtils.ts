@@ -5,7 +5,7 @@ import { Document, Types } from "mongoose";
  */
 export type JSONed<T> = Pick<
   T,
-  Exclude<keyof T, Exclude<keyof Document, "_id">>
+  Exclude<keyof T, Exclude<keyof Document, "_id" | "createAt" | "updatedAt">>
 >;
 
 /**

@@ -17,15 +17,13 @@ beforeAll(async (done) => {
   done();
 });
 
-afterAll(teardown);
-
 describe("Auth", () => {
   it("User can register with username, email, and password. And then confirm their email", async (done) => {
     // Create user and check that it creates correctly
     const input = { ...newUser };
     delete input.is_verified;
     const res = await supertest(app).post("/api/auth/register").send(input);
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     // get token from the email
     const email_token = iwm
       .lastMail()
@@ -104,7 +102,7 @@ describe("Auth", () => {
 
 afterAll(async (done) => {
   try {
-    await clearDB();
+    await teardown();
     await new Promise((resolve) => setTimeout(() => resolve(undefined), 500));
   } catch (error) {
     console.log(error);

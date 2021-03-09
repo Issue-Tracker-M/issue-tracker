@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "lerna bootstrap",
     "api-docs": "scripty",
     "build": "scripty",
     "test": "scripty",

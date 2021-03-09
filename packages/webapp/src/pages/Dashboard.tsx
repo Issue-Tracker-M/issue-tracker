@@ -1,17 +1,13 @@
-import React from 'react'
-import { Box } from '@chakra-ui/react'
-import NavBar from '../components/NavBar'
-import Board from '../components/Board/board'
+import React, { FC } from "react";
+import { AppLayout } from "../components/Layout/AppLayout";
+import Workspace from "../components/Workspace";
 
-const Dashboard = () => {
+const Dashboard: FC = () => {
   return (
-    <Box display="flex" w="100vw">
-      <NavBar />
-      <Box minHeight="100vh" marginLeft="309px" w="100%">
-        <Board />
-      </Box>
-    </Box>
-  )
-}
+    <AppLayout>
+      <Workspace />
+    </AppLayout>
+  );
+};
 
-export default Dashboard
+export default Dashboard;

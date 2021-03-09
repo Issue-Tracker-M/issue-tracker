@@ -7,6 +7,7 @@ const store = configureStore({
 });
 
 if (process.env.NODE_ENV === "development" && (module as any).hot) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (module as any).hot.accept("./rootReducer", () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const newRootReducer = require("./rootReducer").default;
@@ -22,31 +23,3 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   Action<string>
 >;
 export default store;
-
-/* 
-store shape:{
-  user {
-    id
-    email
-    username
-    workspaces:[_id]
-    first_name
-    last_name
-  }
-  current_workspace{
-    name
-    admin
-    users:[_id, name]
-    labels:[{_id, name, color}]
-    todo:[{_id, name, labels:[id]}]
-    in_progress:[task]
-    completed:[task]
-  }
-  entities:{
-    workspaces:{
-
-    }
-    tasks
-  }
-}
-*/

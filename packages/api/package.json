@@ -1,9 +1,9 @@
 {
   "name": "@issue-tracker/api",
   "version": "0.0.1",
-  "main": "dist/index.js",
+  "main": "dist/publicTypes/index.js",
   "license": "MIT",
-  "types": "dist/index.d.ts",
+  "types": "dist/publicTypes/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -14,7 +14,8 @@
     "lint": "scripty",
     "clean": "rimraf dist *.tsbuildinfo",
     "build": "scripty",
-    "test": "scripty"
+    "test": "scripty",
+    "heroku-postbuild": "npm run build"
   },
   "scripty": {
     "path": "../../scripts/packages"
@@ -25,6 +26,7 @@
     "@types/bcrypt": "^3.0.0",
     "@types/bcrypt-nodejs": "^0.0.31",
     "@types/body-parser": "^1.19.0",
+    "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.7",
     "@types/errorhandler": "^1.5.0",
     "@types/eslint": "^7.2.3",
@@ -34,7 +36,7 @@
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mailgen": "^2.0.3",
-    "@types/mongoose": "^5.7.36",
+    "@types/morgan": "^1.9.2",
     "@types/nodemailer": "^6.4.0",
     "@types/nodemon": "^1.19.0",
     "@types/supertest": "^2.0.10",
@@ -50,6 +52,7 @@
     "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "errorhandler": "^1.5.1",
@@ -58,7 +61,8 @@
     "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
     "mailgen": "^2.0.14",
-    "mongoose": "^5.11.13",
+    "mongoose": "^5.11.18",
+    "morgan": "^1.10.0",
     "nodemailer": "^6.4.17",
     "nodemailer-stub": "^1.2.2"
   }

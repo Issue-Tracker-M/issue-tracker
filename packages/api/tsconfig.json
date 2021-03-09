@@ -5,10 +5,10 @@
     "typeRoots": ["node_modules", "typings"],
     "composite": true,
     "outDir": "dist",
-    "rootDir": ".",
+    "rootDir": "src",
     "noImplicitReturns": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src"]
+  "include": ["src/"]
 }

@@ -13,7 +13,7 @@ const tokenSchema = new Schema<ConfirmationTokenDocument>({
 
 export interface ConfirmationTokenDocument
   extends ConfirmationToken,
-    Document {}
+    Document<Schema.Types.ObjectId> {}
 
 export type TokenModel = Model<ConfirmationTokenDocument>;
 

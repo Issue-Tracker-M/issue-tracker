@@ -1,10 +1,12 @@
-import React from 'react'
-import { Box, Heading } from '@chakra-ui/react'
+import React, { FC } from "react";
+import { Center, Heading } from "@chakra-ui/react";
 
-export default function PageNotFound() {
+const PageNotFound: FC = () => {
   return (
-    <Box>
-      <Heading fontSize={['lg', '5xl']}>404 - Not Found</Heading>
-    </Box>
-  )
-}
+    <Center height="100%" width="100%">
+      <Heading>404 - Not Found</Heading>
+    </Center>
+  );
+};
+
+export default PageNotFound;

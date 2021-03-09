@@ -2,9 +2,9 @@ import { Button, chakra, Textarea } from "@chakra-ui/react";
 import React, { FC, useState } from "react";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
 import { addComment } from "../../store/thunks";
-import { Task } from "../../store/workspace/types";
+import { Task } from "../../store/display/types";
 
-interface IProps<T = any> {
+interface IProps<T = (...args: unknown[]) => unknown> {
   taskId: Task["_id"];
   initialContent?: string;
   onSubmit?: T;
@@ -18,7 +18,11 @@ const CommentInput: FC<IProps> = ({
   const [content, setContent] = useState(initialContent);
   const dispatch = useThunkDispatch();
   return (
-    <chakra.form onSubmit={onSubmit}>
+    <chakra.form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (onSubmit) onSubmit(e);
+      }}>
       <Textarea
         placeholder="Write a comment..."
         value={content}

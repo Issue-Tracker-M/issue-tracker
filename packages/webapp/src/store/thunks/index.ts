@@ -1,121 +1,137 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
-import Axios from 'axios'
-import { schema, normalize } from 'normalizr'
-import { createWorkspaceObject } from '../../components/Modals/createWorkspaceModal'
-import { baseUrl } from '../../config'
-import { AtLeastOne } from '../../globals'
-import { setToken } from '../../helpers'
-import normalizeAuthResponse from '../../utils/normalizeAuthResponse'
-import normalizeTaskResponse from '../../utils/normalizeTaskResponse'
-import { axiosWithAuth } from '../../utils/withAuth'
-import { EntityNames } from '../types'
-import { loginCredentials, succesfullAuthObject } from '../user/types'
-import { Comment, Task, Workspace, WorkspaceStub } from '../workspace/types'
+import { getInviteData } from "@issue-tracker/api";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { schema, normalize } from "normalizr";
+import { AppDispatch } from "..";
+import { createWorkspaceObject } from "../../components/Modals/createWorkspaceModal";
+import { AtLeastOne } from "../../globals";
+import { setToken } from "../../helpers";
+import normalizeAuthResponse from "../../utils/normalizeAuthResponse";
+import normalizeTaskResponse from "../../utils/normalizeTaskResponse";
+import { RootState } from "../rootReducer";
+import { EntityNames } from "../types";
+import { loginCredentials, succesfullAuthObject } from "../user/types";
+import {
+  Comment,
+  List,
+  Task,
+  TaskStub,
+  Workspace,
+  WorkspaceStub,
+} from "../display/types";
 
 // This creates an async action creator which later can be used like regular action
 export const authenticate = createAsyncThunk(
-  'user/authenticate',
+  "user/authenticate",
   async (credentials: loginCredentials) => {
-    const res = await Axios.post<succesfullAuthObject>(
-      `${baseUrl}/auth/login`,
-      credentials
-    )
-    setToken(res.data.token)
-    return normalizeAuthResponse(res.data.user)
-    /*
-     */
+    const {
+      data: { user, token },
+    } = await axios.post<succesfullAuthObject>(`/auth/login`, credentials);
+    return { ...normalizeAuthResponse(user), token };
   }
-)
+);
 
 export const confirmEmail = createAsyncThunk(
-  'user/confirmEmail',
+  "user/confirmEmail",
   async (token: string) => {
-    const res = await Axios.post<succesfullAuthObject>(
-      `${baseUrl}/auth/confirm_email`,
-      {
-        token
-      }
-    )
-    setToken(res.data.token)
-    return normalizeAuthResponse(res.data.user)
+    const res = await axios.post<succesfullAuthObject>(`/auth/confirm_email`, {
+      token,
+    });
+    setToken(res.data.token);
+    return normalizeAuthResponse(res.data.user);
   }
-)
+);
 
 export const getWorkspaces = createAsyncThunk(
-  'user/getWorkspaces',
+  "user/getWorkspaces",
   async () => {
-    const response = await axiosWithAuth().get<WorkspaceStub[]>(
-      `${baseUrl}/workspaces/`
-    )
+    const response = await axios.get<WorkspaceStub[]>(`/workspaces/`);
     return normalize(response.data, [
       new schema.Entity<WorkspaceStub>(
         EntityNames.workspaces,
         {},
         { idAttribute: (w) => w._id }
-      )
-    ])
+      ),
+    ]);
   }
-)
+);
 
-export const addWorkspace = createAsyncThunk(
-  'user/addWorkspace',
+export const createWorkspace = createAsyncThunk(
+  "createWorkspace",
   async (workspace: createWorkspaceObject) => {
-    const response = await axiosWithAuth().post<Workspace>(
-      `${baseUrl}/workspaces/`,
-      workspace
-    )
-    return response.data
+    const response = await axios.post<Workspace>(`/workspaces/`, workspace);
+    return response.data;
   }
-)
+);
 
-export const fetchTask = createAsyncThunk(
-  `${EntityNames.tasks}/fetchTask`,
-  async (taskId: Task['_id']) => {
-    const res = await axiosWithAuth().get<Task>(`${baseUrl}/tasks/${taskId}`)
-    console.log(res.data, normalizeTaskResponse(res.data))
-    return normalizeTaskResponse(res.data)
-  }
-)
+type ThunkConfig = {
+  state: RootState;
+  dispatch: AppDispatch;
+};
 
+export const fetchTask = createAsyncThunk<
+  ReturnType<typeof normalizeTaskResponse>,
+  { taskId: string; workspaceId: string },
+  ThunkConfig
+>(`${EntityNames.tasks}/fetchTask`, async ({ taskId, workspaceId }) => {
+  const res = await axios.get<Task>(`/tasks/${taskId}`);
+  return normalizeTaskResponse(res.data);
+});
+
+interface IPatch {
+  update: AtLeastOne<Task> & Pick<Task, "_id" | "workspace">;
+  current: Task | TaskStub;
+}
 /**
  * Performs a partial update on the task.
  * Requires the task id and at least one other property
  */
 export const patchTask = createAsyncThunk(
   `${EntityNames.tasks}/patchTask`,
-  async (
-    data: AtLeastOne<Omit<Task, '_id' | 'loaded'>> & Pick<Task, '_id'>
-  ) => {
-    const { _id, ...rest } = data
-    const res = await axiosWithAuth().patch<{ message: string; data: Task }>(
-      `${baseUrl}/tasks/${_id}`,
-      rest
-    )
-    return normalizeTaskResponse(res.data.data)
+  async (data: IPatch) => {
+    const { _id, workspace, ...rest } = data.update;
+    const res = await axios.patch<Task>(`/tasks/${_id}`, rest);
+    return normalizeTaskResponse(res.data);
   }
-)
+);
 
 export const addComment = createAsyncThunk(
   `${EntityNames.comments}/addComment`,
-  async (data: { taskId: Task['_id']; content: Comment['content'] }) => {
-    const { taskId, content } = data
-    const res = await axiosWithAuth().post<Comment>(
-      `${baseUrl}/tasks/${taskId}/comment`,
-      { content }
-    )
-    return { taskId, comment: res.data }
+  async (data: { taskId: Task["_id"]; content: Comment["content"] }) => {
+    const { taskId, content } = data;
+    const res = await axios.post<Comment>(`/tasks/${taskId}/comments`, {
+      content,
+    });
+    return { taskId, comment: res.data };
   }
-)
+);
 
 interface deleteCommentInput {
-  taskId: Task['_id']
-  commentId: Comment['_id']
+  taskId: Task["_id"];
+  commentId: Comment["_id"];
 }
 export const deleteComment = createAsyncThunk(
   `${EntityNames.comments}/deleteComment`,
   async ({ taskId, commentId }: deleteCommentInput) => {
-    await axiosWithAuth().delete(
-      `${baseUrl}/tasks/${taskId}/comment/${commentId}`
-    )
+    await axios.delete(`/tasks/${taskId}/comments/${commentId}`);
   }
-)
+);
+
+export const addList = createAsyncThunk(
+  `${EntityNames.lists}/addList`,
+  async ({ workspaceId, name }: { workspaceId: string; name: string }) => {
+    const res = await axios.post<List>(`/workspaces/${workspaceId}/lists`, {
+      name,
+    });
+    const newList = res.data;
+    return newList;
+  }
+);
+
+export const fetchInvitationData = createAsyncThunk(
+  "fetchInvitationData",
+  async (token: string) => {
+    const res = await axios.get<getInviteData>(`/auth/invite/${token}`);
+    return res.data;
+  }
+);

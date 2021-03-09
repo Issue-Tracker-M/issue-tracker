@@ -1,0 +1,8 @@
+[build]
+  command = "yarn build && cd packages/webapp && yarn build"
+  publish = "packages/webapp/build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

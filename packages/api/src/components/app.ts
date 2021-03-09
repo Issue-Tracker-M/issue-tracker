@@ -1,12 +1,14 @@
-import { mongoURI, port } from "./../config/index";
+import { CLIENT_URL, mongoURI, NODE_ENV, port } from "./../config/index";
 import express from "express";
-import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import authRouter from "./auth/routes";
+import tasksRouter from "./tasks/routes";
 import workspaceRouter from "../components/workspaces/routes";
-import mongoose from "mongoose";
 import errorHandler from "errorhandler";
+import morgan from "morgan";
+import mongoose from "mongoose";
 mongoose
   .connect(mongoURI, {
     useNewUrlParser: true,
@@ -24,16 +26,28 @@ mongoose
   .catch((err) => {
     console.log(err, "This shouldn't be happening");
   });
+
 const apiRouter = express.Router();
 apiRouter.use("/auth", authRouter);
+apiRouter.use("/tasks", tasksRouter);
 apiRouter.use("/workspaces", workspaceRouter);
 
 const app = express();
 
 app.set("port", port);
 app.use(helmet());
-app.use(cors());
-app.use(bodyParser.json());
+if (!(NODE_ENV === "dev" || NODE_ENV === "test")) {
+  app.use(morgan("tiny"));
+}
+app.use(
+  cors({
+    credentials: true,
+    exposedHeaders: ["set-cookie"],
+    origin: [CLIENT_URL, "http://127.0.0.1", "http://104.142.122.231"],
+  })
+);
+app.use(cookieParser());
+app.use(express.json());
 
 app.use("/api", apiRouter);
 
@@ -41,7 +55,7 @@ app.get("/", (_, res: express.Response) => {
   return res.status(200).json({ message: "API is up 🚀" });
 });
 
-if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "test") {
+if (NODE_ENV === "dev" || NODE_ENV === "test") {
   app.use(errorHandler());
 }
 app.all("*", (_, res: express.Response) => {

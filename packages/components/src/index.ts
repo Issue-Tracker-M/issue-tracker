@@ -1,1 +1,3 @@
-export * from "./MyComponent";
+import VerticalList from "./VerticalList/VerticalList";
+
+export default VerticalList;

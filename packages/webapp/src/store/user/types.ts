@@ -1,31 +1,31 @@
-import { DbDocument, FullDocument, Stub } from '../types'
-import { Workspace } from '../workspace/types'
+import { DbDocument, FullDocument, Stub } from "../types";
+import { Workspace } from "../display/types";
 
 interface UserBase extends DbDocument {
-  readonly email: string
-  readonly username: string
-  readonly first_name: string
-  readonly last_name: string
+  readonly email: string;
+  readonly first_name: string;
+  readonly last_name: string;
+  readonly fullName: string;
 }
 
 export interface UserAPIResponse extends UserBase {
-  readonly workspaces: Pick<Workspace, '_id' | 'name'>
+  readonly workspaces: Pick<Workspace, "_id" | "name">;
 }
 
 export interface UserStub
-  extends Pick<User, '_id' | 'username' | 'first_name' | 'last_name'>,
+  extends Pick<User, "_id" | "first_name" | "last_name">,
     Stub {}
 
 export interface User extends UserBase, FullDocument {
-  readonly workspaces: Workspace['_id'][]
+  readonly workspaces: Workspace["_id"][];
 }
 
 export interface loginCredentials {
-  credential: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface succesfullAuthObject {
-  token: string
-  user: UserAPIResponse
+  token: string;
+  user: UserAPIResponse;
 }

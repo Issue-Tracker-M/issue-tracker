@@ -1,24 +1,28 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { BrowserRouter as Router } from 'react-router-dom'
-import './index.css'
-import 'react-datepicker/dist/react-datepicker.css'
-import App from './App'
-import store from './store'
-import * as serviceWorker from './serviceWorker'
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
+import "./index.css";
+import "react-datepicker/dist/react-datepicker.css";
+import App from "./App";
+import store from "./store";
+import * as serviceWorker from "./serviceWorker";
+import { baseUrl } from "./config";
+import { ColorModeScript } from "@chakra-ui/react";
+baseUrl;
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
+      <ColorModeScript />
       <Router>
         <App />
       </Router>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
-)
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister()
+serviceWorker.unregister();

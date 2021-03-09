@@ -11,21 +11,17 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useEntity } from "../hooks/useEntity";
 import { useThunkDispatch } from "../hooks/useThunkDispatch";
-import { taskSelectors } from "../store/entities/tasks";
-import { userSelectors } from "../store/entities/users";
-import { workspaceSelectors } from "../store/entities/workspaces";
 import { patchTask } from "../store/thunks";
-import { UserStub } from "../store/user/types";
-import { Task } from "../store/workspace/types";
+import { Task } from "../store/display/types";
 
-const MemberPreview = ({ userId }: { userId: UserStub["_id"] }) => {
-  const user = useSelector((state) => userSelectors.selectById(state, userId));
+const MemberPreview = ({ userId }: { userId: string }) => {
+  const user = useEntity("users", userId);
   return user ? (
     <Box display="flex" alignContent="center" alignItems="center">
       <Avatar name={user.first_name + " " + user.last_name} size="sm" />
-      <Text pl="1em">{`${user.first_name} ${user.last_name}(${user.username})`}</Text>
+      <Text pl="1em">{`${user.first_name} ${user.last_name}`}</Text>
     </Box>
   ) : null;
 };
@@ -43,24 +39,10 @@ export const MemberSelect = forwardRef<IProps, "button">(
   ({ taskId, ...rest }, ref) => {
     const dispatch = useThunkDispatch();
 
-    const boardMembers = useSelector((state) => {
-      const { currentWorkspaceId } = state.workspaceDisplay;
-      if (!currentWorkspaceId) return [];
+    const task = useEntity("tasks", taskId) as Task;
+    const workspace = useEntity("workspaces", task?.workspace || "");
+    const boardMembers = workspace?.loaded ? workspace.users : [];
 
-      const currentWorkspace = workspaceSelectors.selectById(
-        state,
-        currentWorkspaceId
-      );
-      if (!currentWorkspace?.loaded) return [];
-
-      return currentWorkspace.users;
-    });
-
-    const taskMembers = useSelector((state) => {
-      const task = taskSelectors.selectById(state, taskId);
-      if (!task?.loaded) return [];
-      return task.users;
-    });
     return (
       <Menu closeOnSelect={false} isLazy={true}>
         <MenuButton {...rest} ref={ref}>
@@ -69,13 +51,19 @@ export const MemberSelect = forwardRef<IProps, "button">(
         <MenuList minWidth="240px">
           <MenuOptionGroup
             title="Workspace Members"
-            // textTransform="uppercase"
-            // fontWeight="500"
-            // color="gray.500"
             type="checkbox"
-            defaultValue={taskMembers}
+            defaultValue={task?.loaded ? task.users : []}
             onChange={(value) => {
-              dispatch(patchTask({ _id: taskId, users: value as string[] }));
+              dispatch(
+                patchTask({
+                  current: task,
+                  update: {
+                    _id: taskId,
+                    workspace: task?.workspace,
+                    users: value as string[],
+                  },
+                })
+              );
             }}>
             {boardMembers.map((userId) => (
               <MenuItemOption key={userId} value={userId}>

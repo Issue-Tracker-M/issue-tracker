@@ -2,10 +2,16 @@ import Workspace, {
   WorkspaceDocument,
   WorkspacePopulatedDocument,
 } from "./model";
+import InvitationToken, {
+  InvitationToken as IInvitationToken,
+} from "../auth/models/InvitationToken";
 import { NextFunction, RequestHandler, Response } from "express";
 import { JSONed } from "../../utils/typeUtils";
 import { WorkspaceInput } from "./validation";
 import { AuthorizedRequest } from "../auth/middleware";
+import Users from "../users/model";
+import sendMail from "../../utils/sendEmail";
+import { inviteTemplate } from "../../templates/inviteTemplate";
 
 /**
  * @private
@@ -33,7 +39,7 @@ export const createWorkspace = async (
     //   { new: true }
     // );
     res.status(201).json(newWorkSpace);
-  } catch (error: unknown) {
+  } catch (error) {
     res.status(500).json(error);
   }
 };
@@ -59,7 +65,7 @@ export const deleteWorkspace: RequestHandler = async (req, res, next) => {
     );
     await workspace.remove();
     return res.sendStatus(200);
-  } catch (error: unknown) {
+  } catch (error) {
     next(error);
   }
 };
@@ -98,7 +104,7 @@ export const getWorkspaces: RequestHandler = async (req, res, next) => {
   try {
     if (!user) throw "Expected a user document";
     await user
-      .populate({ path: "workspaces", select: ["name"] })
+      .populate({ path: "workspaces", populate: { path: "lists.tasks" } })
       .execPopulate();
     return res.status(200).json(user.workspaces);
   } catch (err) {
@@ -119,7 +125,9 @@ export const getWorkspaceById = async (
 ): Promise<void> => {
   try {
     const workspace = await Workspace.findById(req.params.workspace_id)
-      .populate({ path: "lists.tasks", select: ["title", "labels"] })
+      .populate({
+        path: "lists.tasks",
+      })
       .populate({
         path: "users",
         select: ["username", "first_name", "last_name"],
@@ -133,5 +141,49 @@ export const getWorkspaceById = async (
     return;
   } catch (err) {
     next(err);
+  }
+};
+
+/**
+ * Sends an invitation to a workspace to a given email.
+ * @param req
+ * @param res
+ * @param next
+ */
+export const inviteToWorkspace: RequestHandler<
+  { workspaceId: string },
+  any,
+  { email: string }
+> = async (req, res, next) => {
+  const { workspace, user } = req;
+  if (!workspace) throw "Expected a workspace document";
+  if (!user) throw "Expected a user document";
+  const { email } = req.body;
+  try {
+    const invitee = await Users.findOne({ email }).exec();
+    if (invitee?.workspaces.includes(workspace.id))
+      return res
+        .status(401)
+        .json({ message: "User already a part of the workspace" });
+    const invitation_data: Omit<IInvitationToken, "token"> = {
+      invited_by: user.id,
+      invited_to: workspace.id,
+      user_id: invitee ? invitee.id : null,
+      email,
+    };
+    const { token } = await new InvitationToken(invitation_data).save();
+    await sendMail({
+      subject: `${user.fullName} has invited you to a new workspace!`,
+      to: email,
+      html: inviteTemplate(
+        user.fullName,
+        workspace.name,
+        token,
+        invitee?.fullName
+      ),
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    next(error);
   }
 };

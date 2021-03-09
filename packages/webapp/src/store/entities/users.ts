@@ -1,13 +1,14 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import { RootState } from '../rootReducer'
-import { authenticate } from '../thunks'
-import { DbDocument, EntityNames } from '../types'
-import { User, UserStub } from '../user/types'
-import { getCurrentWorkspace } from '../workspace/workspaceSlice'
+import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import { refreshAuthToken } from "../authSlice";
+import { RootState } from "../rootReducer";
+import { authenticate, createWorkspace } from "../thunks";
+import { EntityNames } from "../types";
+import { User, UserStub } from "../user/types";
+import { getCurrentWorkspace } from "../display/displaySlice";
 
 export const userAdapter = createEntityAdapter<User | UserStub>({
-  selectId: (user) => user._id
-})
+  selectId: (user) => user._id,
+});
 
 const usersSlice = createSlice({
   name: EntityNames.users,
@@ -15,23 +16,27 @@ const usersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(authenticate.fulfilled, (state, action) => {
-      userAdapter.upsertMany(state, action.payload.entities.users)
-    })
+      userAdapter.upsertMany(state, action.payload.entities.users);
+    });
+    builder.addCase(refreshAuthToken.fulfilled, (state, action) => {
+      userAdapter.upsertMany(state, action.payload.entities.users);
+    });
+    builder.addCase(createWorkspace.fulfilled, (state, action) => {
+      (state.entities[action.payload.admin] as User).workspaces.push(
+        action.payload._id
+      );
+    });
     builder.addCase(getCurrentWorkspace.fulfilled, (state, action) => {
       const {
-        payload: { entities }
-      } = action
-      userAdapter.upsertMany(state, entities.users)
-    })
-  }
-})
+        payload: { entities },
+      } = action;
+      userAdapter.upsertMany(state, entities.users);
+    });
+  },
+});
 
 export const userSelectors = userAdapter.getSelectors(
   (state: RootState) => state.users
-)
+);
 
-const selectByIds = (ids: DbDocument['_id'][]) => (state: RootState) => {
-  return ids.map((id) => userSelectors.selectById(state, id))
-}
-
-export default usersSlice.reducer
+export default usersSlice.reducer;

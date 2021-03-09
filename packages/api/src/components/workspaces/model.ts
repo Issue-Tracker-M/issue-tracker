@@ -3,15 +3,14 @@ import { Document, Model, Types, Schema, model } from "mongoose";
 import { TaskDocument } from "../tasks/model";
 import { UserDocument } from "../users/model";
 
+// LABELS
 export interface Label {
   name: string;
   color: string;
 }
-
 export interface LabelDocument extends Label, Document {
   _id: Types.ObjectId;
 }
-
 const LabelSchema = new Schema<LabelDocument>({
   name: String,
   color: String, //hex color code
@@ -34,9 +33,10 @@ const ChangeSchema = new Schema({
   user: { type: Types.ObjectId, ref: "Users" },
 });
 
-// List of tasks
+// LIST OF TASKS
 interface ListBaseDocument extends IBaseList, Document {
   _id: Types.ObjectId;
+  archived: boolean;
 }
 export interface ListDocument extends IBaseList, ListBaseDocument {
   tasks: Types.Array<TaskDocument["_id"]>;
@@ -44,12 +44,13 @@ export interface ListDocument extends IBaseList, ListBaseDocument {
 export interface ListPopulatedDocument extends IBaseList, ListBaseDocument {
   tasks: Types.Array<TaskDocument["_id"]>;
 }
-
 const ListSchema = new Schema<ListDocument>({
   name: { type: String, required: true },
   tasks: [{ type: Types.ObjectId, ref: "Tasks" }],
+  archived: { type: Boolean, default: false },
 });
 
+// WORKSPACE
 interface WorkspaceBaseDocument extends IBaseWorkspace, Document {
   _id: Types.ObjectId;
   labels: Types.DocumentArray<LabelDocument>;
@@ -61,7 +62,6 @@ export interface WorkspaceDocument extends WorkspaceBaseDocument {
   // lists: Types.Array<ListDocument["_id"]>;
   users: Types.Array<UserDocument["_id"]>;
   admin: UserDocument["_id"];
-  a: ListDocument;
 }
 
 export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {
@@ -76,7 +76,16 @@ const Workspaces = model<WorkspaceDocument>(
   new Schema<WorkspaceDocument>(
     {
       name: { type: String, required: true },
-      labels: [LabelSchema], //all of labels defined for this workspace
+      labels: [
+        {
+          type: LabelSchema,
+          default: () => [
+            { name: "Urgent", color: "rgb(220, 100, 100)" },
+            { name: "Important", color: "rgb(235, 205, 100)" },
+            { name: "Backlog", color: "rgb(100, 220, 100)" },
+          ],
+        },
+      ], //all of labels defined for this workspace
       users: [{ type: Types.ObjectId, ref: "Users" }], //references to all the users
       admin: { type: Types.ObjectId, ref: "Users", required: true },
       lists: {
