@@ -40,7 +40,7 @@ const Login: FC = () => {
             dispatch(authenticate(values))
               .then(() => {
                 history.push(
-                  location.state?.referrer ? location.state?.referrer : `/home`
+                  location.state?.referrer ? location.state?.referrer : `/`
                 );
                 mounted = false;
               })

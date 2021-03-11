@@ -35,7 +35,7 @@ const App: FC = () => {
         <Route path="/forgot_password" component={ForgotPassword} />
         <Route path="/reset/:token" component={ResetPassword} />
         <Route path="/confirm/:token" component={ConfirmEmail} />
-        <PrivateRoute path="/home" exact component={Home} />
+        <PrivateRoute path="/" exact component={Home} />
         <PrivateRoute path="/w/:workspaceId" component={Dashboard} />
         <PrivateRoute path="/w" component={Workspaces} />
         <Route component={PageNotFound} />
