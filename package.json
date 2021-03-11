@@ -7,11 +7,15 @@
     "postinstall": "lerna bootstrap",
     "api-docs": "scripty",
     "build": "scripty",
+    "lint": "scripty",
     "test": "scripty",
+    "clean": "scripty",
     "dev": "SCRIPTY_PARALLEL=true scripty",
     "test:ci": "lerna run test --since main...HEAD --stream -- --passWithNoTests",
-    "lint": "scripty",
-    "clean": "scripty"
+    "start:client": "serve -s packages/webapp/build -l 4000",
+    "start:api": "node packages/api/dist/index.js",
+    "e2e": "start-test start:api 5000 start:client 4000 test",
+    "cy:open": "cypress open"
   },
   "scripty": {
     "path": "./scripts/workspace"
@@ -52,6 +56,7 @@
     "lerna-changelog": "^1.0.1",
     "rimraf": "^3.0.2",
     "scripty": "^2.0.0",
+    "serve": "^11.3.2",
     "start-server-and-test": "^1.12.0"
   },
   "husky": {

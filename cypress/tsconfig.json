@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "lib": ["DOM", "ES2018"],
+    "types": ["cypress", "@testing-library/cypress"],
+    "baseUrl": "../",
+    "esModuleInterop": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["./**/*"]
+}
