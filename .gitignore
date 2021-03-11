@@ -117,3 +117,6 @@ dist
 **/temp
 **/temp-*
 _config.yml
+
+# Cypress
+cypress/videos

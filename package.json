@@ -13,8 +13,9 @@
     "test:ci": "lerna run test --since main...HEAD --stream -- --passWithNoTests",
     "start:client": "serve -s packages/webapp/build -l 4000",
     "start:api": "node packages/api/dist/index.js",
-    "e2e": "start-test start:api 5000 start:client 4000 cy:open",
+    "e2e": "start-test start:api 5000 start:client 4000 cy:run",
     "cy:open": "cypress open",
+    "cy:run": "cypress run",
     "heroku-postbuild": "yarn build"
   },
   "scripty": {
