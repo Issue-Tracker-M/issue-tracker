@@ -4,14 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "lerna bootstrap",
     "api-docs": "scripty",
     "build": "scripty",
+    "lint": "scripty",
     "test": "scripty",
+    "clean": "scripty",
     "dev": "SCRIPTY_PARALLEL=true scripty",
     "test:ci": "lerna run test --since main...HEAD --stream -- --passWithNoTests",
-    "lint": "scripty",
-    "clean": "scripty"
+    "start:client": "serve -s packages/webapp/build -l 4000",
+    "start:api": "node packages/api/dist/index.js",
+    "e2e": "start-test start:api 5000 start:client 4000 cy:run",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "heroku-postbuild": "yarn build"
   },
   "scripty": {
     "path": "./scripts/workspace"
@@ -41,15 +46,19 @@
     "@commitlint/config-lerna-scopes": "^11.0.0",
     "@microsoft/api-documenter": "^7.12.4",
     "@microsoft/api-extractor": "^7.13.0",
+    "@testing-library/cypress": "^7.0.4",
     "@typescript-eslint/eslint-plugin": "^4.14.0",
     "@typescript-eslint/parser": "^4.14.0",
     "commitlint": "^11.0.0",
+    "cypress": "^6.6.0",
     "eslint": "^7.18.0",
     "husky": "^4.3.8",
     "lerna": "^3.22.1",
     "lerna-changelog": "^1.0.1",
     "rimraf": "^3.0.2",
-    "scripty": "^2.0.0"
+    "scripty": "^2.0.0",
+    "serve": "^11.3.2",
+    "start-server-and-test": "^1.12.0"
   },
   "husky": {
     "hooks": {

@@ -55,7 +55,7 @@ const SignUp: FC = () => {
             })
               .then(() => {
                 history.push(
-                  location.state?.referrer ? location.pathname : "/home"
+                  location.state?.referrer ? location.pathname : "/"
                 );
                 toast({
                   title: "Account created!",

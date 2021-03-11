@@ -35,14 +35,7 @@ const FormikInput = forwardRef<IProps, "input">(
       <Field name={formik_name}>
         {({
           field: { onChange, name, ...f },
-          form: {
-            errors,
-            isSubmitting,
-            validateField,
-            setFieldTouched,
-            touched,
-          },
-          meta,
+          form: { errors, isSubmitting, setFieldTouched, touched },
         }: FieldProps<string>) => (
           <FormControl
             isInvalid={!!errors[name] && !!touched[name]}

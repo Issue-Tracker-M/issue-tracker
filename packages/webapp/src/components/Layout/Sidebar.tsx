@@ -1,13 +1,12 @@
+import React, { FC, ReactNode } from "react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   IconButton,
   PropsOf,
-  useColorMode,
   useDisclosure,
   UseDisclosureProps,
 } from "@chakra-ui/react";
-import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
-import React, { FC, ReactNode } from "react";
+import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
 import { useIsMounted } from "../../hooks/useIsMounted";
 import { MotionContainer } from "./MotionContainer";
 
@@ -24,7 +23,6 @@ export const Sidebar: FC<IProps> = ({
   isOpen: open,
   ...rest
 }) => {
-  const { colorMode } = useColorMode();
   const isMounted = useIsMounted();
   const { isOpen, onToggle } = useDisclosure({
     onOpen,

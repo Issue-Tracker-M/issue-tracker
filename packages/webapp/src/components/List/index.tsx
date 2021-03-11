@@ -5,7 +5,6 @@ import {
   Heading,
   IconButton,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
 import React, { FC, useRef, useEffect } from "react";
 import { useCallback } from "react";

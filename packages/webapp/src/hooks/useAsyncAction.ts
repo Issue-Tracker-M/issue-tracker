@@ -32,17 +32,8 @@ export default function useAsyncThunk<T extends AsyncThunk<any, any, any>>(
 
   useEffect(() => {
     // console.log("Running effect", args);
-    let mounted = true;
-    if (error)
-      return () => {
-        // console.log("Loading cleanup");
-        mounted = false;
-      };
-    if (loading)
-      return () => {
-        // console.log("Loading cleanup");
-        mounted = false;
-      };
+    if (error) return;
+    if (loading) return;
     if (!condition || condition()) {
       // console.log("No condition or condition true");
       setLoading(true);
@@ -52,10 +43,7 @@ export default function useAsyncThunk<T extends AsyncThunk<any, any, any>>(
         setLoading(false);
       });
     }
-    return () => {
-      // console.log("cleanup");
-      mounted = false;
-    };
+    return;
   }, [args, condition, dispatch, error, loading, thunk]);
 
   return { loading, error };

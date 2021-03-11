@@ -1,3 +1,4 @@
+// this ts config is used to build all packages and during watch mode
 {
   "files": [],
   "composite": true,

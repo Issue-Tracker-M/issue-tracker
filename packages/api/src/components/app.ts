@@ -18,10 +18,10 @@ mongoose
   })
   .then((conn) => {
     app.set("db_connection", conn);
-    // console.log(
-    //   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    //   `MongoDB connection with url successful @: ${conn.connection.host}:${conn.connection.port}`
-    // );
+    console.log(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `MongoDB connection with url successful @: ${conn.connection.host}:${conn.connection.port}`
+    );
   })
   .catch((err) => {
     console.log(err, "This shouldn't be happening");

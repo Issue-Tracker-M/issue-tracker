@@ -15,10 +15,9 @@ import { AppLayout } from "../components/Layout/AppLayout";
 import { Header } from "../components/Layout/Header";
 import Loading from "../components/Layout/Loading";
 import useAsyncThunk from "../hooks/useAsyncAction";
-import { useEntity } from "../hooks/useEntity";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import { refreshAuthToken } from "../store/authSlice";
 import { fetchInvitationData } from "../store/thunks";
-import { User } from "../store/user/types";
 import PageNotFound from "./PageNotFound";
 
 const AskToAuth: FC<{ invitationData: getInviteData }> = ({
@@ -53,13 +52,11 @@ export const Invite: FC = () => {
   const history = useHistory();
   const { invite_token } = useParams<{ invite_token: string }>();
 
-  const { loggedIn, currentUserId, invitationData } = useSelector((state) => ({
+  const { loggedIn, invitationData } = useSelector((state) => ({
     loggedIn: !!state.auth.token,
-    currentUserId: state.auth.currentUserId,
     invitationData: state.auth.invitation,
   }));
-
-  const user = useEntity("users", currentUserId!);
+  const user = useCurrentUser();
 
   const { loading: authenticating, error: authError } = useAsyncThunk(
     refreshAuthToken,
@@ -93,7 +90,7 @@ export const Invite: FC = () => {
             <AskToAuth invitationData={invitationData} />
           ) : inviteError ||
             !invitationData ||
-            (user && (user as User).email !== invitationData.email) ? (
+            user?.email !== invitationData.email ? (
             <PageNotFound />
           ) : (
             <>
@@ -134,7 +131,7 @@ export const Invite: FC = () => {
                         .post(`/auth/invite/${invite_token}`, {
                           acceptInvite: false,
                         })
-                        .then(() => history.push(`/home`));
+                        .then(() => history.push(`/`));
                     }}>
                     No
                   </Button>

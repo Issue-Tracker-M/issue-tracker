@@ -1,6 +1,5 @@
 import {
   Badge,
-  Center,
   HStack,
   Icon,
   Link,
@@ -9,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { AiOutlineClockCircle, AiOutlineRead } from "react-icons/ai";
+import { AiOutlineRead } from "react-icons/ai";
 import { useEntity } from "../../hooks/useEntity";
 import { Task } from "../../store/display/types";
 import { ChatIcon, CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";

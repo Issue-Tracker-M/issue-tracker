@@ -28,11 +28,7 @@ import React, { useCallback, FC } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { BsCardList, BsCircle } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import {
-  Link as RouterLink,
-  useHistory,
-  useRouteMatch,
-} from "react-router-dom";
+import { Link as RouterLink, useRouteMatch } from "react-router-dom";
 import { useThunkDispatch } from "../../hooks/useThunkDispatch";
 import { workspaceSelectors } from "../../store/entities/workspaces";
 import {
@@ -181,7 +177,7 @@ export const SidebarNav: FC = () => {
           {isAuthenticated ? (
             <>
               <Profile />
-              <NavItem to="/home" leftIcon={<AiOutlineHome />}>
+              <NavItem to="/" leftIcon={<AiOutlineHome />}>
                 Home
               </NavItem>
               <NavItem to="/w" leftIcon={<BsCardList />}>
