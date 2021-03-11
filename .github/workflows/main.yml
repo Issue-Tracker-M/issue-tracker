@@ -12,6 +12,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      DB_CONNECTION: mongodb://localhost:27017/?readPreference=primary&ssl=false
+      JWT_SECRET: bloop
+      DB_CONNECTION_TEST: mongodb://localhost:27017/?readPreference=primary&ssl=false
+      SENDER_EMAIL: example@mail.com
+      EMAIL_PASSWORD: examplePassword
+      EMAIL_SECRET: bloop
+      CLIENT_URL: http://localhost:4000
+      REACT_APP_API_HOST: http://localhost:5000/api
 
     strategy:
       matrix:
@@ -34,4 +44,4 @@ jobs:
           mongodb-version: 4.4
           mongodb-replica-set: test-rs
       - name: Test changed packages
-        run: yarn test:ci
+        run: yarn e2e
