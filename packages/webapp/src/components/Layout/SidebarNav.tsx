@@ -177,7 +177,7 @@ export const SidebarNav: FC = () => {
           {isAuthenticated ? (
             <>
               <Profile />
-              <NavItem to="/home" leftIcon={<AiOutlineHome />}>
+              <NavItem to="/" leftIcon={<AiOutlineHome />}>
                 Home
               </NavItem>
               <NavItem to="/w" leftIcon={<BsCardList />}>

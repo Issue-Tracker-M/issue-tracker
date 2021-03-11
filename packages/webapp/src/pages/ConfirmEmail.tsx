@@ -19,7 +19,7 @@ export const ConfirmEmail: FC = () => {
     setLoading(true);
     dispatch(confirmEmail(token))
       .then(() => {
-        history.push("/home");
+        history.push("/");
         toast({
           title: "Email confirmed!",
           description: `Your account now will have additional features available to it!`,

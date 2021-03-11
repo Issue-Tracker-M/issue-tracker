@@ -131,7 +131,7 @@ export const Invite: FC = () => {
                         .post(`/auth/invite/${invite_token}`, {
                           acceptInvite: false,
                         })
-                        .then(() => history.push(`/home`));
+                        .then(() => history.push(`/`));
                     }}>
                     No
                   </Button>
