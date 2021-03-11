@@ -43,7 +43,7 @@ app.use(
   cors({
     credentials: true,
     exposedHeaders: ["set-cookie"],
-    origin: [CLIENT_URL, "http://127.0.0.1", "http://104.142.122.231"],
+    origin: CLIENT_URL,
   })
 );
 app.use(cookieParser());

@@ -9,7 +9,8 @@ export let mongoURI: string;
 export const SENDER_EMAIL = process.env.SENDER_EMAIL || "test@email.com";
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD || "12345";
 export const EMAIL_SECRET = process.env.EMAIL_SECRET || "bleep";
-export const CLIENT_URL = process.env.CLIENT_URL || "sergei-dev.me";
+export const CLIENT_URL =
+  process.env.CLIENT_URL || "https://issue-tracker-webapp.netlify.app";
 
 if (NODE_ENV === "test" && DB_CONNECTION_TEST) {
   mongoURI = DB_CONNECTION_TEST.split("issue_tracker_testing").join(
