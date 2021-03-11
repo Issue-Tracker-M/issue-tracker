@@ -34,4 +34,4 @@ jobs:
           mongodb-version: 4.4
           mongodb-replica-set: test-rs
       - name: Test changed packages
-        run: yarn test
+        run: yarn test:ci

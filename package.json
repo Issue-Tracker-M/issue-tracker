@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "lerna bootstrap",
     "api-docs": "scripty",
     "build": "scripty",
     "lint": "scripty",
@@ -14,8 +13,9 @@
     "test:ci": "lerna run test --since main...HEAD --stream -- --passWithNoTests",
     "start:client": "serve -s packages/webapp/build -l 4000",
     "start:api": "node packages/api/dist/index.js",
-    "e2e": "start-test start:api 5000 start:client 4000 test",
-    "cy:open": "cypress open"
+    "e2e": "start-test start:api 5000 start:client 4000 cy:open",
+    "cy:open": "cypress open",
+    "heroku-postbuild": "yarn build"
   },
   "scripty": {
     "path": "./scripts/workspace"
