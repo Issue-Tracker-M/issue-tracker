@@ -71,9 +71,9 @@ type ThunkConfig = {
 
 export const fetchTask = createAsyncThunk<
   ReturnType<typeof normalizeTaskResponse>,
-  { taskId: string; workspaceId: string },
+  { taskId: string },
   ThunkConfig
->(`${EntityNames.tasks}/fetchTask`, async ({ taskId, workspaceId }) => {
+>(`${EntityNames.tasks}/fetchTask`, async ({ taskId }) => {
   const res = await axios.get<Task>(`/tasks/${taskId}`);
   return normalizeTaskResponse(res.data);
 });
@@ -89,7 +89,7 @@ interface IPatch {
 export const patchTask = createAsyncThunk(
   `${EntityNames.tasks}/patchTask`,
   async (data: IPatch) => {
-    const { _id, workspace, ...rest } = data.update;
+    const { _id, ...rest } = data.update;
     const res = await axios.patch<Task>(`/tasks/${_id}`, rest);
     return normalizeTaskResponse(res.data);
   }

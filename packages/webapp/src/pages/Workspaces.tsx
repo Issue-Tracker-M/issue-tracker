@@ -28,13 +28,13 @@ const WorkspaceCard: FC<{ id: string }> = ({ id }) => {
 };
 
 export const Workspaces: FC = () => {
-  const currentUser = useCurrentUser()!;
+  const currentUser = useCurrentUser();
   return (
     <AppLayout>
       <Heading textAlign="center" margin="4">
         Workspaces
       </Heading>
-      {currentUser.workspaces.length ? (
+      {currentUser?.workspaces.length ? (
         <Wrap padding="1rem" justify="center">
           {currentUser.workspaces.map((id) => (
             <WrapItem key={id}>

@@ -1,11 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import {
-  NavLink,
-  useHistory,
-  useLocation,
-  Link as RouterLink,
-} from "react-router-dom";
+import { useHistory, useLocation, Link as RouterLink } from "react-router-dom";
 import { Box, Text, Link } from "@chakra-ui/react";
 import { object, string } from "yup";
 import AuthFormWrapper from "../components/Form/AuthFormWrapper";

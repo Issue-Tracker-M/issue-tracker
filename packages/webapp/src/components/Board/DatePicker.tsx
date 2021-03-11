@@ -101,7 +101,7 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
 
       <IconButton
         aria-label="Remove due date"
-        onClick={(e) => {
+        onClick={() => {
           dispatch(
             patchTask({
               current: task,
@@ -122,7 +122,7 @@ const TaskDatePicker: FC<IProps> = ({ task_id }) => {
     </>
   ) : (
     <Button
-      onClick={(e) => {
+      onClick={() => {
         dispatch(
           patchTask({
             current: task,

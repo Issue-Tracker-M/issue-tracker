@@ -1,7 +1,6 @@
 import {
   AddIcon,
   AtSignIcon,
-  ChevronDownIcon,
   DeleteIcon,
   HamburgerIcon,
   TimeIcon,
@@ -9,7 +8,6 @@ import {
 import { BsTextLeft } from "react-icons/bs";
 import {
   Box,
-  Button,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -43,13 +41,13 @@ import { ListSelect } from "./ListSelect";
 const TaskView: FC = () => {
   const dispatch = useThunkDispatch();
   const { taskId } = useParams<{ taskId: string }>();
-  const task = useEntity("tasks", taskId)!;
+  const task = useEntity("tasks", taskId);
   const history = useHistory();
 
-  const { loading, error } = useAsyncThunk(
+  const { loading } = useAsyncThunk(
     fetchTask,
-    { taskId, workspaceId: task?.workspace },
-    () => task && !task.loaded
+    { taskId },
+    () => !!task?.loaded
   );
 
   return (
@@ -62,7 +60,7 @@ const TaskView: FC = () => {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        {loading ? (
+        {loading || !task ? (
           <Loading />
         ) : (
           <>

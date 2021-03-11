@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from "react";
-import { Box, Center, HStack, Spinner } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import List from "../List";
 import { useEntity } from "../../hooks/useEntity";
 import { getCurrentWorkspace } from "../../store/display/displaySlice";
