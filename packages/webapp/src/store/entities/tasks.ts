@@ -54,7 +54,7 @@ const tasksSlice = createSlice({
       taskAdapter.upsertMany(state, entities.tasks);
     });
     builder.addCase(createTask.fulfilled, (state, action) => {
-      taskAdapter.upsertOne(state, action.payload);
+      taskAdapter.upsertMany(state, action.payload.entities.tasks);
     });
     builder.addCase(addComment.fulfilled, (state, { payload }) => {
       const task = state.entities[payload.taskId];

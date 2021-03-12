@@ -18,7 +18,7 @@ const listSlice = createSlice({
     builder.addCase(createTask.fulfilled, (state, action) => {
       const list = state.entities[action.meta.arg.list];
       if (!list) throw new Error("List entity not found");
-      list.tasks.push(action.payload._id);
+      list.tasks.push(action.payload.result);
     });
     builder.addCase(addList.fulfilled, (state, { payload }) => {
       listAdapter.upsertOne(state, payload);
