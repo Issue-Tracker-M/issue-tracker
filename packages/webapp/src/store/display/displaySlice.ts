@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { getWorkspaceResponse, Task } from "./types";
+import { getWorkspaceResponse } from "./types";
 import { baseUrl } from "../../config";
 import { DbDocument } from "../types";
 import normalizeWorkspaceResponse from "../../utils/normalizeWorkspaceResponse";

@@ -17,7 +17,10 @@ const AllTheProviders: ComponentType<any> = ({ children }) => {
   );
 };
 
-const customRender = (ui: ReactElement<any>, options?: RenderOptions) =>
+const customRender = (
+  ui: ReactElement<any>,
+  options?: RenderOptions
+): ReturnType<typeof render> =>
   render(ui, {
     ...options,
     wrapper: AllTheProviders,
