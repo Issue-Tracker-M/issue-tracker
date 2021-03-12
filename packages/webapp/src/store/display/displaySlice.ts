@@ -28,24 +28,10 @@ export const getCurrentWorkspace = createAsyncThunk(
   }
 );
 
-export const createTask = createAsyncThunk(
-  "workspace/createTask",
-  async (taskInput: Pick<Task, "title" | "workspace" | "list">) => {
-    const { workspace } = taskInput;
-    const response = await axios.post<Task>(
-      `${baseUrl}/workspaces/${workspace}/tasks`,
-      taskInput
-    );
-    const task = response.data;
-    return task;
-  }
-);
-
 const displaySlice = createSlice({
   name: "display",
   initialState,
   reducers: {
-    /* TODO */
     changeFilterText: (state, action: PayloadAction<string>) => {
       state.filterText = action.payload;
     },

@@ -3,7 +3,8 @@ import { RootState } from "../rootReducer";
 import { addList, patchTask } from "../thunks";
 import { EntityNames } from "../types";
 import { List } from "../display/types";
-import { createTask, getCurrentWorkspace } from "../display/displaySlice";
+import { getCurrentWorkspace } from "../display/displaySlice";
+import { createTask } from "./tasks";
 
 export const listAdapter = createEntityAdapter<List>({
   selectId: (list) => list._id,

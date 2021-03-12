@@ -20,8 +20,8 @@ import { Formik } from "formik";
 import StyledForm from "../FormikInputs/StyledForm";
 import FormikInput from "../FormikInputs/FormikInput";
 import { useState } from "react";
-import { createTask } from "../../store/display/displaySlice";
 import { useParams } from "react-router-dom";
+import { createTask } from "../../store/entities/tasks";
 
 const NewTaskForm: FC<{ listId: string; workspaceId: string }> = ({
   listId,

@@ -7,9 +7,18 @@ import { RootState } from "../rootReducer";
 import { addComment, fetchTask, patchTask } from "../thunks";
 import { EntityNames } from "../types";
 import { Task, TaskStub } from "../display/types";
-import { createTask, getCurrentWorkspace } from "../display/displaySlice";
+import { getCurrentWorkspace } from "../display/displaySlice";
 import axios from "axios";
 import normalizeTaskResponse from "../../utils/normalizeTaskResponse";
+
+export const createTask = createAsyncThunk(
+  "tasks/createTask",
+  async (taskInput: Pick<Task, "title" | "workspace" | "list">) => {
+    const response = await axios.post<Task>(`/tasks`, taskInput);
+    const task = response.data;
+    return task;
+  }
+);
 
 export const archiveTask = createAsyncThunk(
   "tasks/archiveTask",
