@@ -20,7 +20,7 @@ interface TaskPreviewProps {
 
 const TaskPreview: FC<TaskPreviewProps> = ({ taskId }) => {
   const task = useEntity("tasks", taskId);
-  if (!task || !task.loaded) throw new Error("Task not found in the entities");
+  if (!task || !task.loaded) return null;
   return <TaskPreviewDisplay {...task} />;
 };
 

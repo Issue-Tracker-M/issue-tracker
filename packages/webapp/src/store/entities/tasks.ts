@@ -16,7 +16,7 @@ export const createTask = createAsyncThunk(
   async (taskInput: Pick<Task, "title" | "workspace" | "list">) => {
     const response = await axios.post<Task>(`/tasks`, taskInput);
     const task = response.data;
-    return task;
+    return normalizeTaskResponse(task);
   }
 );
 
