@@ -38,19 +38,6 @@ const listSlice = createSlice({
         );
       }
     });
-    builder.addCase(patchTask.fulfilled, (state, action) => {
-      // Special case for updating a list to which the task belongs, as we need to sync task and list entities
-      if (action.meta.arg.update.list) {
-        const oldListID = action.meta.arg.current.list;
-        (state.entities[oldListID] as any).tasks = state.entities[
-          oldListID
-        ]?.tasks.filter((id) => id !== action.meta.arg.current._id);
-        state.entities[action.meta.arg.update.list]?.tasks.push(
-          action.payload.result
-        );
-      }
-      return;
-    });
     builder.addCase(patchTask.rejected, (state, action) => {
       // Revert back the state changes
       if (action.meta.arg.update.list) {
