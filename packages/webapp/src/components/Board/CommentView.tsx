@@ -70,7 +70,7 @@ const CommentView: FC<IProps> = ({ commentId, taskId }) => {
         <Text
           backgroundColor="gray.100"
           borderRadius=".5rem"
-          width="max-content"
+          width="100%"
           padding=".5rem">
           {commentData.content}
         </Text>
